@@ -34,7 +34,8 @@ public class Commit implements Serializable {
     private final String parent2;
 
     /**
-     * Maps the filenames to their SHA-1 hashes.
+     * Maps the filenames to their SHA-1 hashes. See {@link Commit#Commit(String, Date, String, String, TreeMap)} for
+     * why {@link TreeMap} is used.
      */
     private final TreeMap<String, String> files;
 
@@ -49,7 +50,9 @@ public class Commit implements Serializable {
      * @param timestamp The commit timestamp.
      * @param parent1 The SHA-1 hash of the first parent of the commit.
      * @param parent2 The SHA-1 hash of the second parent of the commit.
-     * @param files A map mapping the filenames to their SHA-1 hashes.
+     * @param files A {@link TreeMap} mapping the filenames to their SHA-1 hashes. A {@link TreeMap} is used
+     *              for a deterministic retrieval order. (The SHA-1 hash of the commit is sensitive to the file order.
+     *              See {@link Commit#computeSHA1()} for more details.)
      */
      public Commit(String message, Date timestamp, String parent1, String parent2, TreeMap<String, String> files) {
         this.message = message;

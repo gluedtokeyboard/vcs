@@ -1,6 +1,7 @@
 package vcs.core;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -40,7 +41,8 @@ public class VCS implements Serializable {
     private final Map<String, String> branchMap = new HashMap<>();
 
     /**
-     * Maps the staged file names to their SHA-1 hashes.
+     * Maps the staged file names to their SHA-1 hashes. See
+     * {@link Commit#Commit(String, Date, String, String, TreeMap)} for why {@link TreeMap} is used.
      */
     private final TreeMap<String, String> stagedFiles = new TreeMap<>();
 
