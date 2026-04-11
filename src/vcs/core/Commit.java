@@ -2,7 +2,11 @@ package vcs.core;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeMap;
+
+import static vcs.utils.Hash.sha1;
 
 /**
  * {@link Commit} objects store the message, timestamp, parent(s), files, and the SHA-1 hash of the commit.
@@ -53,5 +57,21 @@ public class Commit implements Serializable {
         this.parent1 = parent1;
         this.parent2 = parent2;
         this.files = files;
+        this.sha1 = this.computeSHA1();
+    }
+
+    /**
+     * Computes the SHA-1 hash of the commit. The message, timestamp, parents, and the SHA-1 hashes of the files are
+     * concatenated, and SHA-1 hash of the resulting string is used as the hash of the commit.
+     * @return The SHA-1 hash of the commit.
+     */
+    private String computeSHA1() {
+        List<String> strings = new LinkedList<>();
+        strings.add(this.message);
+        strings.add(Long.toString(this.timestamp.getTime()));
+        strings.add(this.parent1);
+        strings.add(this.parent2);
+        strings.addAll(this.files.values());
+        return sha1(strings);
     }
 }
