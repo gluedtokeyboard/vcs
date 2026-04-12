@@ -64,7 +64,7 @@ public class VCS implements Serializable {
      * @return the absolute path obtained by resolving the given path against the repository folder.
      */
     private static Path resolvePath(String path) {
-        return join(getCWD(), REPO_FOLDER, path);
+        return joinCWD(REPO_FOLDER, path);
     }
 
     /**
