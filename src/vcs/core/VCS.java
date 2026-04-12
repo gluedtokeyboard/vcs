@@ -70,4 +70,21 @@ public class VCS implements Serializable {
     private static Path resolvePath(String path) {
         return join(getCWD(), REPO_FOLDER, path);
     }
+
+    /**
+     * Serializes the current object and writes it to {@link VCS#REPO_FOLDER}/{@link VCS#OBJECT_NAME}.
+     */
+    public void serialize() {
+        Path path = resolvePath(OBJECT_NAME);
+        vcs.utils.Serialization.serialize(this, path);
+    }
+
+    /**
+     * Deserializes the {@link VCS} object from {@link VCS#REPO_FOLDER}/{@link VCS#OBJECT_NAME}.
+     * @return The deserialized {@link VCS} object.
+     */
+    public static VCS deserialize() {
+        Path path = resolvePath(OBJECT_NAME);
+        return vcs.utils.Serialization.deserialize(path, VCS.class);
+    }
 }
