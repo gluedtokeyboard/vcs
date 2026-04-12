@@ -96,13 +96,13 @@ public class VCS implements Serializable {
      * Creates the folders required to store the data and the metadata of the repository.
      */
     private void createRepoFolders() {
-        List<String> folders = List.of(
-                STAGING_AREA_FOLDER,
-                COMMITS_FOLDER,
-                BLOBS_FOLDER
+        List<Path> folders = List.of(
+                getStagingAreaFolder(),
+                getCommitsFolder(),
+                getBlobsFolder()
         );
-        for (String folder : folders) {
-            mkdir(resolvePath(folder));
+        for (Path folder : folders) {
+            mkdir(folder);
         }
     }
 
@@ -111,40 +111,38 @@ public class VCS implements Serializable {
      * @return {@code true} if a repository exists; {@code false} otherwise.
      */
     public boolean repoExists() {
-        return exists(
-                resolvePath("")  // Returns the absolute path of the repository folder.
-        );
+        return exists(getRepoFolder());
     }
 
     /**
      * Getter for the repository folder.
-     * @return The repository folder.
+     * @return The absolute path of the repository folder.
      */
-    public static String getRepoFolder() {
-        return REPO_FOLDER;
+    public static Path getRepoFolder() {
+        return resolvePath("");
     }
 
     /**
      * Getter for the staging area folder.
-     * @return The staging area folder.
+     * @return The absolute path of the staging area folder.
      */
-    public static String getStagingAreaFolder() {
-        return STAGING_AREA_FOLDER;
+    public static Path getStagingAreaFolder() {
+        return resolvePath(STAGING_AREA_FOLDER);
     }
 
     /**
      * Getter for the commits folder.
-     * @return The commits folder.
+     * @return The absolute path of the commits folder.
      */
-    public static String getCommitsFolder() {
-        return COMMITS_FOLDER;
+    public static Path getCommitsFolder() {
+        return resolvePath(COMMITS_FOLDER);
     }
 
     /**
      * Getter for the blobs folder.
-     * @return The blobs folder.
+     * @return The absolute path of the blobs folder.
      */
-    public static String getBlobsFolder() {
-        return BLOBS_FOLDER;
+    public static Path getBlobsFolder() {
+        return resolvePath(BLOBS_FOLDER);
     }
 }
