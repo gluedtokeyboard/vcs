@@ -28,4 +28,12 @@ public class Blob implements Serializable {
         this.contents = read(path);
         this.sha1 = sha1(this.contents);
     }
+
+    /**
+     * Getter for the SHA-1 hash of the blob.
+     * @return The SHA-1 hash of the blob.
+     */
+    public String getSha1() {
+        return sha1;
+    }
 }
