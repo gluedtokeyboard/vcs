@@ -2,13 +2,9 @@ package vcs.core;
 
 import java.io.Serializable;
 import java.nio.file.Path;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
-import static vcs.utils.FileSystem.getCWD;
-import static vcs.utils.FileSystem.join;
+import static vcs.utils.FileSystem.*;
 
 /**
  * The {@link VCS} class stores all metadata about the repository.
@@ -86,5 +82,27 @@ public class VCS implements Serializable {
     public static VCS deserialize() {
         Path path = resolvePath(OBJECT_NAME);
         return vcs.utils.Serialization.deserialize(path, VCS.class);
+    }
+
+    /**
+     * Creates a repository in the current working directory.
+     */
+    public void createRepo() {
+        createRepoFolders();
+        serialize();
+    }
+
+    /**
+     * Creates the folders required to store the data and the metadata of the repository.
+     */
+    private void createRepoFolders() {
+        List<String> folders = List.of(
+                STAGING_AREA_FOLDER,
+                COMMITS_FOLDER,
+                BLOBS_FOLDER
+        );
+        for (String folder : folders) {
+            mkdir(resolvePath(folder));
+        }
     }
 }
