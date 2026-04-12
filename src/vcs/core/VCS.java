@@ -244,4 +244,13 @@ public class VCS implements Serializable {
     public void removeBranch(String branch) {
         branchMap.remove(branch);
     }
+
+    /**
+     * Returns a clone of {@link VCS#stagedFiles}. This can safely be passed to other classes without affecting the
+     * original map.
+     * @return a clone of {@link VCS#stagedFiles}.
+     */
+    public TreeMap<String, String> getStagedFilesClone() {
+        return (TreeMap<String, String>) stagedFiles.clone();
+    }
 }
