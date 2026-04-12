@@ -13,12 +13,12 @@ public class VCS implements Serializable {
     /**
      * The folder used to store the repository data and metadata.
      */
-    private static final String VCS_FOLDER = ".vcs";
+    private static final String REPO_FOLDER = ".vcs";
 
     /**
      * The staging area folder. This will contain {@link Blob} objects of the staged files.
      */
-    private static final String STAGING_AREA = "index";
+    private static final String STAGING_AREA_FOLDER = "index";
 
     /**
      * The folder containing {@link Commit} objects.
