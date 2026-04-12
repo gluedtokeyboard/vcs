@@ -1,0 +1,104 @@
+package vcs.commands;
+
+import vcs.core.Commit;
+import vcs.core.VCS;
+
+import java.nio.file.Path;
+import java.util.Date;
+import java.util.TreeMap;
+
+import static vcs.utils.FileSystem.*;
+
+/**
+ * Methods for creating a commit.
+ */
+public class CommitCommand extends Command {
+    /**
+     * Stores the current repository.
+     *
+     * @param vcs the current repository object.
+     */
+    public CommitCommand(VCS vcs) {
+        super(vcs);
+    }
+
+    /**
+     * Creates a commit with the given message.
+     * @param message the commit message.
+     */
+    public void commit(String message) {
+        if (vcs.stagingAreaIsEmpty()) {
+            throw new RuntimeException("No changes to commit");
+        }
+        if (message == null || message.isEmpty()) {
+            throw new RuntimeException("Please enter a message");
+        }
+        Commit commit = createCommit(message);
+        vcs.setCurrentBranchHead(commit.getSha1());
+        moveBlobsToBlobsFolder();
+        vcs.clearStagingArea();
+        commit.serialize();
+    }
+
+    /**
+     * Moves the blobs from the staging area to the blobs folder.
+     */
+    private static void moveBlobsToBlobsFolder() {
+        ls(VCS.getStagingAreaFolder()).forEach(
+                path -> {
+                    Path destination = join(VCS.getBlobsFolder(), basename(path));
+                    mv(path, destination);
+                }
+        );
+    }
+
+    /**
+     * Creates a new commit with the given message and the staged files.
+     * @param message the commit message.
+     * @return the newly created commit.
+     */
+    private Commit createCommit(String message) {
+        Commit newCommit;
+        Date timestamp = new Date();
+        TreeMap<String, String> stagedFiles = vcs.getStagedFilesClone();
+        Commit latestCommit = getLatestCommitCurrentBranch();
+        if (latestCommit == null) {
+            newCommit = new Commit(message, timestamp, stagedFiles);
+        } else {
+            TreeMap<String, String> files = latestCommit.getFilesClone();
+            updateFiles(files, stagedFiles);
+            newCommit = new Commit(message, timestamp, latestCommit.getSha1(), files);
+        }
+        return newCommit;
+    }
+
+    /**
+     * Returns the latest commit in the current branch.
+     * @return the latest commit in the current branch, or {@code null} if there are no commits.
+     */
+    private Commit getLatestCommitCurrentBranch() {
+        String latestHash = getLatestHashCurrentBranch();
+        if (latestHash == null) {
+            return null;
+        }
+        return Commit.deserialize(latestHash);
+    }
+
+    /**
+     * Returns the hash of the latest commit in the current branch.
+     * @return the hash of the latest commit in the current branch, or {@code null} if there are no commits in the
+     * current branch.
+     */
+    private String getLatestHashCurrentBranch() {
+        return vcs.getCurrentBranchHead();
+    }
+
+    /**
+     * Updates the files of the parent commit in place with the staged files.
+     * @param parentFiles the files of the parent commit.
+     * @param stagedFiles the staged files.
+     */
+    private static void updateFiles(TreeMap<String, String> parentFiles, TreeMap<String, String> stagedFiles) {
+        parentFiles.putAll(stagedFiles);
+    }
+}
