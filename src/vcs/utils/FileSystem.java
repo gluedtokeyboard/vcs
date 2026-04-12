@@ -3,6 +3,7 @@ package vcs.utils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
 /**
@@ -86,6 +87,19 @@ public final class FileSystem {
     public static Stream<Path> ls(Path path) {
         try {
             return Files.list(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Moves the given file from {@code source} to {@code destination}.
+     * @param source The source path.
+     * @param destination The destination path.
+     */
+    public static void mv(Path source, Path destination) {
+        try {
+            Files.move(source, destination, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
