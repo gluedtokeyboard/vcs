@@ -1,11 +1,14 @@
 package vcs.core;
 
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
+import static vcs.utils.FileSystem.join;
+import static vcs.utils.FileSystem.mkdir;
 import static vcs.utils.Hash.sha1;
 
 /**
@@ -84,5 +87,45 @@ public class Commit implements Serializable {
      */
     public String getSha1() {
         return sha1;
+    }
+
+    /**
+     * Serializes the commit. See {@link Commit#getDestinationFolder(String)} for details on the destination folder.
+     */
+    public void serialize() {
+        Path destination = getDestination(sha1);
+        Path directory = destination.getParent();
+        mkdir(directory);
+        vcs.utils.Serialization.serialize(this, destination);
+    }
+
+    /**
+     * Deserializes the commit. See {@link Commit#getDestinationFolder(String)} for details on the destination folder.
+     * @param sha1 the SHA-1 hash of the commit.
+     * @return the deserialized commit.
+     */
+    public static Commit deserialize(String sha1) {
+        Path location = getDestination(sha1);
+        return vcs.utils.Serialization.deserialize(location, Commit.class);
+    }
+
+    /**
+     * Returns the destination for the commit.
+     * @param sha1 the SHA-1 hash of the commit.
+     * @return the destination for the commit.
+     */
+    private static Path getDestination(String sha1) {
+        return join(getDestinationFolder(sha1), sha1);
+    }
+
+    /**
+     * Returns the destination folder for the commit. The destination folder is given by
+     * {@code <commit folder>/<first two characters of the hash>}. This makes it easier to locate the commit when
+     * searching by the prefixes of its hash.
+     * @param sha1 the SHA-1 hash of the commit.
+     * @return the destination folder for the commit.
+     */
+    public static Path getDestinationFolder(String sha1) {
+        return join(VCS.getCommitsFolder(), sha1.substring(0, 2));
     }
 }
