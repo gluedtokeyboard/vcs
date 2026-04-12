@@ -43,6 +43,15 @@ public final class FileSystem {
     }
 
     /**
+     * Joins the given paths to the current working directory.
+     * @param parts the parts to join to the current working directory.
+     * @return the given parts joined to the current working directory.
+     */
+    public static Path joinCWD(String... parts) {
+        return join(getCWD(), parts);
+    }
+
+    /**
      * Returns the absolute path of the current working directory.
      * @return A {@link Path} object containing the current working directory.
      */
