@@ -48,6 +48,19 @@ public final class FileSystem {
     }
 
     /**
+     * Joins the given paths
+     * @param paths the paths to join.
+     * @return the joined path.
+     */
+    public static Path join(Path... paths) {
+        Path result = paths[0];
+        for (int i = 1; i < paths.length; i++) {
+            result = result.resolve(paths[i]);
+        }
+        return result;
+    }
+
+    /**
      * Joins the given paths to the current working directory.
      *
      * @param parts the parts to join to the current working directory.
