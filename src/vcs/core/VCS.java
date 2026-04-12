@@ -115,4 +115,36 @@ public class VCS implements Serializable {
                 resolvePath("")  // Returns the absolute path of the repository folder.
         );
     }
+
+    /**
+     * Getter for the repository folder.
+     * @return The repository folder.
+     */
+    public static String getRepoFolder() {
+        return REPO_FOLDER;
+    }
+
+    /**
+     * Getter for the staging area folder.
+     * @return The staging area folder.
+     */
+    public static String getStagingAreaFolder() {
+        return STAGING_AREA_FOLDER;
+    }
+
+    /**
+     * Getter for the commits folder.
+     * @return The commits folder.
+     */
+    public static String getCommitsFolder() {
+        return COMMITS_FOLDER;
+    }
+
+    /**
+     * Getter for the blobs folder.
+     * @return The blobs folder.
+     */
+    public static String getBlobsFolder() {
+        return BLOBS_FOLDER;
+    }
 }
