@@ -31,6 +31,11 @@ public class VCS implements Serializable {
     private static final String BLOBS_FOLDER = "blobs";
 
     /**
+     * The name to use for serialization/deserialization.
+     */
+    private static final String OBJECT_NAME = "vcs";
+
+    /**
      * The name of the current branch.
      */
     private String currentBranch = "main";
