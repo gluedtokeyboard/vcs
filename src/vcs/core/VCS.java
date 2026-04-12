@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
 import static vcs.utils.FileSystem.*;
 
@@ -167,5 +168,80 @@ public class VCS implements Serializable {
      */
     public void clearStagingArea() {
         stagedFiles.clear();
+    }
+
+    /**
+     * Getter for the current branch.
+     * @return the current branch.
+     */
+    public String getCurrentBranch() {
+        return currentBranch;
+    }
+
+    /**
+     * Setter for the current branch.
+     * @param branch the new branch.
+     */
+    public void setCurrentBranch(String branch) {
+        currentBranch = branch;
+    }
+
+    /**
+     * Returns the branch head of the given branch.
+     * @param branch the branch name.
+     * @return the SHA-1 hash of the branch head of the given branch.
+     */
+    public String getBranchHead(String branch) {
+        return branchMap.get(branch);
+    }
+
+    /**
+     * Returns the SHA-1 hash of the branch head of the current branch.
+     * @return the SHA-1 hash of the branch head of the current branch.
+     */
+    public String getCurrentBranchHead() {
+        return getBranchHead(getCurrentBranch());
+    }
+
+    /**
+     * Sets the branch head for the given branch.
+     * @param branch the name of the branch.
+     * @param head the SHA-1 hash of the new head.
+     */
+    public void setBranchHead(String branch, String head) {
+        branchMap.put(branch, head);
+    }
+
+    /**
+     * Sets the branch head for the current branch.
+     * @param head the SHA-1 hash of the new head.
+     */
+    public void setCurrentBranchHead(String head) {
+        setBranchHead(getCurrentBranch(), head);
+    }
+
+    /**
+     * Returns all the branches.
+     * @return a stream over all the branches.
+     */
+    public Stream<String> getAllBranches() {
+        return branchMap.keySet().stream();
+    }
+
+    /**
+     * Checks if the given branch exists.
+     * @param branch the branch name.
+     * @return a boolean indicating if the given branch exists.
+     */
+    public boolean containsBranch(String branch) {
+        return branchMap.containsKey(branch);
+    }
+
+    /**
+     * Removes the given branch.
+     * @param branch the name of the branch to remove.
+     */
+    public void removeBranch(String branch) {
+        branchMap.remove(branch);
     }
 }
