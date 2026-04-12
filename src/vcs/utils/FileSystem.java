@@ -3,6 +3,7 @@ package vcs.utils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
 /**
  * File system utils.
@@ -10,6 +11,7 @@ import java.nio.file.Path;
 public final class FileSystem {
     /**
      * Checks if the given path exists.
+     *
      * @param path The path of a folder or a file.
      * @return {@code true} if the path exists; {@code false} otherwise.
      */
@@ -19,6 +21,7 @@ public final class FileSystem {
 
     /**
      * Creates the given folder along with the required intermediate folders.
+     *
      * @param folder The path of the folder.
      */
     public static void mkdir(Path folder) {
@@ -31,7 +34,8 @@ public final class FileSystem {
 
     /**
      * Joins the given parts to the given path.
-     * @param path The base path.
+     *
+     * @param path  The base path.
      * @param parts The parts to join to the path.
      * @return A {@link Path} object containing the given parts joined to the base path.
      */
@@ -44,6 +48,7 @@ public final class FileSystem {
 
     /**
      * Joins the given paths to the current working directory.
+     *
      * @param parts the parts to join to the current working directory.
      * @return the given parts joined to the current working directory.
      */
@@ -53,6 +58,7 @@ public final class FileSystem {
 
     /**
      * Returns the absolute path of the current working directory.
+     *
      * @return A {@link Path} object containing the current working directory.
      */
     public static Path getCWD() {
@@ -61,11 +67,25 @@ public final class FileSystem {
 
     /**
      * Deletes the given file.
+     *
      * @param path the path of the file.
      */
     public static void rm(Path path) {
         try {
             Files.delete(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Lists the files in the given directory.
+     * @param path the path of the directory.
+     * @return the files in the given directory as stream objects.
+     */
+    public static Stream<Path> ls(Path path) {
+        try {
+            return Files.list(path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
