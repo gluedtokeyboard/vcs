@@ -2,7 +2,10 @@ package vcs.core;
 
 import java.io.Serializable;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static vcs.utils.FileSystem.*;
 
@@ -82,36 +85,6 @@ public class VCS implements Serializable {
     public static VCS deserialize() {
         Path path = resolvePath(OBJECT_NAME);
         return vcs.utils.Serialization.deserialize(path, VCS.class);
-    }
-
-    /**
-     * Creates a repository in the current working directory.
-     */
-    public void createRepo() {
-        createRepoFolders();
-        serialize();
-    }
-
-    /**
-     * Creates the folders required to store the data and the metadata of the repository.
-     */
-    private void createRepoFolders() {
-        List<Path> folders = List.of(
-                getStagingAreaFolder(),
-                getCommitsFolder(),
-                getBlobsFolder()
-        );
-        for (Path folder : folders) {
-            mkdir(folder);
-        }
-    }
-
-    /**
-     * Checks if a repository exists in the current working directory.
-     * @return {@code true} if a repository exists; {@code false} otherwise.
-     */
-    public boolean repoExists() {
-        return exists(getRepoFolder());
     }
 
     /**

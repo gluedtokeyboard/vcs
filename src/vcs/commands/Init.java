@@ -2,6 +2,12 @@ package vcs.commands;
 
 import vcs.core.VCS;
 
+import java.nio.file.Path;
+import java.util.List;
+
+import static vcs.utils.FileSystem.exists;
+import static vcs.utils.FileSystem.mkdir;
+
 /**
  * Contains methods for initializing the repository.
  */
@@ -20,9 +26,39 @@ public class Init extends Command {
      * @throws RuntimeException If a repository already exists in the current working directory.
      */
     public void init() {
-        if (vcs.repoExists()) {
+        if (repoExists()) {
             throw new RuntimeException("A repository already exists in the current working directory.");
         }
-        vcs.createRepo();
+        createRepo();
+    }
+
+    /**
+     * Creates a repository in the current working directory.
+     */
+    public void createRepo() {
+        createRepoFolders();
+        vcs.serialize();
+    }
+
+    /**
+     * Creates the folders required to store the data and the metadata of the repository.
+     */
+    private void createRepoFolders() {
+        List<Path> folders = List.of(
+                VCS.getStagingAreaFolder(),
+                VCS.getCommitsFolder(),
+                VCS.getBlobsFolder()
+        );
+        for (Path folder : folders) {
+            mkdir(folder);
+        }
+    }
+
+    /**
+     * Checks if a repository exists in the current working directory.
+     * @return {@code true} if a repository exists; {@code false} otherwise.
+     */
+    public boolean repoExists() {
+        return exists(VCS.getRepoFolder());
     }
 }
