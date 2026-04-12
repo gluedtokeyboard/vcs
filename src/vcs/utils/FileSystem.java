@@ -104,4 +104,13 @@ public final class FileSystem {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Returns the basename of the given file.
+     * @param path the path of the file.
+     * @return the basename of the given file.
+     */
+    public static String basename(Path path) {
+        return path.getFileName().toString();
+    }
 }
