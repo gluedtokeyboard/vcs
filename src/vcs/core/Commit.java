@@ -16,6 +16,11 @@ import static vcs.utils.Hash.sha1;
  */
 public class Commit implements Serializable {
     /**
+     * The representation of a null commit.
+     */
+    private static final String NULL_COMMIT = "";
+
+    /**
      * The commit message.
      */
     private final String message;
