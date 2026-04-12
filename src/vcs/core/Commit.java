@@ -77,4 +77,12 @@ public class Commit implements Serializable {
         strings.addAll(this.files.values());
         return sha1(strings);
     }
+
+    /**
+     * Getter for the SHA-1 hash of the commit.
+     * @return The SHA-1 hash of the commit.
+     */
+    public String getSha1() {
+        return sha1;
+    }
 }
