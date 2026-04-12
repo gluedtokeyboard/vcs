@@ -105,4 +105,14 @@ public class VCS implements Serializable {
             mkdir(resolvePath(folder));
         }
     }
+
+    /**
+     * Checks if a repository exists in the current working directory.
+     * @return {@code true} if a repository exists; {@code false} otherwise.
+     */
+    public boolean repoExists() {
+        return exists(
+                resolvePath("")  // Returns the absolute path of the repository folder.
+        );
+    }
 }
