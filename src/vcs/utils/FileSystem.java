@@ -58,4 +58,16 @@ public final class FileSystem {
     public static Path getCWD() {
         return Path.of("").toAbsolutePath();
     }
+
+    /**
+     * Deletes the given file.
+     * @param path the path of the file.
+     */
+    public static void rm(Path path) {
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
