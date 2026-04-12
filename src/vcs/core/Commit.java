@@ -156,4 +156,12 @@ public class Commit implements Serializable {
     public static Path getDestinationFolder(String sha1) {
         return join(VCS.getCommitsFolder(), sha1.substring(0, 2));
     }
+
+    /**
+     * Returns a clone of {@link Commit#files}. This can safely be modified without affecting the original map.
+     * @return a clone of {@link Commit#files}.
+     */
+    public TreeMap<String, String> getFilesClone() {
+        return (TreeMap<String, String>) files.clone();
+    }
 }
