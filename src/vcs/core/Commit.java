@@ -53,11 +53,34 @@ public class Commit implements Serializable {
     private final String sha1;
 
     /**
-     * Creates a commit with the given information.
-     * @param message The commit message.
-     * @param timestamp The commit timestamp.
-     * @param parent1 The SHA-1 hash of the first parent of the commit.
-     * @param parent2 The SHA-1 hash of the second parent of the commit.
+     * Creates a commit with no parents.
+     * @param message the commit message.
+     * @param timestamp the commit timestamp.
+     * @param files a map mapping the filenames to their SHA-1 hashes. See
+     * {@link Commit#Commit(String, Date, String, String, TreeMap)} for why {@link TreeMap} is used.
+     */
+    public Commit(String message, Date timestamp, TreeMap<String, String> files) {
+        this(message, timestamp, NULL_COMMIT, files);
+    }
+
+    /**
+     * Creates a commit with a single parent.
+     * @param message the commit message.
+     * @param timestamp the commit timestamp.
+     * @param parent1 the SHA-1 hash of the first parent of the commit.
+     * @param files a map mapping the filenames to their SHA-1 hashes. See
+     * {@link Commit#Commit(String, Date, String, String, TreeMap)} for why {@link TreeMap} is used.
+     */
+    public Commit(String message, Date timestamp, String parent1, TreeMap<String, String> files) {
+        this(message, timestamp, parent1, NULL_COMMIT, files);
+    }
+
+    /**
+     * Creates a commit with two parents.
+     * @param message the commit message.
+     * @param timestamp the commit timestamp.
+     * @param parent1 the SHA-1 hash of the first parent of the commit.
+     * @param parent2 the SHA-1 hash of the second parent of the commit.
      * @param files A {@link TreeMap} mapping the filenames to their SHA-1 hashes. A {@link TreeMap} is used
      *              for a deterministic retrieval order. (The SHA-1 hash of the commit is sensitive to the file order.
      *              See {@link Commit#computeSHA1()} for more details.)
