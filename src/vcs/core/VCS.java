@@ -1,10 +1,14 @@
 package vcs.core;
 
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+
+import static vcs.utils.FileSystem.getCWD;
+import static vcs.utils.FileSystem.join;
 
 /**
  * The {@link VCS} class stores all metadata about the repository.
@@ -56,5 +60,14 @@ public class VCS implements Serializable {
      */
     public VCS() {
         branchMap.put("main", null);
+    }
+
+    /*
+     * Resolves the given path relative to the repository folder.
+     * @param path the relative path.
+     * @return the absolute path obtained by resolving the given path against the repository folder.
+     */
+    private static Path resolvePath(String path) {
+        return join(getCWD(), REPO_FOLDER, path);
     }
 }
