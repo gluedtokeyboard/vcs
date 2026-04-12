@@ -118,4 +118,54 @@ public class VCS implements Serializable {
     public static Path getBlobsFolder() {
         return resolvePath(BLOBS_FOLDER);
     }
+
+    /**
+     * Stages the given file.
+     * @param path the path of the file.
+     * @param sha1 the SHA-1 hash of the file.
+     */
+    public void stageFile(Path path, String sha1) {
+        stagedFiles.put(path.toString(), sha1);
+    }
+
+    /**
+     * Unstages the given file.
+     * @param path the path of the file.
+     */
+    public void unstageFile(Path path) {
+        stagedFiles.remove(path.toString());
+    }
+
+    /**
+     * Checks if the given file is currently stages.
+     * @param path the path of the file.
+     * @return {@code true} if the file is staged; {@code false} otherwise.
+     */
+    public boolean isStaged(Path path) {
+        return stagedFiles.containsKey(path.toString());
+    }
+
+    /**
+     * Returns the SHA-1 hash of the staged file.
+     * @param path the path of the staged file.
+     * @return the SHA-1 hash of the staged file.
+     */
+    public String getStagedSha(Path path) {
+        return stagedFiles.get(path.toString());
+    }
+
+    /**
+     * Checks if the staging area is empty.
+     * @return {@code true} if the staging area is empty; {@code false} otherwise.
+     */
+    public boolean stagingAreaIsEmpty() {
+        return stagedFiles.isEmpty();
+    }
+
+    /**
+     * Clears the staging area.
+     */
+    public void clearStagingArea() {
+        stagedFiles.clear();
+    }
 }
