@@ -164,4 +164,13 @@ public class Commit implements Serializable {
     public TreeMap<String, String> getFilesClone() {
         return (TreeMap<String, String>) files.clone();
     }
+
+    /**
+     * Checks if the commit contains the given file.
+     * @param path the path of the file.
+     * @return {@code true} if the file exists within the commit; {@code false} otherwise.
+     */
+    public boolean contains(Path path) {
+        return files.containsKey(path.toString());
+    }
 }
