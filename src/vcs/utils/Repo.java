@@ -18,6 +18,11 @@ public final class Repo {
     private final VCS vcs;
 
     /**
+     * A marker to indicate that a file is staged for deletion.
+     */
+    public static final String DELETION_MARKER = "";
+
+    /**
      * Stores the current repository.
      * @param vcs the current repository object.
      */
@@ -61,6 +66,15 @@ public final class Repo {
         String sha1 = vcs.getStagedSha(path);
         Path location = getBlobDestinationStagingArea(sha1);
         rm(location);
+    }
+
+    /**
+     * Stages the given file for deletion.
+     * @param path the path of the file
+     */
+    public void stageDeletion(Path path) {
+        FileSystem.rm(path);
+        vcs.stageFile(path, Repo.DELETION_MARKER);
     }
 
     /**
