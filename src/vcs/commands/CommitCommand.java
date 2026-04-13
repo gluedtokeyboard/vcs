@@ -2,6 +2,7 @@ package vcs.commands;
 
 import vcs.core.Commit;
 import vcs.core.VCS;
+import vcs.utils.Repo;
 
 import java.nio.file.Path;
 import java.util.Date;
@@ -99,6 +100,12 @@ public class CommitCommand extends Command {
      * @param stagedFiles the staged files.
      */
     private static void updateFiles(TreeMap<String, String> parentFiles, TreeMap<String, String> stagedFiles) {
-        parentFiles.putAll(stagedFiles);
+        stagedFiles.forEach((key, value) -> {
+            if (value.equals(Repo.DELETION_MARKER)) {
+                parentFiles.remove(key);
+            } else {
+                parentFiles.put(key, value);
+            }
+        });
     }
 }
