@@ -62,7 +62,7 @@ public class CommitCommand extends Command {
         Commit newCommit;
         Date timestamp = new Date();
         TreeMap<String, String> stagedFiles = vcs.getStagedFilesClone();
-        Commit latestCommit = getLatestCommitCurrentBranch();
+        Commit latestCommit = repoUtils.getLatestCommitCurrentBranch();
         if (latestCommit == null) {
             newCommit = new Commit(message, timestamp, stagedFiles);
         } else {
@@ -71,27 +71,6 @@ public class CommitCommand extends Command {
             newCommit = new Commit(message, timestamp, latestCommit.getSha1(), files);
         }
         return newCommit;
-    }
-
-    /**
-     * Returns the latest commit in the current branch.
-     * @return the latest commit in the current branch, or {@code null} if there are no commits.
-     */
-    private Commit getLatestCommitCurrentBranch() {
-        String latestHash = getLatestHashCurrentBranch();
-        if (latestHash == null) {
-            return null;
-        }
-        return Commit.deserialize(latestHash);
-    }
-
-    /**
-     * Returns the hash of the latest commit in the current branch.
-     * @return the hash of the latest commit in the current branch, or {@code null} if there are no commits in the
-     * current branch.
-     */
-    private String getLatestHashCurrentBranch() {
-        return vcs.getCurrentBranchHead();
     }
 
     /**

@@ -1,6 +1,7 @@
 package vcs.utils;
 
 import vcs.core.Blob;
+import vcs.core.Commit;
 import vcs.core.VCS;
 
 import java.nio.file.Path;
@@ -89,5 +90,26 @@ public final class Repo {
      */
     private static Path getBlobDestinationStagingArea(String sha1) {
         return join(VCS.getStagingAreaFolder(), sha1);
+    }
+
+    /**
+     * Returns the latest commit in the current branch.
+     * @return the latest commit in the current branch, or {@code null} if there are no commits.
+     */
+    public Commit getLatestCommitCurrentBranch() {
+        String latestHash = getLatestHashCurrentBranch();
+        if (latestHash == null) {
+            return null;
+        }
+        return Commit.deserialize(latestHash);
+    }
+
+    /**
+     * Returns the hash of the latest commit in the current branch.
+     * @return the hash of the latest commit in the current branch, or {@code null} if there are no commits in the
+     * current branch.
+     */
+    private String getLatestHashCurrentBranch() {
+        return vcs.getCurrentBranchHead();
     }
 }
