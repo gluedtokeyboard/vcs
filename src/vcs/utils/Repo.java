@@ -23,6 +23,11 @@ public final class Repo {
     public static final String DELETION_MARKER = "";
 
     /**
+     * The representation of a null commit.
+     */
+    public static final String NULL_COMMIT = "";
+
+    /**
      * Stores the current repository.
      * @param vcs the current repository object.
      */

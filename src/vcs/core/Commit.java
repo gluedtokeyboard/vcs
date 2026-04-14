@@ -10,16 +10,12 @@ import java.util.TreeMap;
 import static vcs.utils.FileSystem.join;
 import static vcs.utils.FileSystem.mkdir;
 import static vcs.utils.Hash.sha1;
+import static vcs.utils.Repo.NULL_COMMIT;
 
 /**
  * {@link Commit} objects store the message, timestamp, parent(s), files, and the SHA-1 hash of the commit.
  */
 public class Commit implements Serializable {
-    /**
-     * The representation of a null commit.
-     */
-    private static final String NULL_COMMIT = "";
-
     /**
      * The commit message.
      */
