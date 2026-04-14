@@ -169,4 +169,36 @@ public class Commit implements Serializable {
     public boolean contains(Path path) {
         return files.containsKey(path.toString());
     }
+
+    /**
+     * Getter for the commit message.
+     * @return the commit message.
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * Getter for the commit timestamp.
+     * @return the commit timestamp.
+     */
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    /**
+     * Getter for the first parent.
+     * @return the SHA-1 hash of the first parent.
+     */
+    public String getParent1() {
+        return parent1;
+    }
+
+    /**
+     * Getter for the second parent.
+     * @return the SHA-1 hash of the second parent
+     */
+    public String getParent2() {
+        return parent2;
+    }
 }
