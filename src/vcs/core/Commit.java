@@ -171,6 +171,15 @@ public class Commit implements Serializable {
     }
 
     /**
+     * Returns the hash of the given file in the commit.
+     * @param path the path of the file.
+     * @return the file's hash in the commit.
+     */
+    public String getFileHash(Path path) {
+        return files.get(path.toString());
+    }
+
+    /**
      * Getter for the commit message.
      * @return the commit message.
      */
