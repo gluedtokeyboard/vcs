@@ -1,8 +1,11 @@
 package vcs.commands;
 
+import vcs.core.Blob;
+import vcs.core.Commit;
 import vcs.core.VCS;
 
 import java.nio.file.Path;
+import java.util.Objects;
 
 import static vcs.utils.FileSystem.exists;
 import static vcs.utils.FileSystem.joinCWD;
@@ -32,6 +35,23 @@ public class Add extends Command {
         if (vcs.isStaged(p)) {
             repoUtils.unstageFile(p);
         }
-        repoUtils.stageFile(p);
+        if (hasChanged(p)) {
+            repoUtils.stageFile(p);
+        }
+    }
+
+    /**
+     * Checks if the given file has changed compared to the previous commit.
+     * @param path the path of the file.
+     * @return {@code true} if the file has changed; {@code false} otherwise.
+     */
+    private boolean hasChanged(Path path) {
+        Commit commit = repoUtils.getLatestCommitCurrentBranch();
+        if (commit == null) {
+            return true;
+        }
+        String previousHash = commit.getFileHash(path);
+        Blob blob = new Blob(path);
+        return !Objects.equals(blob.getSha1(), previousHash);
     }
 }
