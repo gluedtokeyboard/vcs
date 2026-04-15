@@ -192,4 +192,13 @@ public final class FileSystem {
     public static String getRelativePathCWD(String path) {
         return getRelativePath(Path.of(path), getCWD()).toString();
     }
+
+    /**
+     * Returns the directory of the given path.
+     * @param path a {@link Path} object.
+     * @return the directory of the given path.
+     */
+    public static Path getDirectory(Path path) {
+        return path.getParent();
+    }
 }
