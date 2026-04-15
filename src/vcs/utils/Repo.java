@@ -5,6 +5,8 @@ import vcs.core.Commit;
 import vcs.core.VCS;
 
 import java.nio.file.Path;
+import java.util.Set;
+import java.util.function.Consumer;
 
 import static vcs.utils.FileSystem.*;
 import static vcs.utils.Serialization.serialize;
@@ -111,5 +113,31 @@ public final class Repo {
      */
     private String getLatestHashCurrentBranch() {
         return vcs.getCurrentBranchHead();
+    }
+
+    /**
+     * Walks the repository root.
+     * @param consumeFiles indicates whether to pass files to the given {@link Consumer}.
+     * @param consumeDirs indicates whether to pass directories to the given {@link Consumer}.
+     * @param consumer a {@link Consumer} to consume the repository files and directories.
+     */
+    public static void walkRepo(boolean consumeFiles, boolean consumeDirs, Consumer<Path> consumer) {
+        walk(getCWD(), Set.of(VCS.getRepoFolder()), consumeFiles, consumeDirs, consumer);
+    }
+
+    /**
+     * Walks the repository root, but only feeds files to the consumer.
+     * @param consumer a {@link Consumer} to consume the repository files.
+     */
+    public static void walkRepoFiles(Consumer<Path> consumer) {
+        walkRepo(true, false, consumer);
+    }
+
+    /**
+     * Walks the repository root, but only feeds directories to the consumer.
+     * @param consumer a {@link Consumer} to consume all the directories in the repository.
+     */
+    public static void walkRepoDirs(Consumer<Path> consumer) {
+        walkRepo(false, true, consumer);
     }
 }
