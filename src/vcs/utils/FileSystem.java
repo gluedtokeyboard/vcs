@@ -1,9 +1,10 @@
 package vcs.utils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -125,5 +126,42 @@ public final class FileSystem {
      */
     public static String basename(Path path) {
         return path.getFileName().toString();
+    }
+
+    /**
+     * Walks the given directory and execute the given {@link Consumer} on files and directories.
+     * @param directory the directory to walk.
+     * @param excludedDirs the directories to skip.
+     * @param consumeFiles indicates whether to pass files to the given {@link Consumer}.
+     * @param consumeDirs indicates whether to pass directories to the given {@link Consumer}.
+     * @param consumer a {@link Consumer} to consume the files and directories.
+     */
+    public static void walk(
+            Path directory, Set<Path> excludedDirs, boolean consumeFiles, boolean consumeDirs,
+            Consumer<Path> consumer) {
+        try {
+            Files.walkFileTree(directory, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+                    if (excludedDirs.contains(dir)) {
+                        return FileVisitResult.SKIP_SUBTREE;
+                    }
+                    if (consumeDirs) {
+                        consumer.accept(dir);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    if (consumeFiles) {
+                        consumer.accept(file);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
