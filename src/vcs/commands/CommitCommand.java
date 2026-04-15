@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.TreeMap;
 
 import static vcs.utils.FileSystem.*;
+import static vcs.utils.Repo.getBlobDestinationCommit;
 
 /**
  * Methods for creating a commit.
@@ -47,7 +48,8 @@ public class CommitCommand extends Command {
     private static void moveBlobsToBlobsFolder() {
         ls(VCS.getStagingAreaFolder()).forEach(
                 path -> {
-                    Path destination = join(VCS.getBlobsFolder(), basename(path));
+                    String sha1 = basename(path);
+                    Path destination = getBlobDestinationCommit(sha1);
                     mv(path, destination);
                 }
         );
