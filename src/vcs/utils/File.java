@@ -20,4 +20,17 @@ public final class File {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Writes the given bytes to a file.
+     * @param contents the contents of the file.
+     * @param file the destination path.
+     */
+    public static void write(byte[] contents, Path file) {
+        try {
+            Files.write(file, contents);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
