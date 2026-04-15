@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
 import static vcs.utils.FileSystem.join;
 import static vcs.utils.FileSystem.mkdir;
@@ -209,5 +210,13 @@ public class Commit implements Serializable {
      */
     public String getParent2() {
         return parent2;
+    }
+
+    /**
+     * Returns the files tracked by the commit.
+     * @return the files tracked by the commit.
+     */
+    public Stream<String> getCommitFiles() {
+        return files.keySet().stream();
     }
 }
