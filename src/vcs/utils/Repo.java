@@ -54,7 +54,7 @@ public final class Repo {
      */
     private static void moveBlobToStagingArea(Blob blob) {
         Path destination = getBlobDestinationStagingArea(blob.getSha1());
-        serialize(blob, destination);
+        blob.serialize(destination);
     }
 
     /**
