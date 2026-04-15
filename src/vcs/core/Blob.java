@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.nio.file.Path;
 
 import static vcs.utils.File.read;
+import static vcs.utils.File.write;
 import static vcs.utils.Hash.sha1;
 
 /**
@@ -35,5 +36,13 @@ public class Blob implements Serializable {
      */
     public String getSha1() {
         return sha1;
+    }
+
+    /**
+     * Writes the contents of the blob to a file.
+     * @param file the path of the file.
+     */
+    public void writeToFile(Path file) {
+        write(contents, file);
     }
 }
