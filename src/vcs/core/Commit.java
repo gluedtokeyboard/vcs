@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
-import static vcs.utils.FileSystem.join;
-import static vcs.utils.FileSystem.mkdir;
+import static vcs.utils.FileSystem.*;
 import static vcs.utils.Hash.sha1;
 import static vcs.utils.Repo.NULL_COMMIT;
 
@@ -119,7 +118,7 @@ public class Commit implements Serializable {
      */
     public void serialize() {
         Path destination = getDestination(sha1);
-        Path directory = destination.getParent();
+        Path directory = getDirectory(destination);
         mkdir(directory);
         vcs.utils.Serialization.serialize(this, destination);
     }
