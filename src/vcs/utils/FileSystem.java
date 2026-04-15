@@ -164,4 +164,32 @@ public final class FileSystem {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Returns the given absolute path relative to the given base path.
+     * @param path an absolute path.
+     * @param base a base path.
+     * @return the given absolute path relative to the given base path.
+     */
+    public static Path getRelativePath(Path path, Path base) {
+        return base.relativize(path);
+    }
+
+    /**
+     * Returns the given absolute path relative to the current working directory.
+     * @param path an absolute path.
+     * @return the given absolute path relative to the current working directory.
+     */
+    public static Path getRelativePathCWD(Path path) {
+        return getRelativePath(path, getCWD());
+    }
+
+    /**
+     * Returns the given absolute path relative to the current working directory.
+     * @param path an absolute path.
+     * @return the given absolute path relative to the current working directory.
+     */
+    public static String getRelativePathCWD(String path) {
+        return getRelativePath(Path.of(path), getCWD()).toString();
+    }
 }
