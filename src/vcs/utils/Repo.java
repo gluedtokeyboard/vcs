@@ -95,6 +95,15 @@ public final class Repo {
     }
 
     /**
+     * Returns the destination for the blob when a commit is made.
+     * @param sha1 the SHA-1 hash of the blob.
+     * @return the blob's destination when a commit is made.
+     */
+    public static Path getBlobDestinationCommit(String sha1) {
+        return join(VCS.getBlobsFolder(), sha1);
+    }
+
+    /**
      * Returns the latest commit in the current branch.
      * @return the latest commit in the current branch, or {@code null} if there are no commits.
      */
