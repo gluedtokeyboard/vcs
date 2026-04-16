@@ -22,4 +22,25 @@ public final class General {
         }
         return difference;
     }
+
+    /**
+     * Computes the set intersection between two sets.
+     * @param a the first set.
+     * @param b the second set.
+     * @return a new set containing the intersection.
+     * @param <T> the type of the set elements.
+     */
+    public static <T> Set<T> setIntersection(Set<T> a, Set<T> b) {
+        Set<T> smallerSet, biggerSet;
+        if (a.size() < b.size()) {
+            smallerSet = a;
+            biggerSet = b;
+        } else {
+            smallerSet = b;
+            biggerSet = a;
+        }
+        Set<T> intersection = new HashSet<>();
+        smallerSet.stream().filter(biggerSet::contains).forEach(intersection::add);
+        return intersection;
+    }
 }
