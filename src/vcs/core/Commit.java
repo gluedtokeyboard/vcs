@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
+import static vcs.utils.stateful.CommitUtils.NULL_COMMIT;
 import static vcs.utils.stateless.FileSystem.*;
 import static vcs.utils.stateless.Hash.sha1;
-import static vcs.utils.stateful.Repo.NULL_COMMIT;
 
 /**
  * {@link Commit} objects store the message, timestamp, parent(s), files, and the SHA-1 hash of the commit.

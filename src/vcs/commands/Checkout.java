@@ -3,15 +3,15 @@ package vcs.commands;
 import vcs.core.Blob;
 import vcs.core.Commit;
 import vcs.core.VCS;
+import vcs.utils.stateful.CommitUtils;
 import vcs.utils.stateless.FileSystem;
-import vcs.utils.stateful.Repo;
 
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static vcs.utils.stateful.General.walkRepoDirsPost;
 import static vcs.utils.stateless.FileSystem.*;
-import static vcs.utils.stateful.Repo.walkRepoDirsPost;
 import static vcs.utils.stateless.General.setIntersection;
 import static vcs.utils.stateless.Serialization.deserialize;
 
@@ -63,7 +63,7 @@ public class Checkout extends Command {
      */
     private void restoreFile(Commit commit, Path path) {
         String sha1 = commit.getFileHash(path);
-        Path blobLocation = Repo.getBlobDestinationCommit(sha1);
+        Path blobLocation = CommitUtils.getBlobDestinationCommit(sha1);
         Blob blob = Blob.deserialize(blobLocation);
         blob.writeToFile(path);
     }

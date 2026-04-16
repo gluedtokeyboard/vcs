@@ -33,10 +33,10 @@ public class Add extends Command {
             throw new RuntimeException("File does not exist");
         }
         if (vcs.isStaged(p)) {
-            repoUtils.unstageFile(p);
+            stagingAreaUtils.unstageFile(p);
         }
         if (hasChanged(p)) {
-            repoUtils.stageFile(p);
+            stagingAreaUtils.stageFile(p);
         }
     }
 
@@ -46,7 +46,7 @@ public class Add extends Command {
      * @return {@code true} if the file has changed; {@code false} otherwise.
      */
     private boolean hasChanged(Path path) {
-        Commit commit = repoUtils.getLatestCommitCurrentBranch();
+        Commit commit = commitUtils.getLatestCommitCurrentBranch();
         if (commit == null) {
             return true;
         }

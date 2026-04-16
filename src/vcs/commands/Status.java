@@ -3,6 +3,7 @@ package vcs.commands;
 import vcs.core.Blob;
 import vcs.core.Commit;
 import vcs.core.VCS;
+import vcs.utils.stateful.StagingArea;
 import vcs.utils.stateless.FileSystem;
 
 import java.nio.file.Path;
@@ -11,10 +12,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static vcs.utils.stateful.General.walkRepoFiles;
 import static vcs.utils.stateless.FileSystem.getRelativePathCWD;
 import static vcs.utils.stateless.General.setDifference;
-import static vcs.utils.stateful.Repo.DELETION_MARKER;
-import static vcs.utils.stateful.Repo.walkRepoFiles;
 
 /**
  * Methods for getting the status of the repository.
@@ -51,7 +51,7 @@ public class Status extends Command {
         Set<String> unstagedModifications = new HashSet<>();
         Set<String> untrackedFiles = new HashSet<>();
         Set<String> cwdFiles = new HashSet<>();
-        Commit latestCommit = repoUtils.getLatestCommitCurrentBranch();
+        Commit latestCommit = commitUtils.getLatestCommitCurrentBranch();
         Set<String> latestCommitFiles = getCommitFiles(latestCommit);
         walkRepoFiles(file -> {
             String relativePath = getRelativePathCWD(file).toString();
@@ -130,7 +130,7 @@ public class Status extends Command {
     private Set<String> getStagedAdditions(TreeMap<String, String> stagedFiles) {
         return filterStagedFiles(
                 stagedFiles,
-                entry -> !entry.getValue().equals(DELETION_MARKER)
+                entry -> !entry.getValue().equals(StagingArea.DELETION_MARKER)
         ).collect(Collectors.toSet());
     }
 
@@ -142,7 +142,7 @@ public class Status extends Command {
     private Set<String> getStagedDeletions(TreeMap<String, String> stagedFiles) {
         return filterStagedFiles(
                 stagedFiles,
-                entry -> entry.getValue().equals(DELETION_MARKER)
+                entry -> entry.getValue().equals(StagingArea.DELETION_MARKER)
         ).collect(Collectors.toSet());
     }
 
