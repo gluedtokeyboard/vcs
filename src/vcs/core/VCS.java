@@ -1,5 +1,7 @@
 package vcs.core;
 
+import vcs.utils.stateless.Serialization;
+
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.Date;
@@ -8,7 +10,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
-import static vcs.utils.FileSystem.*;
+import static vcs.utils.stateless.FileSystem.*;
 
 /**
  * The {@link VCS} class stores all metadata about the repository.
@@ -76,7 +78,7 @@ public class VCS implements Serializable {
      */
     public void serialize() {
         Path path = resolvePath(OBJECT_NAME);
-        vcs.utils.Serialization.serialize(this, path);
+        Serialization.serialize(this, path);
     }
 
     /**
@@ -85,7 +87,7 @@ public class VCS implements Serializable {
      */
     public static VCS deserialize() {
         Path path = resolvePath(OBJECT_NAME);
-        return vcs.utils.Serialization.deserialize(path, VCS.class);
+        return Serialization.deserialize(path, VCS.class);
     }
 
     /**

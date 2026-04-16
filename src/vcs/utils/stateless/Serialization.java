@@ -1,4 +1,4 @@
-package vcs.utils;
+package vcs.utils.stateless;
 
 import java.io.*;
 import java.nio.file.Files;

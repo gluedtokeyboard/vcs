@@ -3,7 +3,7 @@ package vcs.commands;
 import vcs.core.Blob;
 import vcs.core.Commit;
 import vcs.core.VCS;
-import vcs.utils.FileSystem;
+import vcs.utils.stateless.FileSystem;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -11,10 +11,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static vcs.utils.FileSystem.getRelativePathCWD;
-import static vcs.utils.General.setDifference;
-import static vcs.utils.Repo.DELETION_MARKER;
-import static vcs.utils.Repo.walkRepoFiles;
+import static vcs.utils.stateless.FileSystem.getRelativePathCWD;
+import static vcs.utils.stateless.General.setDifference;
+import static vcs.utils.stateful.Repo.DELETION_MARKER;
+import static vcs.utils.stateful.Repo.walkRepoFiles;
 
 /**
  * Methods for getting the status of the repository.

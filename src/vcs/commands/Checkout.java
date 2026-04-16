@@ -3,17 +3,17 @@ package vcs.commands;
 import vcs.core.Blob;
 import vcs.core.Commit;
 import vcs.core.VCS;
-import vcs.utils.FileSystem;
-import vcs.utils.Repo;
+import vcs.utils.stateless.FileSystem;
+import vcs.utils.stateful.Repo;
 
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static vcs.utils.FileSystem.*;
-import static vcs.utils.General.setIntersection;
-import static vcs.utils.Repo.walkRepoDirsPost;
-import static vcs.utils.Serialization.deserialize;
+import static vcs.utils.stateless.FileSystem.*;
+import static vcs.utils.stateful.Repo.walkRepoDirsPost;
+import static vcs.utils.stateless.General.setIntersection;
+import static vcs.utils.stateless.Serialization.deserialize;
 
 /**
  * Methods for checking out files and branches.

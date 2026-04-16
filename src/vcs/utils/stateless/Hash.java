@@ -1,4 +1,4 @@
-package vcs.utils;
+package vcs.utils.stateless;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

@@ -1,15 +1,15 @@
-package vcs.utils;
+package vcs.utils.stateful;
 
 import vcs.core.Blob;
 import vcs.core.Commit;
 import vcs.core.VCS;
+import vcs.utils.stateless.FileSystem;
 
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static vcs.utils.FileSystem.*;
-import static vcs.utils.Serialization.serialize;
+import static vcs.utils.stateless.FileSystem.*;
 
 /**
  * Utils for the repository.

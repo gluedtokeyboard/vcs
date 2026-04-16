@@ -2,14 +2,14 @@ package vcs.commands;
 
 import vcs.core.Commit;
 import vcs.core.VCS;
-import vcs.utils.Repo;
+import vcs.utils.stateful.Repo;
 
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.TreeMap;
 
-import static vcs.utils.FileSystem.*;
-import static vcs.utils.Repo.getBlobDestinationCommit;
+import static vcs.utils.stateless.FileSystem.*;
+import static vcs.utils.stateful.Repo.getBlobDestinationCommit;
 
 /**
  * Methods for creating a commit.

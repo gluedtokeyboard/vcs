@@ -1,5 +1,7 @@
 package vcs.core;
 
+import vcs.utils.stateless.Serialization;
+
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.Date;
@@ -8,9 +10,9 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
-import static vcs.utils.FileSystem.*;
-import static vcs.utils.Hash.sha1;
-import static vcs.utils.Repo.NULL_COMMIT;
+import static vcs.utils.stateless.FileSystem.*;
+import static vcs.utils.stateless.Hash.sha1;
+import static vcs.utils.stateful.Repo.NULL_COMMIT;
 
 /**
  * {@link Commit} objects store the message, timestamp, parent(s), files, and the SHA-1 hash of the commit.
@@ -120,7 +122,7 @@ public class Commit implements Serializable {
         Path destination = getDestination(sha1);
         Path directory = getDirectory(destination);
         mkdir(directory);
-        vcs.utils.Serialization.serialize(this, destination);
+        Serialization.serialize(this, destination);
     }
 
     /**
@@ -130,7 +132,7 @@ public class Commit implements Serializable {
      */
     public static Commit deserialize(String sha1) {
         Path location = getDestination(sha1);
-        return vcs.utils.Serialization.deserialize(location, Commit.class);
+        return Serialization.deserialize(location, Commit.class);
     }
 
     /**

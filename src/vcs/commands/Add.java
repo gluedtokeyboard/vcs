@@ -7,8 +7,8 @@ import vcs.core.VCS;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static vcs.utils.FileSystem.exists;
-import static vcs.utils.FileSystem.joinCWD;
+import static vcs.utils.stateless.FileSystem.exists;
+import static vcs.utils.stateless.FileSystem.joinCWD;
 
 /**
  * Methods for staging a file.

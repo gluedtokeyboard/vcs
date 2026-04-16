@@ -1,7 +1,7 @@
 package vcs.commands;
 
 import vcs.core.VCS;
-import vcs.utils.Repo;
+import vcs.utils.stateful.Repo;
 
 /**
  * The base class for all commands.
