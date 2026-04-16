@@ -133,12 +133,15 @@ public final class FileSystem {
      * @param directory the directory to walk.
      * @param excludedDirs the directories to skip.
      * @param consumeFiles indicates whether to pass files to the given {@link Consumer}.
-     * @param consumeDirs indicates whether to pass directories to the given {@link Consumer}.
+     * @param consumeDirsPreVisit indicates whether to pass directories to the given {@link Consumer} before visiting
+     *                           them.
+     * @param consumeDirsPostVisit indicates whether to pass directories to the given {@link Consumer} after visiting
+     *                            them.
      * @param consumer a {@link Consumer} to consume the files and directories.
      */
     public static void walk(
-            Path directory, Set<Path> excludedDirs, boolean consumeFiles, boolean consumeDirs,
-            Consumer<Path> consumer) {
+            Path directory, Set<Path> excludedDirs, boolean consumeFiles, boolean consumeDirsPreVisit,
+            boolean consumeDirsPostVisit, Consumer<Path> consumer) {
         try {
             Files.walkFileTree(directory, new SimpleFileVisitor<>() {
                 @Override
@@ -146,7 +149,15 @@ public final class FileSystem {
                     if (excludedDirs.contains(dir)) {
                         return FileVisitResult.SKIP_SUBTREE;
                     }
-                    if (consumeDirs) {
+                    if (consumeDirsPreVisit) {
+                        consumer.accept(dir);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+                    if (consumeDirsPostVisit) {
                         consumer.accept(dir);
                     }
                     return FileVisitResult.CONTINUE;
