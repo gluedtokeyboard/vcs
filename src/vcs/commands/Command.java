@@ -3,6 +3,7 @@ package vcs.commands;
 import vcs.core.VCS;
 import vcs.utils.stateful.CommitUtils;
 import vcs.utils.stateful.General;
+import vcs.utils.stateful.Restoration;
 import vcs.utils.stateful.StagingArea;
 
 /**
@@ -30,6 +31,11 @@ class Command {
     protected final General generalUtils;
 
     /**
+     * File and commit restoration utils.
+     */
+    protected final Restoration restorationUtils;
+
+    /**
      * Stores the current repository and initializes the repository util objects with it.
      * @param vcs the current repository object.
      */
@@ -38,5 +44,6 @@ class Command {
         this.stagingAreaUtils = new StagingArea(vcs);
         this.commitUtils = new CommitUtils(vcs);
         this.generalUtils = new General(vcs);
+        this.restorationUtils = new Restoration(vcs);
     }
 }
