@@ -2,14 +2,12 @@ package vcs.commands;
 
 import vcs.core.Commit;
 import vcs.core.VCS;
-import vcs.utils.stateless.FileSystem;
 
 import java.nio.file.Path;
 
+import static vcs.utils.stateful.CommitUtils.getCommit;
 import static vcs.utils.stateful.Restoration.restoreFile;
 import static vcs.utils.stateless.FileSystem.joinCWD;
-import static vcs.utils.stateless.FileSystem.ls;
-import static vcs.utils.stateless.Serialization.deserialize;
 
 /**
  * Methods for checking out files and branches.
@@ -52,24 +50,6 @@ public class Checkout extends Command {
             throw new RuntimeException("File " + file + " not found in commit " + commit.getSha1());
         }
         restoreFile(commit, path);
-    }
-
-    /**
-     * Returns the commit matching the given commit ID.
-     *
-     * @param commitId a prefix of the SHA-1 hash of the commit.
-     * @return the commit matching the given commit ID, or {@code null} if the commit isn't found.
-     */
-    private Commit getCommit(String commitId) {
-        Path directory = Commit.getDestinationFolder(commitId);
-        Commit[] commit = {null};
-        ls(directory).forEach(path -> {
-            String basename = FileSystem.basename(path);
-            if (basename.startsWith(commitId)) {
-                commit[0] = deserialize(path, Commit.class);
-            }
-        });
-        return commit[0];
     }
 
     /**
