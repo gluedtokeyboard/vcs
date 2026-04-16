@@ -7,10 +7,13 @@ import vcs.utils.FileSystem;
 import vcs.utils.Repo;
 
 import java.nio.file.Path;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import static vcs.utils.FileSystem.*;
+import static vcs.utils.General.setIntersection;
+import static vcs.utils.Repo.walkRepoDirsPost;
 import static vcs.utils.Serialization.deserialize;
-import static vcs.utils.FileSystem.joinCWD;
-import static vcs.utils.FileSystem.ls;
 
 /**
  * Methods for checking out files and branches.
@@ -80,5 +83,112 @@ public class Checkout extends Command {
             }
         });
         return commit[0];
+    }
+
+    /**
+     * Checks out the given branch.
+     * @param branch the branch name.
+     * @throws RuntimeException if the branch does not exist, or if it is the current branch.
+     */
+    public void checkoutBranch(String branch) {
+        if (!vcs.containsBranch(branch)) {
+            throw new RuntimeException("Branch " + branch + " does not exist");
+        }
+        if (vcs.getCurrentBranch().equals(branch)) {
+            throw new RuntimeException("Branch " + branch + " is already the current branch");
+        }
+        String hash = vcs.getBranchHead(branch);
+        Commit commit = Commit.deserialize(hash);
+        restoreCommitSafely(commit);
+        vcs.setCurrentBranch(branch);
+    }
+
+    /**
+     * Restores the commit only if no data in the repository would be lost.
+     * @param commit the {@link Commit} to restore.
+     */
+    private void restoreCommitSafely(Commit commit) {
+        checkSafety(commit);
+        removeTrackedFiles(commit);
+        restoreCommit(commit);
+    }
+
+    /**
+     * Checks if it is safe to restore the given commit.
+     * @param commit the {@link Commit} to restore.
+     * @throws RuntimeException if:
+     * <ul>
+     *     <li>The staging area isn't empty.</li>
+     *     <li>There are unstaged modifications present.</li>
+     *     <li>There are untracked files present that would be overwritten.</li>
+     * </ul>
+     */
+    private void checkSafety(Commit commit) {
+        if (!vcs.stagingAreaIsEmpty()) {
+            throw new RuntimeException("The staging area isn't empty");
+        }
+        Status.StatusRecord statusRecord = new Status(vcs).status();
+        if (hasUnstagedModifications(statusRecord)) {
+            throw new RuntimeException("There are unstaged modifications present");
+        }
+        if (hasUntrackedConflicts(statusRecord, commit)) {
+            throw new RuntimeException("There are untracked files present that would be overwritten");
+        }
+    }
+
+    /**
+     * Checks if the repository has unstaged modifications.
+     * @param statusRecord a {@link vcs.commands.Status.StatusRecord} object containing the repository status.
+     * @return a boolean indicating whether the repository has unstaged modifications.
+     */
+    private boolean hasUnstagedModifications(Status.StatusRecord statusRecord) {
+        return !(statusRecord.unstagedModifications().isEmpty() && statusRecord.unstagedDeletions().isEmpty());
+    }
+
+    /**
+     * Checks if the repository has untracked files that would be overwritten while checking out the given
+     * {@link Commit}.
+     * @param statusRecord a {@link vcs.commands.Status.StatusRecord} object containing the repository status.
+     * @param commit the {@link Commit} to check out.
+     * @return a boolean indicating whether the repository has unstaged modifications.
+     */
+    private boolean hasUntrackedConflicts(Status.StatusRecord statusRecord, Commit commit) {
+        Set<String> commitFiles = commit.getCommitFiles().collect(Collectors.toSet());
+        Set<String> untrackedFiles = statusRecord.untrackedFiles();
+        return !setIntersection(commitFiles, untrackedFiles).isEmpty();
+    }
+
+    /**
+     * Removes the files tracked in the given commit from the repository.
+     * @param commit a {@link Commit} object.
+     */
+    private void removeTrackedFiles(Commit commit) {
+        commit.getCommitFiles()
+                .map(Path::of)
+                .forEach(FileSystem::rm);
+        removeEmptyDirectories();
+    }
+
+    /**
+     * Removes empty directories in the repository.
+     */
+    private static void removeEmptyDirectories() {
+        walkRepoDirsPost(path -> {
+            try {
+                rm(path);
+            } catch (RuntimeException e) {
+                /* Directory not empty, so do nothing. */
+            }
+        });
+    }
+
+    /**
+     * Restores the given {@link Commit}.
+     * @param commit the {@link Commit} to restore.
+     */
+    private void restoreCommit(Commit commit) {
+        commit.getCommitFiles()
+                .map(Path::of)
+                .forEach(path -> restoreFile(commit, path));
     }
 }
