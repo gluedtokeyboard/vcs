@@ -3,6 +3,7 @@ package vcs.core;
 import vcs.utils.stateless.Serialization;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 import static vcs.utils.stateless.File.read;
@@ -62,5 +63,13 @@ public class Blob implements Serializable {
      */
     public static Blob deserialize(Path path) {
         return Serialization.deserialize(path, Blob.class);
+    }
+
+    /**
+     * Getter for the blob contents.
+     * @return the contents of the blob as a string.
+     */
+    public String getContents() {
+        return new String(contents, StandardCharsets.UTF_8);
     }
 }
