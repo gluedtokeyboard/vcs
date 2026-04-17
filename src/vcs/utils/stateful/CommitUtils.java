@@ -1,6 +1,7 @@
 package vcs.utils.stateful;
 
 import vcs.commands.Status;
+import vcs.core.Blob;
 import vcs.core.Commit;
 import vcs.core.VCS;
 import vcs.utils.stateless.FileSystem;
@@ -122,5 +123,15 @@ public final class CommitUtils extends StatefulUtil {
         Set<String> commitFiles = commit.getCommitFiles().collect(Collectors.toSet());
         Set<String> untrackedFiles = statusRecord.untrackedFiles();
         return !setIntersection(commitFiles, untrackedFiles).isEmpty();
+    }
+
+    /**
+     * Deserializes a committed {@link Blob}.
+     * @param sha1 the SHA-1 hash of the {@link Blob}.
+     * @return the deserialized {@link Blob}.
+     */
+    public static Blob getCommittedBlob(String sha1) {
+        Path blobLocation = CommitUtils.getBlobDestinationCommit(sha1);
+        return Blob.deserialize(blobLocation);
     }
 }

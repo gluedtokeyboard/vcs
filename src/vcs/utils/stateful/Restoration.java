@@ -7,6 +7,7 @@ import vcs.utils.stateless.FileSystem;
 
 import java.nio.file.Path;
 
+import static vcs.utils.stateful.CommitUtils.getCommittedBlob;
 import static vcs.utils.stateful.General.walkRepoDirsPost;
 import static vcs.utils.stateless.FileSystem.rm;
 
@@ -30,8 +31,7 @@ public final class Restoration extends StatefulUtil {
      */
     public static void restoreFile(Commit commit, Path path) {
         String sha1 = commit.getFileHash(path);
-        Path blobLocation = CommitUtils.getBlobDestinationCommit(sha1);
-        Blob blob = Blob.deserialize(blobLocation);
+        Blob blob = getCommittedBlob(sha1);
         blob.writeToFile(path);
     }
 
