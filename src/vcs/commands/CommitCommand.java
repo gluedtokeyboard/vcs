@@ -29,13 +29,22 @@ public class CommitCommand extends Command {
      * @param message the commit message.
      */
     public void commit(String message) {
+        commit(null, message);
+    }
+
+    /**
+     * Creates a commit with the given second parent and message.
+     * @param parent2 the SHA-1 hash of the second parent, or {@code null} if there is no second parent.
+     * @param message the commit message.
+     */
+    void commit(String parent2, String message) {
         if (vcs.stagingAreaIsEmpty()) {
             throw new RuntimeException("No changes to commit");
         }
         if (message == null || message.isEmpty()) {
             throw new RuntimeException("Please enter a message");
         }
-        Commit commit = createCommit(message);
+        Commit commit = createCommit(parent2, message);
         vcs.setCurrentBranchHead(commit.getSha1());
         moveBlobsToBlobsFolder();
         vcs.clearStagingArea();
@@ -56,11 +65,12 @@ public class CommitCommand extends Command {
     }
 
     /**
-     * Creates a new commit with the given message and the staged files.
+     * Creates a new commit with the given second parent, message, and the staged files.
+     * @param parent2 the SHA-1 hash of the second parent, or {@code null} if there is no second parent.
      * @param message the commit message.
      * @return the newly created commit.
      */
-    private Commit createCommit(String message) {
+    private Commit createCommit(String parent2, String message) {
         Commit newCommit;
         Date timestamp = new Date();
         TreeMap<String, String> stagedFiles = vcs.getStagedFilesClone();
@@ -70,7 +80,11 @@ public class CommitCommand extends Command {
         } else {
             TreeMap<String, String> files = latestCommit.getFilesClone();
             updateFiles(files, stagedFiles);
-            newCommit = new Commit(message, timestamp, latestCommit.getSha1(), files);
+            if (parent2 == null) {
+                newCommit = new Commit(message, timestamp, latestCommit.getSha1(), files);
+            } else {
+                newCommit = new Commit(message, timestamp, latestCommit.getSha1(), parent2, files);
+            }
         }
         return newCommit;
     }
