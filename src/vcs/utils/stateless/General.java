@@ -43,4 +43,20 @@ public final class General {
         smallerSet.stream().filter(biggerSet::contains).forEach(intersection::add);
         return intersection;
     }
+
+    /**
+     * Computes the set union between a base set and other sets.
+     * @param base the base set.
+     * @param others the sets whose elements should be added to the base set.
+     * @return a new set containing the union.
+     * @param <T> the type of the set elements.
+     */
+    @SafeVarargs
+    public static <T> Set<T> setUnion(Set<T> base, Set<T>... others) {
+        Set<T> union = new HashSet<>(base);
+        for (Set<T> other : others) {
+            union.addAll(other);
+        }
+        return union;
+    }
 }
