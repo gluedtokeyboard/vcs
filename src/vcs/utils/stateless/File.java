@@ -33,4 +33,17 @@ public final class File {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Writes the given string to a file.
+     * @param contents the contents of the file.
+     * @param file the destination path.
+     */
+    public static void write(String contents, Path file) {
+        try {
+            Files.writeString(file, contents);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
