@@ -7,6 +7,9 @@ import vcs.core.VCS;
 import vcs.utils.stateless.FileSystem;
 
 import java.nio.file.Path;
+import java.util.ArrayDeque;
+import java.util.Iterator;
+import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -133,5 +136,46 @@ public final class CommitUtils extends StatefulUtil {
     public static Blob getCommittedBlob(String sha1) {
         Path blobLocation = CommitUtils.getBlobDestinationCommit(sha1);
         return Blob.deserialize(blobLocation);
+    }
+
+    /**
+     * Yields the SHA-1 hashes of the commit and its ancestors in BFS order.
+     * @param commit the starting {@linkplain Commit}.
+     * @return an iterable that yields the SHA-1 hashes of the commit and its ancestors in BFS order.
+     */
+    public static Iterable<String> getCommitsInBFSOrder(Commit commit) {
+        return () -> {
+            Queue<String> fringe = new ArrayDeque<>();
+            fringe.add(commit.getSha1());
+            return new Iterator<>() {
+                /**
+                 * Checks if the fringe is not empty.
+                 * @return a boolean indicating whether there are more hashes to yield.
+                 */
+                @Override
+                public boolean hasNext() {
+                    return !fringe.isEmpty();
+                }
+
+                /**
+                 * Returns the next commit hash in BFS order, and adds its parents to the fringe.
+                 * @return the next commit hash in BFS order.
+                 */
+                @Override
+                public String next() {
+                    String sha1 = fringe.remove();
+                    Commit commit = Commit.deserialize(sha1);
+                    String parent1 = commit.getParent1();
+                    String parent2 = commit.getParent2();
+                    if (!parent1.equals(NULL_COMMIT)) {
+                        fringe.add(parent1);
+                    }
+                    if (!parent2.equals(NULL_COMMIT)) {
+                        fringe.add(parent2);
+                    }
+                    return sha1;
+                }
+            };
+        };
     }
 }
