@@ -4,7 +4,6 @@ import vcs.core.Blob;
 import vcs.core.Commit;
 import vcs.core.VCS;
 import vcs.utils.stateful.StagingArea;
-import vcs.utils.stateless.FileSystem;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -13,7 +12,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static vcs.utils.stateful.General.walkRepoFiles;
-import static vcs.utils.stateless.FileSystem.getRelativePathCWD;
 import static vcs.utils.stateless.General.setDifference;
 
 /**
@@ -54,18 +52,17 @@ public class Status extends Command {
         Commit latestCommit = commitUtils.getLatestCommitCurrentBranch();
         Set<String> latestCommitFiles = getCommitFiles(latestCommit);
         walkRepoFiles(file -> {
-            String relativePath = getRelativePathCWD(file).toString();
+            String fileString = file.toString();
             if (isUnstagedMod(latestCommit, latestCommitFiles, file)) {
-                unstagedModifications.add(relativePath);
+                unstagedModifications.add(fileString);
             } else if (isUntracked(stagedDeletions, latestCommitFiles, file)) {
-                untrackedFiles.add(relativePath);
+                untrackedFiles.add(fileString);
             }
-            cwdFiles.add(relativePath);
+            cwdFiles.add(fileString);
         });
         Set<String> unstagedDeletions = new HashSet<>();
-        Set<String> latestCommitFilesRelative = relativizePathsCWD(latestCommitFiles);
         unstagedDeletions.addAll(setDifference(stagedAdditions, cwdFiles));
-        unstagedDeletions.addAll(setDifference(latestCommitFilesRelative, cwdFiles, stagedDeletions));
+        unstagedDeletions.addAll(setDifference(latestCommitFiles, cwdFiles, stagedDeletions));
         return new StatusRecord(
                 branches, currentBranch, stagedAdditions, stagedDeletions, unstagedModifications, unstagedDeletions,
                 untrackedFiles
@@ -82,15 +79,6 @@ public class Status extends Command {
             return Collections.emptySet();
         }
         return commit.getCommitFiles().collect(Collectors.toSet());
-    }
-
-    /**
-     * Relativizes the given paths with respect to the current working directory.
-     * @param paths a {@link Set} of paths.
-     * @return the given paths relativized with respect to the current working directory.
-     */
-    private static Set<String> relativizePathsCWD(Set<String> paths) {
-        return paths.stream().map(FileSystem::getRelativePathCWD).collect(Collectors.toSet());
     }
 
     /**
@@ -157,8 +145,7 @@ public class Status extends Command {
                 .entrySet()
                 .stream()
                 .filter(filter)
-                .map(Map.Entry::getKey)
-                .map(FileSystem::getRelativePathCWD);
+                .map(Map.Entry::getKey);
     }
 
     /**
