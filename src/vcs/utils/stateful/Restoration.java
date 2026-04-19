@@ -41,16 +41,16 @@ public final class Restoration extends StatefulUtil {
      */
     public void restoreCommitSafely(Commit commit) {
         new CommitUtils(vcs).checkSafety(commit);
-        removeTrackedFiles(commit);
+        removeTrackedFiles();
         restoreCommit(commit);
     }
 
     /**
-     * Removes the files tracked in the given commit from the repository.
-     * @param commit a {@link Commit} object.
+     * Removes the files tracked in the head commit.
      */
-    private static void removeTrackedFiles(Commit commit) {
-        commit.getCommitFiles()
+    private void removeTrackedFiles() {
+        Commit head = Commit.deserialize(vcs.getCurrentBranchHead());
+        head.getCommitFiles()
                 .map(Path::of)
                 .forEach(FileSystem::rm);
         removeEmptyDirectories();
