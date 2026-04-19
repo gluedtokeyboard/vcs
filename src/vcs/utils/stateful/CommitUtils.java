@@ -13,8 +13,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static vcs.utils.stateless.FileSystem.join;
-import static vcs.utils.stateless.FileSystem.ls;
+import static vcs.utils.stateless.FileSystem.*;
 import static vcs.utils.stateless.General.setIntersection;
 import static vcs.utils.stateless.Serialization.deserialize;
 
@@ -72,14 +71,16 @@ public final class CommitUtils extends StatefulUtil {
      * @return the commit matching the given commit ID, or {@code null} if the commit isn't found.
      */
     public static Commit getCommit(String commitId) {
-        Path directory = Commit.getDestinationFolder(commitId);
         Commit[] commit = {null};
-        ls(directory).forEach(path -> {
-            String basename = FileSystem.basename(path);
-            if (basename.startsWith(commitId)) {
-                commit[0] = deserialize(path, Commit.class);
-            }
-        });
+        Path directory = Commit.getDestinationFolder(commitId);
+        if (exists(directory)) {
+            ls(directory).forEach(path -> {
+                String basename = FileSystem.basename(path);
+                if (basename.startsWith(commitId)) {
+                    commit[0] = deserialize(path, Commit.class);
+                }
+            });
+        }
         return commit[0];
     }
 
