@@ -1,10 +1,10 @@
 package vcs.core.service.command;
 
 import vcs.core.model.VCS;
-import vcs.util.stateful.CommitUtil;
-import vcs.util.stateful.General;
-import vcs.util.stateful.Restoration;
-import vcs.util.stateful.StagingArea;
+import vcs.core.service.common.CommitService;
+import vcs.core.service.common.GeneralService;
+import vcs.core.service.common.RestorationService;
+import vcs.core.service.common.StagingAreaService;
 
 /**
  * The base class for all commands.
@@ -16,34 +16,34 @@ class Command {
     protected final VCS vcs;
 
     /**
-     * Staging area utils.
+     * Contains staging area methods.
      */
-    protected final StagingArea stagingAreaUtil;
+    protected final StagingAreaService stagingAreaService;
 
     /**
-     * Utils for working with commits.
+     * Contains methods for working with commits.
      */
-    protected final CommitUtil commitUtil;
+    protected final CommitService commitService;
 
     /**
-     * General repository utils.
+     * Contains general repository methods.
      */
-    protected final General generalUtil;
+    protected final GeneralService generalService;
 
     /**
-     * File and commit restoration utils.
+     * Contains file and commit restoration methods.
      */
-    protected final Restoration restorationUtil;
+    protected final RestorationService restorationService;
 
     /**
-     * Stores the current repository and initializes the repository util objects with it.
+     * Stores the current repository and initializes the common service objects with it.
      * @param vcs the current repository object.
      */
     protected Command(VCS vcs) {
         this.vcs = vcs;
-        this.stagingAreaUtil = new StagingArea(vcs);
-        this.commitUtil = new CommitUtil(vcs);
-        this.generalUtil = new General(vcs);
-        this.restorationUtil = new Restoration(vcs);
+        this.stagingAreaService = new StagingAreaService(vcs);
+        this.commitService = new CommitService(vcs);
+        this.generalService = new GeneralService(vcs);
+        this.restorationService = new RestorationService(vcs);
     }
 }

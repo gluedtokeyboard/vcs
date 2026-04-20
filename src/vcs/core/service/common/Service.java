@@ -1,11 +1,11 @@
-package vcs.util.stateful;
+package vcs.core.service.common;
 
 import vcs.core.model.VCS;
 
 /**
- * The base class for all stateful utils.
+ * The base class for all common service classes.
  */
-class StatefulUtil {
+class Service {
     /**
      * The current repository.
      */
@@ -15,7 +15,7 @@ class StatefulUtil {
      * Stores the current repository.
      * @param vcs the current repository object.
      */
-    protected StatefulUtil(VCS vcs) {
+    protected Service(VCS vcs) {
         this.vcs = vcs;
     }
 }

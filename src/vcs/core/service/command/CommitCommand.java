@@ -2,13 +2,13 @@ package vcs.core.service.command;
 
 import vcs.core.model.Commit;
 import vcs.core.model.VCS;
-import vcs.util.stateful.StagingArea;
+import vcs.core.service.common.StagingAreaService;
 
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.TreeMap;
 
-import static vcs.util.stateful.CommitUtil.getBlobDestinationCommit;
+import static vcs.core.service.common.CommitService.getBlobDestinationCommit;
 import static vcs.util.stateless.FileSystem.*;
 
 /**
@@ -74,7 +74,7 @@ public class CommitCommand extends Command {
         Commit newCommit;
         Date timestamp = new Date();
         TreeMap<String, String> stagedFiles = vcs.getStagedFilesClone();
-        Commit latestCommit = commitUtil.getLatestCommitCurrentBranch();
+        Commit latestCommit = commitService.getLatestCommitCurrentBranch();
         if (latestCommit == null) {
             newCommit = new Commit(message, timestamp, stagedFiles);
         } else {
@@ -96,7 +96,7 @@ public class CommitCommand extends Command {
      */
     private static void updateFiles(TreeMap<String, String> parentFiles, TreeMap<String, String> stagedFiles) {
         stagedFiles.forEach((key, value) -> {
-            if (value.equals(StagingArea.DELETION_MARKER)) {
+            if (value.equals(StagingAreaService.DELETION_MARKER)) {
                 parentFiles.remove(key);
             } else {
                 parentFiles.put(key, value);

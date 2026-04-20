@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static vcs.util.stateful.CommitUtil.getCommitsInBFSOrder;
-import static vcs.util.stateful.CommitUtil.getCommittedBlob;
-import static vcs.util.stateful.Restoration.restoreFile;
+import static vcs.core.service.common.CommitService.getCommitsInBFSOrder;
+import static vcs.core.service.common.CommitService.getCommittedBlob;
+import static vcs.core.service.common.RestorationService.restoreFile;
 import static vcs.util.stateless.File.write;
 import static vcs.util.stateless.FileSystem.basename;
 import static vcs.util.stateless.General.*;
@@ -47,7 +47,7 @@ public class Merge extends Command {
         Commit current = Commit.deserialize(currentSha1);
         Commit splitPoint = getSplitPoint(current, other);
         checkMergeNeeded(current, other, splitPoint, branchName);
-        commitUtil.checkSafety(other);
+        commitService.checkSafety(other);
         mergeCommits(current, other, splitPoint, branchName);
     }
 

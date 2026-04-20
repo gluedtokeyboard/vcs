@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
-import static vcs.util.stateful.CommitUtil.NULL_COMMIT;
+import static vcs.core.service.common.CommitService.NULL_COMMIT;
 import static vcs.util.stateless.FileSystem.*;
 import static vcs.util.stateless.Hash.sha1;
 

@@ -5,8 +5,8 @@ import vcs.core.model.VCS;
 
 import java.nio.file.Path;
 
-import static vcs.util.stateful.CommitUtil.getCommit;
-import static vcs.util.stateful.Restoration.restoreFile;
+import static vcs.core.service.common.CommitService.getCommit;
+import static vcs.core.service.common.RestorationService.restoreFile;
 import static vcs.util.stateless.FileSystem.joinCWD;
 
 /**
@@ -67,7 +67,7 @@ public class Checkout extends Command {
         }
         String hash = vcs.getBranchHead(branch);
         Commit commit = Commit.deserialize(hash);
-        restorationUtil.restoreCommitSafely(commit);
+        restorationService.restoreCommitSafely(commit);
         vcs.setCurrentBranch(branch);
     }
 }

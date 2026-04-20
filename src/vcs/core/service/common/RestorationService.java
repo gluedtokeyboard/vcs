@@ -1,4 +1,4 @@
-package vcs.util.stateful;
+package vcs.core.service.common;
 
 import vcs.core.model.Blob;
 import vcs.core.model.Commit;
@@ -7,20 +7,20 @@ import vcs.util.stateless.FileSystem;
 
 import java.nio.file.Path;
 
-import static vcs.util.stateful.CommitUtil.getCommittedBlob;
-import static vcs.util.stateful.General.walkRepoDirsPost;
+import static vcs.core.service.common.CommitService.getCommittedBlob;
+import static vcs.core.service.common.GeneralService.walkRepoDirsPost;
 import static vcs.util.stateless.FileSystem.rm;
 
 /**
- * File and commit restoration utils.
+ * File and commit restoration methods.
  */
-public final class Restoration extends StatefulUtil {
+public final class RestorationService extends Service {
     /**
      * Stores the current repository.
      *
      * @param vcs the current repository object.
      */
-    public Restoration(VCS vcs) {
+    public RestorationService(VCS vcs) {
         super(vcs);
     }
 
@@ -40,7 +40,7 @@ public final class Restoration extends StatefulUtil {
      * @param commit the {@link Commit} to restore.
      */
     public void restoreCommitSafely(Commit commit) {
-        new CommitUtil(vcs).checkSafety(commit);
+        new CommitService(vcs).checkSafety(commit);
         removeTrackedFiles();
         restoreCommit(commit);
     }

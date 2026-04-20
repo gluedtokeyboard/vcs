@@ -1,4 +1,4 @@
-package vcs.util.stateful;
+package vcs.core.service.common;
 
 import vcs.core.model.VCS;
 
@@ -10,15 +10,15 @@ import static vcs.util.stateless.FileSystem.getCWD;
 import static vcs.util.stateless.FileSystem.walk;
 
 /**
- * General stateful utils.
+ * General repository methods.
  */
-public final class General extends StatefulUtil {
+public final class GeneralService extends Service {
     /**
      * Stores the current repository.
      *
      * @param vcs the current repository object.
      */
-    public General(VCS vcs) {
+    public GeneralService(VCS vcs) {
         super(vcs);
     }
 

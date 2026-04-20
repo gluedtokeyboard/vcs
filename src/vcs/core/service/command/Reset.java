@@ -3,7 +3,7 @@ package vcs.core.service.command;
 import vcs.core.model.Commit;
 import vcs.core.model.VCS;
 
-import static vcs.util.stateful.CommitUtil.getCommit;
+import static vcs.core.service.common.CommitService.getCommit;
 
 /**
  * Methods for resetting the current branch.
@@ -27,7 +27,7 @@ public class Reset extends Command {
         if (commit == null) {
             throw new RuntimeException("Commit with id " + commitId + " not found");
         }
-        restorationUtil.restoreCommitSafely(commit);
+        restorationService.restoreCommitSafely(commit);
         vcs.setCurrentBranchHead(commit.getSha1());
     }
 }

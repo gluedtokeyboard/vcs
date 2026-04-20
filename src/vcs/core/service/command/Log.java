@@ -5,7 +5,7 @@ import vcs.core.model.VCS;
 
 import java.util.ArrayList;
 
-import static vcs.util.stateful.CommitUtil.NULL_COMMIT;
+import static vcs.core.service.common.CommitService.NULL_COMMIT;
 
 /**
  * Methods for obtaining the repository logs.

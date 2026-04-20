@@ -30,10 +30,10 @@ public class Rm extends Command {
         boolean isStaged = vcs.isStaged(p);
         boolean isTracked = isTracked(p);
         if (isStaged) {
-            stagingAreaUtil.unstageFile(p);
+            stagingAreaService.unstageFile(p);
         }
         if (isTracked) {
-            stagingAreaUtil.stageDeletion(p);
+            stagingAreaService.stageDeletion(p);
         }
         if (!(isStaged || isTracked)) {
             throw new RuntimeException("The given file is neither staged nor tracked.");

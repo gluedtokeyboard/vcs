@@ -1,4 +1,4 @@
-package vcs.util.stateful;
+package vcs.core.service.common;
 
 import vcs.core.service.command.Status;
 import vcs.core.model.Blob;
@@ -18,9 +18,9 @@ import static vcs.util.stateless.General.setIntersection;
 import static vcs.util.stateless.Serialization.deserialize;
 
 /**
- * Commit utils.
+ * Commit methods.
  */
-public final class CommitUtil extends StatefulUtil {
+public final class CommitService extends Service {
     /**
      * The representation of a null commit.
      */
@@ -31,7 +31,7 @@ public final class CommitUtil extends StatefulUtil {
      *
      * @param vcs the current repository object.
      */
-    public CommitUtil(VCS vcs) {
+    public CommitService(VCS vcs) {
         super(vcs);
     }
 
@@ -135,7 +135,7 @@ public final class CommitUtil extends StatefulUtil {
      * @return the deserialized {@link Blob}.
      */
     public static Blob getCommittedBlob(String sha1) {
-        Path blobLocation = CommitUtil.getBlobDestinationCommit(sha1);
+        Path blobLocation = CommitService.getBlobDestinationCommit(sha1);
         return Blob.deserialize(blobLocation);
     }
 

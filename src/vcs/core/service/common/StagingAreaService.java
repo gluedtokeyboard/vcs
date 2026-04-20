@@ -1,4 +1,4 @@
-package vcs.util.stateful;
+package vcs.core.service.common;
 
 import vcs.core.model.Blob;
 import vcs.core.model.VCS;
@@ -10,9 +10,9 @@ import static vcs.util.stateless.FileSystem.join;
 import static vcs.util.stateless.FileSystem.rm;
 
 /**
- * Staging area utils.
+ * Staging area methods.
  */
-public final class StagingArea extends StatefulUtil {
+public final class StagingAreaService extends Service {
     /**
      * A marker to indicate that a file is staged for deletion.
      */
@@ -23,7 +23,7 @@ public final class StagingArea extends StatefulUtil {
      *
      * @param vcs the current repository object.
      */
-    public StagingArea(VCS vcs) {
+    public StagingAreaService(VCS vcs) {
         super(vcs);
     }
 

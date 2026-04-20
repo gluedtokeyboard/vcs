@@ -3,7 +3,7 @@ package vcs.core.service.command;
 import vcs.core.model.Blob;
 import vcs.core.model.Commit;
 import vcs.core.model.VCS;
-import vcs.util.stateful.StagingArea;
+import vcs.core.service.common.StagingAreaService;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static vcs.util.stateful.General.walkRepoFiles;
+import static vcs.core.service.common.GeneralService.walkRepoFiles;
 import static vcs.util.stateless.General.setDifference;
 
 /**
@@ -49,7 +49,7 @@ public class Status extends Command {
         Set<String> unstagedModifications = new HashSet<>();
         Set<String> untrackedFiles = new HashSet<>();
         Set<String> cwdFiles = new HashSet<>();
-        Commit latestCommit = commitUtil.getLatestCommitCurrentBranch();
+        Commit latestCommit = commitService.getLatestCommitCurrentBranch();
         Set<String> latestCommitFiles = getCommitFiles(latestCommit);
         walkRepoFiles(file -> {
             String fileString = file.toString();
@@ -118,7 +118,7 @@ public class Status extends Command {
     private Set<String> getStagedAdditions(TreeMap<String, String> stagedFiles) {
         return filterStagedFiles(
                 stagedFiles,
-                entry -> !entry.getValue().equals(StagingArea.DELETION_MARKER)
+                entry -> !entry.getValue().equals(StagingAreaService.DELETION_MARKER)
         ).collect(Collectors.toSet());
     }
 
@@ -130,7 +130,7 @@ public class Status extends Command {
     private Set<String> getStagedDeletions(TreeMap<String, String> stagedFiles) {
         return filterStagedFiles(
                 stagedFiles,
-                entry -> entry.getValue().equals(StagingArea.DELETION_MARKER)
+                entry -> entry.getValue().equals(StagingAreaService.DELETION_MARKER)
         ).collect(Collectors.toSet());
     }
 
