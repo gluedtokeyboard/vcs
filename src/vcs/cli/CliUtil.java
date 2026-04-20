@@ -11,7 +11,7 @@ import static vcs.util.stateless.FileSystem.getRelativePathCWD;
 /**
  * Utils for the CLI.
  */
-final class Util {
+final class CliUtil {
     /**
      * Prints the help prompt to {@link System#err}.
      */

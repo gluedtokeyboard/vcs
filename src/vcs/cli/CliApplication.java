@@ -6,7 +6,7 @@ import vcs.core.VCS;
 
 import java.util.ArrayList;
 
-import static vcs.cli.Util.*;
+import static vcs.cli.CliUtil.*;
 
 /**
  * The entry point for the CLI.
@@ -43,7 +43,7 @@ public class CliApplication {
                         break;
                     case "log":
                         ArrayList<Commit> commits = new Log(vcs).log();
-                        commits.stream().map(Util::commitToString).forEach(System.out::println);
+                        commits.stream().map(CliUtil::commitToString).forEach(System.out::println);
                         break;
                     case "status":
                         Status.StatusRecord status = new Status(vcs).status();
