@@ -1,4 +1,4 @@
-package vcs.core;
+package vcs.core.model;
 
 import vcs.util.stateless.Serialization;
 

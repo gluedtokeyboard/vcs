@@ -1,7 +1,7 @@
 package vcs.cli;
 
 import vcs.command.Status;
-import vcs.core.Commit;
+import vcs.core.model.Commit;
 
 import java.util.List;
 import java.util.Set;

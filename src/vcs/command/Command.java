@@ -1,6 +1,6 @@
 package vcs.command;
 
-import vcs.core.VCS;
+import vcs.core.model.VCS;
 import vcs.util.stateful.CommitUtil;
 import vcs.util.stateful.General;
 import vcs.util.stateful.Restoration;

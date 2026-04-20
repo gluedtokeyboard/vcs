@@ -1,9 +1,9 @@
 package vcs.util.stateful;
 
 import vcs.command.Status;
-import vcs.core.Blob;
-import vcs.core.Commit;
-import vcs.core.VCS;
+import vcs.core.model.Blob;
+import vcs.core.model.Commit;
+import vcs.core.model.VCS;
 import vcs.util.stateless.FileSystem;
 
 import java.nio.file.Path;

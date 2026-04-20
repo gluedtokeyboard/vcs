@@ -1,6 +1,6 @@
 package vcs.util.stateful;
 
-import vcs.core.VCS;
+import vcs.core.model.VCS;
 
 import java.nio.file.Path;
 import java.util.Set;

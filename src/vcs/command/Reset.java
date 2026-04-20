@@ -1,7 +1,7 @@
 package vcs.command;
 
-import vcs.core.Commit;
-import vcs.core.VCS;
+import vcs.core.model.Commit;
+import vcs.core.model.VCS;
 
 import static vcs.util.stateful.CommitUtil.getCommit;
 

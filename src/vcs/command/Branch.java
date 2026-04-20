@@ -1,6 +1,6 @@
 package vcs.command;
 
-import vcs.core.VCS;
+import vcs.core.model.VCS;
 
 /**
  * Methods to create/remove branches.

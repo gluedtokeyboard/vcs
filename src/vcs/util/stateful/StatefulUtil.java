@@ -1,6 +1,6 @@
 package vcs.util.stateful;
 
-import vcs.core.VCS;
+import vcs.core.model.VCS;
 
 /**
  * The base class for all stateful utils.
