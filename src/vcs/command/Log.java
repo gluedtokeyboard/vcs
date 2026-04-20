@@ -1,11 +1,11 @@
-package vcs.commands;
+package vcs.command;
 
 import vcs.core.Commit;
 import vcs.core.VCS;
 
 import java.util.ArrayList;
 
-import static vcs.utils.stateful.CommitUtils.NULL_COMMIT;
+import static vcs.util.stateful.CommitUtil.NULL_COMMIT;
 
 /**
  * Methods for obtaining the repository logs.

@@ -1,9 +1,9 @@
-package vcs.commands;
+package vcs.command;
 
 import vcs.core.Blob;
 import vcs.core.Commit;
 import vcs.core.VCS;
-import vcs.utils.stateful.StagingArea;
+import vcs.util.stateful.StagingArea;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -11,8 +11,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static vcs.utils.stateful.General.walkRepoFiles;
-import static vcs.utils.stateless.General.setDifference;
+import static vcs.util.stateful.General.walkRepoFiles;
+import static vcs.util.stateless.General.setDifference;
 
 /**
  * Methods for getting the status of the repository.
@@ -49,7 +49,7 @@ public class Status extends Command {
         Set<String> unstagedModifications = new HashSet<>();
         Set<String> untrackedFiles = new HashSet<>();
         Set<String> cwdFiles = new HashSet<>();
-        Commit latestCommit = commitUtils.getLatestCommitCurrentBranch();
+        Commit latestCommit = commitUtil.getLatestCommitCurrentBranch();
         Set<String> latestCommitFiles = getCommitFiles(latestCommit);
         walkRepoFiles(file -> {
             String fileString = file.toString();

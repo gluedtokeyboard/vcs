@@ -1,4 +1,4 @@
-package vcs.utils.stateless;
+package vcs.util.stateless;
 
 import java.util.HashSet;
 import java.util.Set;

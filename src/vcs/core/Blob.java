@@ -1,14 +1,14 @@
 package vcs.core;
 
-import vcs.utils.stateless.Serialization;
+import vcs.util.stateless.Serialization;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
-import static vcs.utils.stateless.File.read;
-import static vcs.utils.stateless.File.write;
-import static vcs.utils.stateless.Hash.sha1;
+import static vcs.util.stateless.File.read;
+import static vcs.util.stateless.File.write;
+import static vcs.util.stateless.Hash.sha1;
 
 /**
  * Stores a file as a byte array.

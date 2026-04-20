@@ -1,4 +1,4 @@
-package vcs.commands;
+package vcs.command;
 
 import vcs.core.VCS;
 

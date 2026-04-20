@@ -1,4 +1,4 @@
-package vcs.commands;
+package vcs.command;
 
 import vcs.core.Blob;
 import vcs.core.Commit;
@@ -7,8 +7,8 @@ import vcs.core.VCS;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static vcs.utils.stateless.FileSystem.exists;
-import static vcs.utils.stateless.FileSystem.joinCWD;
+import static vcs.util.stateless.FileSystem.exists;
+import static vcs.util.stateless.FileSystem.joinCWD;
 
 /**
  * Methods for staging a file.
@@ -33,10 +33,10 @@ public class Add extends Command {
             throw new RuntimeException("File does not exist");
         }
         if (vcs.isStaged(p)) {
-            stagingAreaUtils.unstageFile(p);
+            stagingAreaUtil.unstageFile(p);
         }
         if (hasChanged(p)) {
-            stagingAreaUtils.stageFile(p);
+            stagingAreaUtil.stageFile(p);
         }
     }
 
@@ -46,7 +46,7 @@ public class Add extends Command {
      * @return {@code true} if the file has changed; {@code false} otherwise.
      */
     private boolean hasChanged(Path path) {
-        Commit commit = commitUtils.getLatestCommitCurrentBranch();
+        Commit commit = commitUtil.getLatestCommitCurrentBranch();
         if (commit == null) {
             return true;
         }

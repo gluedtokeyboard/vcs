@@ -1,15 +1,15 @@
-package vcs.commands;
+package vcs.command;
 
 import vcs.core.Commit;
 import vcs.core.VCS;
-import vcs.utils.stateful.StagingArea;
+import vcs.util.stateful.StagingArea;
 
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.TreeMap;
 
-import static vcs.utils.stateful.CommitUtils.getBlobDestinationCommit;
-import static vcs.utils.stateless.FileSystem.*;
+import static vcs.util.stateful.CommitUtil.getBlobDestinationCommit;
+import static vcs.util.stateless.FileSystem.*;
 
 /**
  * Methods for creating a commit.
@@ -74,7 +74,7 @@ public class CommitCommand extends Command {
         Commit newCommit;
         Date timestamp = new Date();
         TreeMap<String, String> stagedFiles = vcs.getStagedFilesClone();
-        Commit latestCommit = commitUtils.getLatestCommitCurrentBranch();
+        Commit latestCommit = commitUtil.getLatestCommitCurrentBranch();
         if (latestCommit == null) {
             newCommit = new Commit(message, timestamp, stagedFiles);
         } else {

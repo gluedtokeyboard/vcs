@@ -1,13 +1,13 @@
-package vcs.commands;
+package vcs.command;
 
 import vcs.core.Commit;
 import vcs.core.VCS;
 
 import java.nio.file.Path;
 
-import static vcs.utils.stateful.CommitUtils.getCommit;
-import static vcs.utils.stateful.Restoration.restoreFile;
-import static vcs.utils.stateless.FileSystem.joinCWD;
+import static vcs.util.stateful.CommitUtil.getCommit;
+import static vcs.util.stateful.Restoration.restoreFile;
+import static vcs.util.stateless.FileSystem.joinCWD;
 
 /**
  * Methods for checking out files and branches.
@@ -67,7 +67,7 @@ public class Checkout extends Command {
         }
         String hash = vcs.getBranchHead(branch);
         Commit commit = Commit.deserialize(hash);
-        restorationUtils.restoreCommitSafely(commit);
+        restorationUtil.restoreCommitSafely(commit);
         vcs.setCurrentBranch(branch);
     }
 }

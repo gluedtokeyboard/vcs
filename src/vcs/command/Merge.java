@@ -1,4 +1,4 @@
-package vcs.commands;
+package vcs.command;
 
 import vcs.core.Blob;
 import vcs.core.Commit;
@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static vcs.utils.stateful.CommitUtils.getCommitsInBFSOrder;
-import static vcs.utils.stateful.CommitUtils.getCommittedBlob;
-import static vcs.utils.stateful.Restoration.restoreFile;
-import static vcs.utils.stateless.File.write;
-import static vcs.utils.stateless.FileSystem.basename;
-import static vcs.utils.stateless.General.*;
+import static vcs.util.stateful.CommitUtil.getCommitsInBFSOrder;
+import static vcs.util.stateful.CommitUtil.getCommittedBlob;
+import static vcs.util.stateful.Restoration.restoreFile;
+import static vcs.util.stateless.File.write;
+import static vcs.util.stateless.FileSystem.basename;
+import static vcs.util.stateless.General.*;
 
 /**
  * Methods to merge branches.
@@ -47,7 +47,7 @@ public class Merge extends Command {
         Commit current = Commit.deserialize(currentSha1);
         Commit splitPoint = getSplitPoint(current, other);
         checkMergeNeeded(current, other, splitPoint, branchName);
-        commitUtils.checkSafety(other);
+        commitUtil.checkSafety(other);
         mergeCommits(current, other, splitPoint, branchName);
     }
 

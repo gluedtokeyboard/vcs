@@ -1,4 +1,4 @@
-package vcs.utils.stateless;
+package vcs.util.stateless;
 
 import java.io.IOException;
 import java.nio.file.*;

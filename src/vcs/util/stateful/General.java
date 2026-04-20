@@ -1,4 +1,4 @@
-package vcs.utils.stateful;
+package vcs.util.stateful;
 
 import vcs.core.VCS;
 
@@ -6,8 +6,8 @@ import java.nio.file.Path;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static vcs.utils.stateless.FileSystem.getCWD;
-import static vcs.utils.stateless.FileSystem.walk;
+import static vcs.util.stateless.FileSystem.getCWD;
+import static vcs.util.stateless.FileSystem.walk;
 
 /**
  * General stateful utils.

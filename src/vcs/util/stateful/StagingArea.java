@@ -1,13 +1,13 @@
-package vcs.utils.stateful;
+package vcs.util.stateful;
 
 import vcs.core.Blob;
 import vcs.core.VCS;
-import vcs.utils.stateless.FileSystem;
+import vcs.util.stateless.FileSystem;
 
 import java.nio.file.Path;
 
-import static vcs.utils.stateless.FileSystem.join;
-import static vcs.utils.stateless.FileSystem.rm;
+import static vcs.util.stateless.FileSystem.join;
+import static vcs.util.stateless.FileSystem.rm;
 
 /**
  * Staging area utils.

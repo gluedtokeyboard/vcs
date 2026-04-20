@@ -1,11 +1,11 @@
-package vcs.commands;
+package vcs.command;
 
 import vcs.core.Commit;
 import vcs.core.VCS;
 
 import java.nio.file.Path;
 
-import static vcs.utils.stateless.FileSystem.joinCWD;
+import static vcs.util.stateless.FileSystem.joinCWD;
 
 /**
  * Methods for deleting a file.
@@ -30,10 +30,10 @@ public class Rm extends Command {
         boolean isStaged = vcs.isStaged(p);
         boolean isTracked = isTracked(p);
         if (isStaged) {
-            stagingAreaUtils.unstageFile(p);
+            stagingAreaUtil.unstageFile(p);
         }
         if (isTracked) {
-            stagingAreaUtils.stageDeletion(p);
+            stagingAreaUtil.stageDeletion(p);
         }
         if (!(isStaged || isTracked)) {
             throw new RuntimeException("The given file is neither staged nor tracked.");

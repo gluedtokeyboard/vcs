@@ -1,10 +1,10 @@
-package vcs.utils.stateful;
+package vcs.util.stateful;
 
-import vcs.commands.Status;
+import vcs.command.Status;
 import vcs.core.Blob;
 import vcs.core.Commit;
 import vcs.core.VCS;
-import vcs.utils.stateless.FileSystem;
+import vcs.util.stateless.FileSystem;
 
 import java.nio.file.Path;
 import java.util.ArrayDeque;
@@ -13,14 +13,14 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static vcs.utils.stateless.FileSystem.*;
-import static vcs.utils.stateless.General.setIntersection;
-import static vcs.utils.stateless.Serialization.deserialize;
+import static vcs.util.stateless.FileSystem.*;
+import static vcs.util.stateless.General.setIntersection;
+import static vcs.util.stateless.Serialization.deserialize;
 
 /**
  * Commit utils.
  */
-public final class CommitUtils extends StatefulUtil {
+public final class CommitUtil extends StatefulUtil {
     /**
      * The representation of a null commit.
      */
@@ -31,7 +31,7 @@ public final class CommitUtils extends StatefulUtil {
      *
      * @param vcs the current repository object.
      */
-    public CommitUtils(VCS vcs) {
+    public CommitUtil(VCS vcs) {
         super(vcs);
     }
 
@@ -109,7 +109,7 @@ public final class CommitUtils extends StatefulUtil {
 
     /**
      * Checks if the repository has unstaged modifications.
-     * @param statusRecord a {@link vcs.commands.Status.StatusRecord} object containing the repository status.
+     * @param statusRecord a {@link vcs.command.Status.StatusRecord} object containing the repository status.
      * @return a boolean indicating whether the repository has unstaged modifications.
      */
     private static boolean hasUnstagedModifications(Status.StatusRecord statusRecord) {
@@ -119,7 +119,7 @@ public final class CommitUtils extends StatefulUtil {
     /**
      * Checks if the repository has untracked files that would be overwritten while checking out the given
      * {@link Commit}.
-     * @param statusRecord a {@link vcs.commands.Status.StatusRecord} object containing the repository status.
+     * @param statusRecord a {@link vcs.command.Status.StatusRecord} object containing the repository status.
      * @param commit the {@link Commit} to check out.
      * @return a boolean indicating whether the repository has unstaged modifications.
      */
@@ -135,7 +135,7 @@ public final class CommitUtils extends StatefulUtil {
      * @return the deserialized {@link Blob}.
      */
     public static Blob getCommittedBlob(String sha1) {
-        Path blobLocation = CommitUtils.getBlobDestinationCommit(sha1);
+        Path blobLocation = CommitUtil.getBlobDestinationCommit(sha1);
         return Blob.deserialize(blobLocation);
     }
 

@@ -1,17 +1,17 @@
 package vcs.cli;
 
-import vcs.commands.Status;
+import vcs.command.Status;
 import vcs.core.Commit;
 
 import java.util.List;
 import java.util.Set;
 
-import static vcs.utils.stateless.FileSystem.getRelativePathCWD;
+import static vcs.util.stateless.FileSystem.getRelativePathCWD;
 
 /**
  * Utils for the CLI.
  */
-final class Utils {
+final class Util {
     /**
      * Prints the help prompt to {@link System#err}.
      */

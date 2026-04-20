@@ -1,4 +1,4 @@
-package vcs.utils.stateful;
+package vcs.util.stateful;
 
 import vcs.core.VCS;
 
