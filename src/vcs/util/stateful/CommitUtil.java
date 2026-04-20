@@ -1,6 +1,6 @@
 package vcs.util.stateful;
 
-import vcs.command.Status;
+import vcs.core.service.command.Status;
 import vcs.core.model.Blob;
 import vcs.core.model.Commit;
 import vcs.core.model.VCS;
@@ -109,7 +109,7 @@ public final class CommitUtil extends StatefulUtil {
 
     /**
      * Checks if the repository has unstaged modifications.
-     * @param statusRecord a {@link vcs.command.Status.StatusRecord} object containing the repository status.
+     * @param statusRecord a {@link vcs.core.service.command.Status.StatusRecord} object containing the repository status.
      * @return a boolean indicating whether the repository has unstaged modifications.
      */
     private static boolean hasUnstagedModifications(Status.StatusRecord statusRecord) {
@@ -119,7 +119,7 @@ public final class CommitUtil extends StatefulUtil {
     /**
      * Checks if the repository has untracked files that would be overwritten while checking out the given
      * {@link Commit}.
-     * @param statusRecord a {@link vcs.command.Status.StatusRecord} object containing the repository status.
+     * @param statusRecord a {@link vcs.core.service.command.Status.StatusRecord} object containing the repository status.
      * @param commit the {@link Commit} to check out.
      * @return a boolean indicating whether the repository has unstaged modifications.
      */

@@ -1,4 +1,4 @@
-package vcs.command;
+package vcs.core.service.command;
 
 import vcs.core.model.VCS;
 import vcs.util.stateful.CommitUtil;
