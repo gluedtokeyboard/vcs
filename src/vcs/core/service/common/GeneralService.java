@@ -6,8 +6,8 @@ import java.nio.file.Path;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static vcs.util.stateless.FileSystem.getCWD;
-import static vcs.util.stateless.FileSystem.walk;
+import static vcs.util.FileSystem.getCWD;
+import static vcs.util.FileSystem.walk;
 
 /**
  * General repository methods.

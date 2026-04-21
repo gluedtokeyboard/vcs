@@ -5,8 +5,8 @@ import vcs.core.model.VCS;
 import java.nio.file.Path;
 import java.util.List;
 
-import static vcs.util.stateless.FileSystem.exists;
-import static vcs.util.stateless.FileSystem.mkdir;
+import static vcs.util.FileSystem.exists;
+import static vcs.util.FileSystem.mkdir;
 
 /**
  * Contains methods for initializing the repository.

@@ -6,7 +6,7 @@ import vcs.core.model.Commit;
 import java.util.List;
 import java.util.Set;
 
-import static vcs.util.stateless.FileSystem.getRelativePathCWD;
+import static vcs.util.FileSystem.getRelativePathCWD;
 
 /**
  * Utils for the CLI.

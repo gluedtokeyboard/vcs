@@ -1,6 +1,6 @@
 package vcs.core.model;
 
-import vcs.util.stateless.Serialization;
+import vcs.util.Serialization;
 
 import java.io.Serializable;
 import java.nio.file.Path;
@@ -11,8 +11,8 @@ import java.util.TreeMap;
 import java.util.stream.Stream;
 
 import static vcs.core.service.common.CommitService.NULL_COMMIT;
-import static vcs.util.stateless.FileSystem.*;
-import static vcs.util.stateless.Hash.sha1;
+import static vcs.util.FileSystem.*;
+import static vcs.util.Hash.sha1;
 
 /**
  * {@link Commit} objects store the message, timestamp, parent(s), files, and the SHA-1 hash of the commit.

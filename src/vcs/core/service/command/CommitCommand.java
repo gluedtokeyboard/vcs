@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.TreeMap;
 
 import static vcs.core.service.common.CommitService.getBlobDestinationCommit;
-import static vcs.util.stateless.FileSystem.*;
+import static vcs.util.FileSystem.*;
 
 /**
  * Methods for creating a commit.

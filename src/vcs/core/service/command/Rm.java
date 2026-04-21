@@ -5,7 +5,7 @@ import vcs.core.model.VCS;
 
 import java.nio.file.Path;
 
-import static vcs.util.stateless.FileSystem.joinCWD;
+import static vcs.util.FileSystem.joinCWD;
 
 /**
  * Methods for deleting a file.

@@ -1,6 +1,6 @@
 package vcs.core.model;
 
-import vcs.util.stateless.Serialization;
+import vcs.util.Serialization;
 
 import java.io.Serializable;
 import java.nio.file.Path;
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
-import static vcs.util.stateless.FileSystem.*;
+import static vcs.util.FileSystem.*;
 
 /**
  * The {@link VCS} class stores all metadata about the repository.

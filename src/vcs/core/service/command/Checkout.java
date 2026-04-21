@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 import static vcs.core.service.common.CommitService.getCommit;
 import static vcs.core.service.common.RestorationService.restoreFile;
-import static vcs.util.stateless.FileSystem.joinCWD;
+import static vcs.util.FileSystem.joinCWD;
 
 /**
  * Methods for checking out files and branches.

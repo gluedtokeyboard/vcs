@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 import static vcs.core.service.common.CommitService.getCommitsInBFSOrder;
 import static vcs.core.service.common.CommitService.getCommittedBlob;
 import static vcs.core.service.common.RestorationService.restoreFile;
-import static vcs.util.stateless.File.write;
-import static vcs.util.stateless.FileSystem.basename;
-import static vcs.util.stateless.General.*;
+import static vcs.util.File.write;
+import static vcs.util.FileSystem.basename;
+import static vcs.util.General.*;
 
 /**
  * Methods to merge branches.

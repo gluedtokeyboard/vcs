@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static vcs.core.service.common.GeneralService.walkRepoFiles;
-import static vcs.util.stateless.General.setDifference;
+import static vcs.util.General.setDifference;
 
 /**
  * Methods for getting the status of the repository.

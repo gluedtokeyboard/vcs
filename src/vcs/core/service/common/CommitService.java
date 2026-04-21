@@ -4,7 +4,7 @@ import vcs.core.service.command.Status;
 import vcs.core.model.Blob;
 import vcs.core.model.Commit;
 import vcs.core.model.VCS;
-import vcs.util.stateless.FileSystem;
+import vcs.util.FileSystem;
 
 import java.nio.file.Path;
 import java.util.ArrayDeque;
@@ -13,9 +13,9 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static vcs.util.stateless.FileSystem.*;
-import static vcs.util.stateless.General.setIntersection;
-import static vcs.util.stateless.Serialization.deserialize;
+import static vcs.util.FileSystem.*;
+import static vcs.util.General.setIntersection;
+import static vcs.util.Serialization.deserialize;
 
 /**
  * Commit methods.

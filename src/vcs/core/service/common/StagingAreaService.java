@@ -2,12 +2,12 @@ package vcs.core.service.common;
 
 import vcs.core.model.Blob;
 import vcs.core.model.VCS;
-import vcs.util.stateless.FileSystem;
+import vcs.util.FileSystem;
 
 import java.nio.file.Path;
 
-import static vcs.util.stateless.FileSystem.join;
-import static vcs.util.stateless.FileSystem.rm;
+import static vcs.util.FileSystem.join;
+import static vcs.util.FileSystem.rm;
 
 /**
  * Staging area methods.
