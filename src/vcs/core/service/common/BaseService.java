@@ -5,7 +5,7 @@ import vcs.core.model.VCS;
 /**
  * The base class for all common service classes.
  */
-class BaseService {
+abstract class BaseService {
     /**
      * The current repository.
      */

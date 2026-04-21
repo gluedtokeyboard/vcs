@@ -9,7 +9,7 @@ import vcs.core.service.common.StagingAreaService;
 /**
  * The base class for all commands.
  */
-class BaseCommand {
+abstract class BaseCommand {
     /**
      * The current repository.
      */
