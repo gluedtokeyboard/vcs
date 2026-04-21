@@ -17,7 +17,7 @@ import static vcs.util.General.setDifference;
 /**
  * Methods for getting the status of the repository.
  */
-public class Status extends Command {
+public class Status extends BaseCommand {
     /**
      * Stores the current repository.
      *

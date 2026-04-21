@@ -12,7 +12,7 @@ import static vcs.util.FileSystem.joinCWD;
 /**
  * Methods for checking out files and branches.
  */
-public class Checkout extends Command {
+public class Checkout extends BaseCommand {
     /**
      * Stores the current repository, and initializes the repository utils object with it.
      *

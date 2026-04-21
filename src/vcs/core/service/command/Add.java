@@ -13,7 +13,7 @@ import static vcs.util.FileSystem.joinCWD;
 /**
  * Methods for staging a file.
  */
-public class Add extends Command {
+public class Add extends BaseCommand {
     /**
      * Stores the current repository.
      *

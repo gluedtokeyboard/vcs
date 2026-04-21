@@ -11,7 +11,7 @@ import static vcs.util.FileSystem.mkdir;
 /**
  * Contains methods for initializing the repository.
  */
-public class Init extends Command {
+public class Init extends BaseCommand {
     /**
      * Stores the current repository.
      *

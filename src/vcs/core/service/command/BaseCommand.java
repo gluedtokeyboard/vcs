@@ -9,7 +9,7 @@ import vcs.core.service.common.StagingAreaService;
 /**
  * The base class for all commands.
  */
-class Command {
+class BaseCommand {
     /**
      * The current repository.
      */
@@ -39,7 +39,7 @@ class Command {
      * Stores the current repository and initializes the common service objects with it.
      * @param vcs the current repository object.
      */
-    protected Command(VCS vcs) {
+    protected BaseCommand(VCS vcs) {
         this.vcs = vcs;
         this.stagingAreaService = new StagingAreaService(vcs);
         this.commitService = new CommitService(vcs);

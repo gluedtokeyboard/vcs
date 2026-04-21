@@ -10,7 +10,7 @@ import static vcs.core.service.common.CommitService.NULL_COMMIT;
 /**
  * Methods for obtaining the repository logs.
  */
-public class Log extends Command {
+public class Log extends BaseCommand {
     /**
      * Stores the current repository, and initializes the repository utils object with it.
      *

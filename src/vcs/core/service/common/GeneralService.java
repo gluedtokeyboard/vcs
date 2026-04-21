@@ -12,7 +12,7 @@ import static vcs.util.FileSystem.walk;
 /**
  * General repository methods.
  */
-public final class GeneralService extends Service {
+public final class GeneralService extends BaseService {
     /**
      * Stores the current repository.
      *

@@ -5,7 +5,7 @@ import vcs.core.model.VCS;
 /**
  * Methods to create/remove branches.
  */
-public class Branch extends Command {
+public class Branch extends BaseCommand {
     /**
      * Stores the current repository, and initializes the repository utils object with it.
      *

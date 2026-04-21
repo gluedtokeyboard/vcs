@@ -20,7 +20,7 @@ import static vcs.util.General.*;
 /**
  * Methods to merge branches.
  */
-public class Merge extends Command {
+public class Merge extends BaseCommand {
     /**
      * Stores the current repository, and initializes the repository utils object with it.
      *

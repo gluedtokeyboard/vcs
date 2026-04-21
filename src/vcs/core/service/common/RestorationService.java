@@ -14,7 +14,7 @@ import static vcs.util.FileSystem.rm;
 /**
  * File and commit restoration methods.
  */
-public final class RestorationService extends Service {
+public final class RestorationService extends BaseService {
     /**
      * Stores the current repository.
      *

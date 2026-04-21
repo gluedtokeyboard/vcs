@@ -10,7 +10,7 @@ import static vcs.util.FileSystem.joinCWD;
 /**
  * Methods for deleting a file.
  */
-public class Rm extends Command {
+public class Rm extends BaseCommand {
     /**
      * Stores the current repository.
      *

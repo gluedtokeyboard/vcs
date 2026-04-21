@@ -8,7 +8,7 @@ import static vcs.core.service.common.CommitService.getCommit;
 /**
  * Methods for resetting the current branch.
  */
-public class Reset extends Command {
+public class Reset extends BaseCommand {
     /**
      * Stores the current repository, and initializes the repository utils object with it.
      *

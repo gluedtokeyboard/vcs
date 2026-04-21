@@ -12,7 +12,7 @@ import static vcs.util.FileSystem.rm;
 /**
  * Staging area methods.
  */
-public final class StagingAreaService extends Service {
+public final class StagingAreaService extends BaseService {
     /**
      * A marker to indicate that a file is staged for deletion.
      */

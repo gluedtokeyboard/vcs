@@ -5,7 +5,7 @@ import vcs.core.model.VCS;
 /**
  * The base class for all common service classes.
  */
-class Service {
+class BaseService {
     /**
      * The current repository.
      */
@@ -15,7 +15,7 @@ class Service {
      * Stores the current repository.
      * @param vcs the current repository object.
      */
-    protected Service(VCS vcs) {
+    protected BaseService(VCS vcs) {
         this.vcs = vcs;
     }
 }

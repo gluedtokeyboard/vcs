@@ -20,7 +20,7 @@ import static vcs.util.Serialization.deserialize;
 /**
  * Commit methods.
  */
-public final class CommitService extends Service {
+public final class CommitService extends BaseService {
     /**
      * The representation of a null commit.
      */

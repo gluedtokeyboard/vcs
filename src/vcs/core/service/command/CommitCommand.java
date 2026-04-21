@@ -14,7 +14,7 @@ import static vcs.util.FileSystem.*;
 /**
  * Methods for creating a commit.
  */
-public class CommitCommand extends Command {
+public class CommitCommand extends BaseCommand {
     /**
      * Stores the current repository.
      *
