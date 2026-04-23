@@ -12,6 +12,7 @@
         <module>vcs-util</module>
         <module>vcs-core</module>
         <module>vcs-cli</module>
+        <module>vcs-storage</module>
     </modules>
 
     <properties>
