@@ -13,6 +13,7 @@
         <module>vcs-core</module>
         <module>vcs-cli</module>
         <module>vcs-storage</module>
+        <module>vcs-persistence</module>
     </modules>
 
     <properties>
