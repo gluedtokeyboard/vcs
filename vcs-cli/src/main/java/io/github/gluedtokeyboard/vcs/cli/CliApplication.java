@@ -1,7 +1,7 @@
 package io.github.gluedtokeyboard.vcs.cli;
 
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
-import io.github.gluedtokeyboard.vcs.core.model.VCS;
+import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 import io.github.gluedtokeyboard.vcs.core.service.command.*;
 
 import java.util.ArrayList;
@@ -17,14 +17,14 @@ public class CliApplication {
      * @param args the command-line arguments for the application.
      */
     static void main(String[] args) {
-        VCS vcs;
+        Vcs vcs;
         try {
             String command = args[0];
             if (command.equals("init")) {
-                vcs = new VCS();
+                vcs = new Vcs();
                 new Init(vcs).init();
             } else {
-                vcs = VCS.deserialize();
+                vcs = Vcs.deserialize();
                 switch (command) {
                     case "add":
                         new Add(vcs).add(args[1]);

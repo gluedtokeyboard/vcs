@@ -1,6 +1,6 @@
 package io.github.gluedtokeyboard.vcs.core.service.common;
 
-import io.github.gluedtokeyboard.vcs.core.model.VCS;
+import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 
 import java.nio.file.Path;
 import java.util.Set;
@@ -18,7 +18,7 @@ public final class GeneralService extends BaseService {
      *
      * @param vcs the current repository object.
      */
-    public GeneralService(VCS vcs) {
+    public GeneralService(Vcs vcs) {
         super(vcs);
     }
 
@@ -33,7 +33,7 @@ public final class GeneralService extends BaseService {
      */
     public static void walkRepo(
             boolean consumeFiles, boolean consumeDirsPreVisit, boolean consumeDirsPostVisit, Consumer<Path> consumer) {
-        walk(getCWD(), Set.of(VCS.getRepoFolder()), consumeFiles, consumeDirsPreVisit, consumeDirsPostVisit, consumer);
+        walk(getCWD(), Set.of(Vcs.getRepoFolder()), consumeFiles, consumeDirsPreVisit, consumeDirsPostVisit, consumer);
     }
 
     /**

@@ -152,7 +152,7 @@ public class Commit implements Serializable {
      * @return the destination folder for the commit.
      */
     public static Path getDestinationFolder(String sha1) {
-        return join(VCS.getCommitsFolder(), sha1.substring(0, 2));
+        return join(Vcs.getCommitsFolder(), sha1.substring(0, 2));
     }
 
     /**

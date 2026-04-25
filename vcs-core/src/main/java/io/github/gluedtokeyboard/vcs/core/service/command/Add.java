@@ -2,7 +2,7 @@ package io.github.gluedtokeyboard.vcs.core.service.command;
 
 import io.github.gluedtokeyboard.vcs.core.model.Blob;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
-import io.github.gluedtokeyboard.vcs.core.model.VCS;
+import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 
 import java.nio.file.Path;
 import java.util.Objects;
@@ -19,7 +19,7 @@ public class Add extends BaseCommand {
      *
      * @param vcs the current repository object.
      */
-    public Add(VCS vcs) {
+    public Add(Vcs vcs) {
         super(vcs);
     }
 

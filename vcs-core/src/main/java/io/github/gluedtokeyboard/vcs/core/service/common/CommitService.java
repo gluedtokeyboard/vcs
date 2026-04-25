@@ -3,7 +3,7 @@ package io.github.gluedtokeyboard.vcs.core.service.common;
 import io.github.gluedtokeyboard.vcs.core.service.command.Status;
 import io.github.gluedtokeyboard.vcs.core.model.Blob;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
-import io.github.gluedtokeyboard.vcs.core.model.VCS;
+import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 import io.github.gluedtokeyboard.vcs.util.FileSystem;
 
 import java.nio.file.Path;
@@ -31,7 +31,7 @@ public final class CommitService extends BaseService {
      *
      * @param vcs the current repository object.
      */
-    public CommitService(VCS vcs) {
+    public CommitService(Vcs vcs) {
         super(vcs);
     }
 
@@ -41,7 +41,7 @@ public final class CommitService extends BaseService {
      * @return the blob's destination when a commit is made.
      */
     public static Path getBlobDestinationCommit(String sha1) {
-        return join(VCS.getBlobsFolder(), sha1);
+        return join(Vcs.getBlobsFolder(), sha1);
     }
 
     /**

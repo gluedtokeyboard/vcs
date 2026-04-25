@@ -50,7 +50,7 @@ public class Blob implements Serializable {
     }
 
     /**
-     * Serializes the blob in {@link VCS#getBlobsFolder()}.
+     * Serializes the blob in {@link Vcs#getBlobsFolder()}.
      */
     public void serialize(Path destination) {
         Serialization.serialize(this, destination);

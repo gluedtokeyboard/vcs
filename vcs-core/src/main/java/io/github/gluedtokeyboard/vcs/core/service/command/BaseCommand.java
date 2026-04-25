@@ -1,6 +1,6 @@
 package io.github.gluedtokeyboard.vcs.core.service.command;
 
-import io.github.gluedtokeyboard.vcs.core.model.VCS;
+import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 import io.github.gluedtokeyboard.vcs.core.service.common.CommitService;
 import io.github.gluedtokeyboard.vcs.core.service.common.GeneralService;
 import io.github.gluedtokeyboard.vcs.core.service.common.RestorationService;
@@ -13,7 +13,7 @@ abstract class BaseCommand {
     /**
      * The current repository.
      */
-    protected final VCS vcs;
+    protected final Vcs vcs;
 
     /**
      * Contains staging area methods.
@@ -39,7 +39,7 @@ abstract class BaseCommand {
      * Stores the current repository and initializes the common service objects with it.
      * @param vcs the current repository object.
      */
-    protected BaseCommand(VCS vcs) {
+    protected BaseCommand(Vcs vcs) {
         this.vcs = vcs;
         this.stagingAreaService = new StagingAreaService(vcs);
         this.commitService = new CommitService(vcs);

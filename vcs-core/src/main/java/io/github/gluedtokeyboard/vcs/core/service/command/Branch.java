@@ -1,6 +1,6 @@
 package io.github.gluedtokeyboard.vcs.core.service.command;
 
-import io.github.gluedtokeyboard.vcs.core.model.VCS;
+import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 
 /**
  * Methods to create/remove branches.
@@ -11,7 +11,7 @@ public class Branch extends BaseCommand {
      *
      * @param vcs the current repository object.
      */
-    public Branch(VCS vcs) {
+    public Branch(Vcs vcs) {
         super(vcs);
     }
 

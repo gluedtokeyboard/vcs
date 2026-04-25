@@ -1,7 +1,7 @@
 package io.github.gluedtokeyboard.vcs.core.service.command;
 
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
-import io.github.gluedtokeyboard.vcs.core.model.VCS;
+import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 
 import java.nio.file.Path;
 
@@ -16,7 +16,7 @@ public class Rm extends BaseCommand {
      *
      * @param vcs the current repository object.
      */
-    public Rm(VCS vcs) {
+    public Rm(Vcs vcs) {
         super(vcs);
     }
 

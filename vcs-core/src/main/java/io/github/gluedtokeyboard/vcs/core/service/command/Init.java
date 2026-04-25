@@ -1,6 +1,6 @@
 package io.github.gluedtokeyboard.vcs.core.service.command;
 
-import io.github.gluedtokeyboard.vcs.core.model.VCS;
+import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -17,7 +17,7 @@ public class Init extends BaseCommand {
      *
      * @param vcs the current repository object.
      */
-    public Init(VCS vcs) {
+    public Init(Vcs vcs) {
         super(vcs);
     }
 
@@ -45,9 +45,9 @@ public class Init extends BaseCommand {
      */
     private void createRepoFolders() {
         List<Path> folders = List.of(
-                VCS.getStagingAreaFolder(),
-                VCS.getCommitsFolder(),
-                VCS.getBlobsFolder()
+                Vcs.getStagingAreaFolder(),
+                Vcs.getCommitsFolder(),
+                Vcs.getBlobsFolder()
         );
         for (Path folder : folders) {
             mkdir(folder);
@@ -59,6 +59,6 @@ public class Init extends BaseCommand {
      * @return {@code true} if a repository exists; {@code false} otherwise.
      */
     public boolean repoExists() {
-        return exists(VCS.getRepoFolder());
+        return exists(Vcs.getRepoFolder());
     }
 }

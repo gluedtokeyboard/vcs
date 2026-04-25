@@ -2,7 +2,7 @@ package io.github.gluedtokeyboard.vcs.core.service.command;
 
 import io.github.gluedtokeyboard.vcs.core.model.Blob;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
-import io.github.gluedtokeyboard.vcs.core.model.VCS;
+import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 import io.github.gluedtokeyboard.vcs.core.service.common.StagingAreaService;
 
 import java.nio.file.Path;
@@ -23,7 +23,7 @@ public class Status extends BaseCommand {
      *
      * @param vcs the current repository object.
      */
-    public Status(VCS vcs) {
+    public Status(Vcs vcs) {
         super(vcs);
     }
 

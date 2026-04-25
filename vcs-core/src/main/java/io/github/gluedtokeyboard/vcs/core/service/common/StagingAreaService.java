@@ -1,7 +1,7 @@
 package io.github.gluedtokeyboard.vcs.core.service.common;
 
 import io.github.gluedtokeyboard.vcs.core.model.Blob;
-import io.github.gluedtokeyboard.vcs.core.model.VCS;
+import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 import io.github.gluedtokeyboard.vcs.util.FileSystem;
 
 import java.nio.file.Path;
@@ -23,7 +23,7 @@ public final class StagingAreaService extends BaseService {
      *
      * @param vcs the current repository object.
      */
-    public StagingAreaService(VCS vcs) {
+    public StagingAreaService(Vcs vcs) {
         super(vcs);
     }
 
@@ -80,6 +80,6 @@ public final class StagingAreaService extends BaseService {
      * @return The blob's destination in the staging area.
      */
     private static Path getBlobDestinationStagingArea(String sha1) {
-        return join(VCS.getStagingAreaFolder(), sha1);
+        return join(Vcs.getStagingAreaFolder(), sha1);
     }
 }

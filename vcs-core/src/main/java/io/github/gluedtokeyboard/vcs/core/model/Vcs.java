@@ -14,9 +14,9 @@ import static io.github.gluedtokeyboard.vcs.util.FileSystem.join;
 import static io.github.gluedtokeyboard.vcs.util.FileSystem.joinCWD;
 
 /**
- * The {@link VCS} class stores all metadata about the repository.
+ * The {@link Vcs} class stores all metadata about the repository.
  */
-public class VCS implements Serializable {
+public class Vcs implements Serializable {
     /**
      * The folder used to store the repository data and metadata.
      */
@@ -61,7 +61,7 @@ public class VCS implements Serializable {
     /**
      * Initializes the repository object with a default branch named "main".
      */
-    public VCS() {
+    public Vcs() {
         branchMap.put("main", null);
     }
 
@@ -75,7 +75,7 @@ public class VCS implements Serializable {
     }
 
     /**
-     * Serializes the current object and writes it to {@link VCS#REPO_FOLDER}/{@link VCS#OBJECT_NAME}.
+     * Serializes the current object and writes it to {@link Vcs#REPO_FOLDER}/{@link Vcs#OBJECT_NAME}.
      */
     public void serialize() {
         Path path = resolvePath(OBJECT_NAME);
@@ -83,12 +83,12 @@ public class VCS implements Serializable {
     }
 
     /**
-     * Deserializes the {@link VCS} object from {@link VCS#REPO_FOLDER}/{@link VCS#OBJECT_NAME}.
-     * @return The deserialized {@link VCS} object.
+     * Deserializes the {@link Vcs} object from {@link Vcs#REPO_FOLDER}/{@link Vcs#OBJECT_NAME}.
+     * @return The deserialized {@link Vcs} object.
      */
-    public static VCS deserialize() {
+    public static Vcs deserialize() {
         Path path = resolvePath(OBJECT_NAME);
-        return Serialization.deserialize(path, VCS.class);
+        return Serialization.deserialize(path, Vcs.class);
     }
 
     /**
@@ -249,9 +249,9 @@ public class VCS implements Serializable {
     }
 
     /**
-     * Returns a clone of {@link VCS#stagedFiles}. This can safely be passed to other classes without affecting the
+     * Returns a clone of {@link Vcs#stagedFiles}. This can safely be passed to other classes without affecting the
      * original map.
-     * @return a clone of {@link VCS#stagedFiles}.
+     * @return a clone of {@link Vcs#stagedFiles}.
      */
     public TreeMap<String, String> getStagedFilesClone() {
         return (TreeMap<String, String>) stagedFiles.clone();

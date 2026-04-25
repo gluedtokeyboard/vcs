@@ -1,7 +1,7 @@
 package io.github.gluedtokeyboard.vcs.core.service.command;
 
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
-import io.github.gluedtokeyboard.vcs.core.model.VCS;
+import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 import io.github.gluedtokeyboard.vcs.core.service.common.StagingAreaService;
 
 import java.nio.file.Path;
@@ -20,7 +20,7 @@ public class CommitCommand extends BaseCommand {
      *
      * @param vcs the current repository object.
      */
-    public CommitCommand(VCS vcs) {
+    public CommitCommand(Vcs vcs) {
         super(vcs);
     }
 
@@ -55,7 +55,7 @@ public class CommitCommand extends BaseCommand {
      * Moves the blobs from the staging area to the blobs folder.
      */
     private static void moveBlobsToBlobsFolder() {
-        ls(VCS.getStagingAreaFolder()).forEach(
+        ls(Vcs.getStagingAreaFolder()).forEach(
                 path -> {
                     String sha1 = basename(path);
                     Path destination = getBlobDestinationCommit(sha1);
