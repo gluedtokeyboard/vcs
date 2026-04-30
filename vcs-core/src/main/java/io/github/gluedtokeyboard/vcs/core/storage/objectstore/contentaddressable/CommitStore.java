@@ -3,6 +3,7 @@ package io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressabl
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
 import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
 import io.github.gluedtokeyboard.vcs.persistence.objectstore.ObjectStore;
+import io.github.gluedtokeyboard.vcs.storage.Entry;
 import io.github.gluedtokeyboard.vcs.storage.Storage;
 
 import java.util.Optional;
@@ -126,6 +127,7 @@ public class CommitStore implements ContentAddressableStore<Commit> {
             return Optional.empty();
         }
         return storage.ls(directory).stream()
+                .map(Entry::path)
                 .filter(commit -> storage.basename(commit).startsWith(commitPrefix))
                 .findFirst();
     }
