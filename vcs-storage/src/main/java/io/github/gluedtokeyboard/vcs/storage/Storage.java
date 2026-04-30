@@ -56,9 +56,9 @@ public interface Storage {
     /**
      * Lists the contents of the given directory.
      * @param folder the path of the directory.
-     * @return a {@link List} containing the contents of the given directory.
+     * @return a {@link List} containing the contents of the given directory as {@link Entry} objects.
      */
-    List<String> ls(String folder);
+    List<Entry> ls(String folder);
 
     /**
      * Moves the given source to the given destination.

@@ -1,5 +1,7 @@
 package io.github.gluedtokeyboard.vcs.storage.filesystem;
 
+import io.github.gluedtokeyboard.vcs.storage.Entry;
+import io.github.gluedtokeyboard.vcs.storage.EntryType;
 import io.github.gluedtokeyboard.vcs.storage.Storage;
 
 import java.io.IOException;
@@ -111,13 +113,17 @@ public class FileSystemStorage implements Storage {
      * Lists the contents of the given directory.
      *
      * @param folder the path of the directory.
-     * @return a {@link List} containing the contents of the given directory.
+     * @return a {@link List} containing the contents of the given directory as {@link Entry} objects.
      */
     @Override
-    public List<String> ls(String folder) {
+    public List<Entry> ls(String folder) {
         Path realPath = getRealPath(folder);
         try (Stream<Path> files = Files.list(realPath)) {
-            return files.map(this::getFileSystemPath).toList();
+            return files.map(path -> {
+                String fileSystemPath = getFileSystemPath(path);
+                EntryType type = Files.isRegularFile(path) ? EntryType.FILE : EntryType.DIRECTORY;
+                return new Entry(fileSystemPath, type);
+            }).toList();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
