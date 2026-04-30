@@ -1,4 +1,6 @@
-package io.github.gluedtokeyboard.vcs.storage;
+package io.github.gluedtokeyboard.vcs.storage.filesystem;
+
+import io.github.gluedtokeyboard.vcs.storage.Storage;
 
 import java.io.IOException;
 import java.nio.file.*;
