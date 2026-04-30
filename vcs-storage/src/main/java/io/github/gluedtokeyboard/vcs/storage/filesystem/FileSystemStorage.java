@@ -64,22 +64,6 @@ public class FileSystemStorage implements Storage {
     }
 
     /**
-     * Writes the given string to a file.
-     *
-     * @param contents the contents of the file.
-     * @param file     the destination path.
-     */
-    @Override
-    public void write(String contents, String file) {
-        Path realPath = getRealPath(file);
-        try {
-            Files.writeString(realPath, contents);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
      * Checks if the given path exists.
      *
      * @param path the path of a folder or a file.

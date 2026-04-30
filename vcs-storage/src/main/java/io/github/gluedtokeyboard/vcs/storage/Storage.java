@@ -1,5 +1,6 @@
 package io.github.gluedtokeyboard.vcs.storage;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -27,7 +28,10 @@ public interface Storage {
      * @param contents the contents of the file.
      * @param file the destination path.
      */
-    void write(String contents, String file);
+    default void write(String contents, String file) {
+        byte[] bytes = contents.getBytes(StandardCharsets.UTF_8);
+        write(bytes, file);
+    }
 
     /**
      * Checks if the given path exists.
