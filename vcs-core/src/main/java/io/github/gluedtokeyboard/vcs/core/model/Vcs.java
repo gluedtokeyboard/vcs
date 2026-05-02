@@ -1,7 +1,6 @@
 package io.github.gluedtokeyboard.vcs.core.model;
 
 import java.io.Serializable;
-import java.nio.file.Path;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,16 +39,16 @@ public class Vcs implements Serializable {
      * @param path the path of the file.
      * @param sha1 the SHA-1 hash of the file.
      */
-    public void stageFile(Path path, String sha1) {
-        stagedFiles.put(path.toString(), sha1);
+    public void stageFile(String path, String sha1) {
+        stagedFiles.put(path, sha1);
     }
 
     /**
      * Unstages the given file.
      * @param path the path of the file.
      */
-    public void unstageFile(Path path) {
-        stagedFiles.remove(path.toString());
+    public void unstageFile(String path) {
+        stagedFiles.remove(path);
     }
 
     /**
@@ -57,8 +56,8 @@ public class Vcs implements Serializable {
      * @param path the path of the file.
      * @return {@code true} if the file is staged; {@code false} otherwise.
      */
-    public boolean isStaged(Path path) {
-        return stagedFiles.containsKey(path.toString());
+    public boolean isStaged(String path) {
+        return stagedFiles.containsKey(path);
     }
 
     /**
@@ -66,8 +65,8 @@ public class Vcs implements Serializable {
      * @param path the path of the staged file.
      * @return the SHA-1 hash of the staged file.
      */
-    public String getStagedSha(Path path) {
-        return stagedFiles.get(path.toString());
+    public String getStagedSha(String path) {
+        return stagedFiles.get(path);
     }
 
     /**

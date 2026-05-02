@@ -45,7 +45,7 @@ public class Rm extends BaseCommand {
      * @param path the path of the file
      * @return {@code true} if the file is tracked; {@code false} otherwise.
      */
-    private boolean isTracked(Path path) {
+    private boolean isTracked(String path) {
         String parentHash = vcs.getCurrentBranchHead();
         Commit parentCommit = Commit.deserialize(parentHash);
         return parentCommit.contains(path);

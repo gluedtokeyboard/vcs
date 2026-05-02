@@ -40,7 +40,7 @@ public final class CommitService extends BaseService {
      * @param sha1 the SHA-1 hash of the blob.
      * @return the blob's destination when a commit is made.
      */
-    public static Path getBlobDestinationCommit(String sha1) {
+    public static String getBlobDestinationCommit(String sha1) {
         return join(Vcs.getBlobsFolder(), sha1);
     }
 

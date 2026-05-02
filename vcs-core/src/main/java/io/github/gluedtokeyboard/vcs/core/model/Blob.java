@@ -2,10 +2,8 @@ package io.github.gluedtokeyboard.vcs.core.model;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 
 import static io.github.gluedtokeyboard.vcs.util.File.read;
-import static io.github.gluedtokeyboard.vcs.util.File.write;
 import static io.github.gluedtokeyboard.vcs.util.Hash.sha1;
 
 /**
@@ -26,7 +24,7 @@ public class Blob implements Serializable {
      * Creates a blob of the given file.
      * @param path the path of the file.
      */
-    public Blob(Path path) {
+    public Blob(String path) {
         this.contents = read(path);
         this.sha1 = sha1(this.contents);
     }
@@ -43,7 +41,7 @@ public class Blob implements Serializable {
      * Writes the contents of the blob to a file.
      * @param file the path of the file.
      */
-    public void writeToFile(Path file) {
+    public void writeToFile(String file) {
         write(contents, file);
     }
 

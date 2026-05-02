@@ -29,7 +29,7 @@ public final class RestorationService extends BaseService {
      * @param commit the {@link Commit} object.
      * @param path the path of the file.
      */
-    public static void restoreFile(Commit commit, Path path) {
+    public static void restoreFile(Commit commit, String path) {
         String sha1 = commit.getFileHash(path);
         Blob blob = getCommittedBlob(sha1);
         blob.writeToFile(path);

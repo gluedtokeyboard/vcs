@@ -31,7 +31,7 @@ public final class StagingAreaService extends BaseService {
      * Stages the given file.
      * @param path the path of the file.
      */
-    public void stageFile(Path path) {
+    public void stageFile(String path) {
         Blob blob = new Blob(path);
         vcs.stageFile(path, blob.getSha1());
         moveBlobToStagingArea(blob);
@@ -50,7 +50,7 @@ public final class StagingAreaService extends BaseService {
      * Unstages the given file.
      * @param path the path of the file.
      */
-    public void unstageFile(Path path) {
+    public void unstageFile(String path) {
         removeBlobFromStagingArea(path);
         vcs.unstageFile(path);
     }
@@ -59,7 +59,7 @@ public final class StagingAreaService extends BaseService {
      * Removes the given file's blob from the staging area.
      * @param path The path of the file.
      */
-    private void removeBlobFromStagingArea(Path path) {
+    private void removeBlobFromStagingArea(String path) {
         String sha1 = vcs.getStagedSha(path);
         Path location = getBlobDestinationStagingArea(sha1);
         rm(location);
@@ -69,7 +69,7 @@ public final class StagingAreaService extends BaseService {
      * Stages the given file for deletion.
      * @param path the path of the file
      */
-    public void stageDeletion(Path path) {
+    public void stageDeletion(String path) {
         FileSystem.rm(path);
         vcs.stageFile(path, DELETION_MARKER);
     }
@@ -79,7 +79,7 @@ public final class StagingAreaService extends BaseService {
      * @param sha1 The SHA-1 hash of the blob.
      * @return The blob's destination in the staging area.
      */
-    private static Path getBlobDestinationStagingArea(String sha1) {
+    private static String getBlobDestinationStagingArea(String sha1) {
         return join(Vcs.getStagingAreaFolder(), sha1);
     }
 }
