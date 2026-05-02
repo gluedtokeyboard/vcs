@@ -1,7 +1,5 @@
 package io.github.gluedtokeyboard.vcs.core.model;
 
-import io.github.gluedtokeyboard.vcs.util.Serialization;
-
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.Date;
@@ -35,23 +33,6 @@ public class Vcs implements Serializable {
      */
     public Vcs() {
         branchMap.put("main", null);
-    }
-
-    /**
-     * Serializes the current object and writes it to {@link Vcs#REPO_FOLDER}/{@link Vcs#OBJECT_NAME}.
-     */
-    public void serialize() {
-        Path path = resolvePath(OBJECT_NAME);
-        Serialization.serialize(this, path);
-    }
-
-    /**
-     * Deserializes the {@link Vcs} object from {@link Vcs#REPO_FOLDER}/{@link Vcs#OBJECT_NAME}.
-     * @return The deserialized {@link Vcs} object.
-     */
-    public static Vcs deserialize() {
-        Path path = resolvePath(OBJECT_NAME);
-        return Serialization.deserialize(path, Vcs.class);
     }
 
     /**
