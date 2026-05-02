@@ -10,38 +10,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
-import static io.github.gluedtokeyboard.vcs.util.FileSystem.join;
-import static io.github.gluedtokeyboard.vcs.util.FileSystem.joinCWD;
-
 /**
  * The {@link Vcs} class stores all metadata about the repository.
  */
 public class Vcs implements Serializable {
-    /**
-     * The folder used to store the repository data and metadata.
-     */
-    private static final String REPO_FOLDER = ".vcs";
-
-    /**
-     * The staging area folder. This will contain {@link Blob} objects of the staged files.
-     */
-    private static final String STAGING_AREA_FOLDER = "index";
-
-    /**
-     * The folder containing {@link Commit} objects.
-     */
-    private static final String COMMITS_FOLDER = "commits";
-
-    /**
-     * The folder containing {@link Blob} objects of the committed files.
-     */
-    private static final String BLOBS_FOLDER = "blobs";
-
-    /**
-     * The name to use for serialization/deserialization.
-     */
-    private static final String OBJECT_NAME = "vcs";
-
     /**
      * The name of the current branch.
      */
@@ -65,15 +37,6 @@ public class Vcs implements Serializable {
         branchMap.put("main", null);
     }
 
-    /*
-     * Resolves the given path relative to the repository folder.
-     * @param path the relative path.
-     * @return the absolute path obtained by resolving the given path against the repository folder.
-     */
-    private static Path resolvePath(String path) {
-        return join(getRepoFolder(), path);
-    }
-
     /**
      * Serializes the current object and writes it to {@link Vcs#REPO_FOLDER}/{@link Vcs#OBJECT_NAME}.
      */
@@ -89,38 +52,6 @@ public class Vcs implements Serializable {
     public static Vcs deserialize() {
         Path path = resolvePath(OBJECT_NAME);
         return Serialization.deserialize(path, Vcs.class);
-    }
-
-    /**
-     * Getter for the repository folder.
-     * @return The absolute path of the repository folder.
-     */
-    public static Path getRepoFolder() {
-        return joinCWD(REPO_FOLDER);
-    }
-
-    /**
-     * Getter for the staging area folder.
-     * @return The absolute path of the staging area folder.
-     */
-    public static Path getStagingAreaFolder() {
-        return resolvePath(STAGING_AREA_FOLDER);
-    }
-
-    /**
-     * Getter for the commits folder.
-     * @return The absolute path of the commits folder.
-     */
-    public static Path getCommitsFolder() {
-        return resolvePath(COMMITS_FOLDER);
-    }
-
-    /**
-     * Getter for the blobs folder.
-     * @return The absolute path of the blobs folder.
-     */
-    public static Path getBlobsFolder() {
-        return resolvePath(BLOBS_FOLDER);
     }
 
     /**
