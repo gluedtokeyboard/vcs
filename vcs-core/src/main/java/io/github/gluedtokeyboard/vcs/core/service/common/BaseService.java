@@ -1,21 +1,57 @@
 package io.github.gluedtokeyboard.vcs.core.service.common;
 
+import io.github.gluedtokeyboard.vcs.core.model.Blob;
+import io.github.gluedtokeyboard.vcs.core.model.Commit;
 import io.github.gluedtokeyboard.vcs.core.model.Vcs;
+import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
+import io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressable.ContentAddressableStore;
+import io.github.gluedtokeyboard.vcs.core.storage.objectstore.vcs.VcsStore;
+import io.github.gluedtokeyboard.vcs.storage.Storage;
 
 /**
  * The base class for all common service classes.
  */
 abstract class BaseService {
     /**
-     * The current repository.
+     * The object used to interact with the storage.
      */
-    protected final Vcs vcs;
+    protected final Storage storage;
 
     /**
-     * Stores the current repository.
-     * @param vcs the current repository object.
+     * Contains the layout of the repository.
      */
-    protected BaseService(Vcs vcs) {
-        this.vcs = vcs;
+    protected final VcsLayout vcsLayout;
+
+    /**
+     * A store for {@link Vcs} objects.
+     */
+    protected final VcsStore vcsStore;
+
+    /**
+     * A store for {@link Blob} objects.
+     */
+    protected final ContentAddressableStore<Blob> blobStore;
+
+    /**
+     * A store for {@link Commit} objects.
+     */
+    protected final ContentAddressableStore<Commit> commitStore;
+
+    /**
+     * Stores the given interface implementations.
+     * @param storage a {@link Storage} implementation.
+     * @param vcsLayout a {@link VcsLayout} implementation.
+     * @param vcsStore a {@link VcsStore} implementation.
+     * @param blobStore a {@link ContentAddressableStore<Blob>} implementation.
+     * @param commitStore a {@link ContentAddressableStore<Commit>} implementation.
+     */
+    protected BaseService(
+            Storage storage, VcsLayout vcsLayout, VcsStore vcsStore, ContentAddressableStore<Blob> blobStore,
+            ContentAddressableStore<Commit> commitStore) {
+        this.storage = storage;
+        this.vcsLayout = vcsLayout;
+        this.vcsStore = vcsStore;
+        this.blobStore = blobStore;
+        this.commitStore = commitStore;
     }
 }
