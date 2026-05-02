@@ -1,7 +1,6 @@
 package io.github.gluedtokeyboard.vcs.core.model;
 
 import java.io.Serializable;
-import java.nio.file.Path;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -125,8 +124,8 @@ public class Commit implements Serializable {
      * @param path the path of the file.
      * @return {@code true} if the file exists within the commit; {@code false} otherwise.
      */
-    public boolean contains(Path path) {
-        return files.containsKey(path.toString());
+    public boolean contains(String path) {
+        return files.containsKey(path);
     }
 
     /**
@@ -134,8 +133,8 @@ public class Commit implements Serializable {
      * @param path the path of the file.
      * @return the file's hash in the commit.
      */
-    public String getFileHash(Path path) {
-        return files.get(path.toString());
+    public String getFileHash(String path) {
+        return files.get(path);
     }
 
     /**

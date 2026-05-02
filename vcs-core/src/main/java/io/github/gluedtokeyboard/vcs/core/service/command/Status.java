@@ -5,7 +5,6 @@ import io.github.gluedtokeyboard.vcs.core.model.Commit;
 import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 import io.github.gluedtokeyboard.vcs.core.service.common.StagingAreaService;
 
-import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -88,7 +87,7 @@ public class Status extends BaseCommand {
      * @param file the path of the file.
      * @return a boolean indicating whether the given file has been modified but not staged for addition.
      */
-    private boolean isUnstagedMod(Commit latestCommit, Set<String> latestCommitFiles, Path file) {
+    private boolean isUnstagedMod(Commit latestCommit, Set<String> latestCommitFiles, String file) {
         String fileString = file.toString();
         Blob blob = new Blob(file);
         return latestCommitFiles.contains(fileString)
@@ -104,7 +103,7 @@ public class Status extends BaseCommand {
      * @param file the path of the file.
      * @return a boolean indicating whether the given file is untracked.
      */
-    private boolean isUntracked(Set<String> stagedDeletions, Set<String> latestCommitFiles, Path file) {
+    private boolean isUntracked(Set<String> stagedDeletions, Set<String> latestCommitFiles, String file) {
         String fileString = file.toString();
         return stagedDeletions.contains(fileString)
                 || (!latestCommitFiles.contains(fileString) && !vcs.isStaged(file));

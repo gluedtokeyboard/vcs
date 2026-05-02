@@ -2,7 +2,6 @@ package io.github.gluedtokeyboard.vcs.core.service.common;
 
 import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 
-import java.nio.file.Path;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -32,7 +31,8 @@ public final class GeneralService extends BaseService {
      * @param consumer a {@link Consumer} to consume the repository files and directories.
      */
     public static void walkRepo(
-            boolean consumeFiles, boolean consumeDirsPreVisit, boolean consumeDirsPostVisit, Consumer<Path> consumer) {
+            boolean consumeFiles, boolean consumeDirsPreVisit, boolean consumeDirsPostVisit,
+            Consumer<String> consumer) {
         walk(getCWD(), Set.of(Vcs.getRepoFolder()), consumeFiles, consumeDirsPreVisit, consumeDirsPostVisit, consumer);
     }
 
@@ -40,7 +40,7 @@ public final class GeneralService extends BaseService {
      * Walks the repository root, but only feeds files to the consumer.
      * @param consumer a {@link Consumer} to consume the repository files.
      */
-    public static void walkRepoFiles(Consumer<Path> consumer) {
+    public static void walkRepoFiles(Consumer<String> consumer) {
         walkRepo(true, false, false, consumer);
     }
 
@@ -48,7 +48,7 @@ public final class GeneralService extends BaseService {
      * Walks the repository root, but only feeds directories to the consumer before visiting them.
      * @param consumer a {@link Consumer} to consume all the directories in the repository.
      */
-    public static void walkRepoDirsPre(Consumer<Path> consumer) {
+    public static void walkRepoDirsPre(Consumer<String> consumer) {
         walkRepo(false, true, false, consumer);
     }
 
@@ -56,7 +56,7 @@ public final class GeneralService extends BaseService {
      * Walks the repository root, but only feeds directories to the consumer after visiting them.
      * @param consumer a {@link Consumer} to consume all the directories in the repository.
      */
-    public static void walkRepoDirsPost(Consumer<Path> consumer) {
+    public static void walkRepoDirsPost(Consumer<String> consumer) {
         walkRepo(false, false, true, consumer);
     }
 }

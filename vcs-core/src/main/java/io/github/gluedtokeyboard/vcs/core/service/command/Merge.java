@@ -245,7 +245,7 @@ public class Merge extends BaseCommand {
      * @param file the path of the file.
      * @return the contents of the given file.
      */
-    private String getContents(Commit commit, Path file) {
+    private String getContents(Commit commit, String file) {
         String sha1 = commit.getFileHash(file);
         if (sha1 == null) {
             return "";

@@ -45,7 +45,7 @@ public class Add extends BaseCommand {
      * @param path the path of the file.
      * @return {@code true} if the file has changed; {@code false} otherwise.
      */
-    private boolean hasChanged(Path path) {
+    private boolean hasChanged(String path) {
         Commit commit = commitService.getLatestCommitCurrentBranch();
         if (commit == null) {
             return true;
