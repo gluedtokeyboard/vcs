@@ -1,7 +1,5 @@
 package io.github.gluedtokeyboard.vcs.core.model;
 
-import io.github.gluedtokeyboard.vcs.util.Serialization;
-
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.Date;
@@ -11,7 +9,6 @@ import java.util.TreeMap;
 import java.util.stream.Stream;
 
 import static io.github.gluedtokeyboard.vcs.core.service.common.CommitService.NULL_COMMIT;
-import static io.github.gluedtokeyboard.vcs.util.FileSystem.*;
 import static io.github.gluedtokeyboard.vcs.util.Hash.sha1;
 
 /**
@@ -113,46 +110,6 @@ public class Commit implements Serializable {
      */
     public String getSha1() {
         return sha1;
-    }
-
-    /**
-     * Serializes the commit. See {@link Commit#getDestinationFolder(String)} for details on the destination folder.
-     */
-    public void serialize() {
-        Path destination = getDestination(sha1);
-        Path directory = getDirectory(destination);
-        mkdir(directory);
-        Serialization.serialize(this, destination);
-    }
-
-    /**
-     * Deserializes the commit. See {@link Commit#getDestinationFolder(String)} for details on the destination folder.
-     * @param sha1 the SHA-1 hash of the commit.
-     * @return the deserialized commit.
-     */
-    public static Commit deserialize(String sha1) {
-        Path location = getDestination(sha1);
-        return Serialization.deserialize(location, Commit.class);
-    }
-
-    /**
-     * Returns the destination for the commit.
-     * @param sha1 the SHA-1 hash of the commit.
-     * @return the destination for the commit.
-     */
-    private static Path getDestination(String sha1) {
-        return join(getDestinationFolder(sha1), sha1);
-    }
-
-    /**
-     * Returns the destination folder for the commit. The destination folder is given by
-     * {@code <commit folder>/<first two characters of the hash>}. This makes it easier to locate the commit when
-     * searching by the prefixes of its hash.
-     * @param sha1 the SHA-1 hash of the commit.
-     * @return the destination folder for the commit.
-     */
-    public static Path getDestinationFolder(String sha1) {
-        return join(Vcs.getCommitsFolder(), sha1.substring(0, 2));
     }
 
     /**

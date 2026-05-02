@@ -1,7 +1,5 @@
 package io.github.gluedtokeyboard.vcs.core.model;
 
-import io.github.gluedtokeyboard.vcs.util.Serialization;
-
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -47,22 +45,6 @@ public class Blob implements Serializable {
      */
     public void writeToFile(Path file) {
         write(contents, file);
-    }
-
-    /**
-     * Serializes the blob in {@link Vcs#getBlobsFolder()}.
-     */
-    public void serialize(Path destination) {
-        Serialization.serialize(this, destination);
-    }
-
-    /**
-     * Deserializes the blob from the given path.
-     * @param path the path of the blob.
-     * @return the deserialized blob.
-     */
-    public static Blob deserialize(Path path) {
-        return Serialization.deserialize(path, Blob.class);
     }
 
     /**
