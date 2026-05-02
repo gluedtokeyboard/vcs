@@ -1,15 +1,21 @@
 package io.github.gluedtokeyboard.vcs.core.model;
 
+import io.github.gluedtokeyboard.vcs.storage.Storage;
+
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 
-import static io.github.gluedtokeyboard.vcs.util.File.read;
 import static io.github.gluedtokeyboard.vcs.util.Hash.sha1;
 
 /**
  * Stores a file as a byte array.
  */
 public class Blob implements Serializable {
+    /**
+     * The object used to interact with the storage.
+     */
+    private final Storage storage;
+
     /**
      * The contents of the file.
      */
@@ -22,10 +28,12 @@ public class Blob implements Serializable {
 
     /**
      * Creates a blob of the given file.
+     * @param storage a {@link Storage} implementation.
      * @param path the path of the file.
      */
-    public Blob(String path) {
-        this.contents = read(path);
+    public Blob(Storage storage, String path) {
+        this.storage = storage;
+        this.contents = storage.read(path);
         this.sha1 = sha1(this.contents);
     }
 
@@ -42,7 +50,7 @@ public class Blob implements Serializable {
      * @param file the path of the file.
      */
     public void writeToFile(String file) {
-        write(contents, file);
+        storage.write(contents, file);
     }
 
     /**
