@@ -1,19 +1,45 @@
 package io.github.gluedtokeyboard.vcs.core.service.command;
 
+import io.github.gluedtokeyboard.vcs.core.model.Blob;
+import io.github.gluedtokeyboard.vcs.core.model.Commit;
 import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 import io.github.gluedtokeyboard.vcs.core.service.common.CommitService;
 import io.github.gluedtokeyboard.vcs.core.service.common.GeneralService;
 import io.github.gluedtokeyboard.vcs.core.service.common.RestorationService;
 import io.github.gluedtokeyboard.vcs.core.service.common.StagingAreaService;
+import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
+import io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressable.ContentAddressableStore;
+import io.github.gluedtokeyboard.vcs.core.storage.objectstore.vcs.VcsStore;
+import io.github.gluedtokeyboard.vcs.storage.Storage;
 
 /**
  * The base class for all commands.
  */
 abstract class BaseCommand {
     /**
-     * The current repository.
+     * The object used to interact with the storage.
      */
-    protected final Vcs vcs;
+    protected final Storage storage;
+
+    /**
+     * Contains the layout of the repository.
+     */
+    protected final VcsLayout vcsLayout;
+
+    /**
+     * A store for {@link Vcs} objects.
+     */
+    protected final VcsStore vcsStore;
+
+    /**
+     * A store for {@link Blob} objects.
+     */
+    protected final ContentAddressableStore<Blob> blobStore;
+
+    /**
+     * A store for {@link Commit} objects.
+     */
+    protected final ContentAddressableStore<Commit> commitStore;
 
     /**
      * Contains staging area methods.
@@ -36,14 +62,24 @@ abstract class BaseCommand {
     protected final RestorationService restorationService;
 
     /**
-     * Stores the current repository and initializes the common service objects with it.
-     * @param vcs the current repository object.
+     * Stores the given interface implementations and initializes the common service objects with it.
+     * @param storage a {@link Storage} implementation.
+     * @param vcsLayout a {@link VcsLayout} implementation.
+     * @param vcsStore a {@link VcsStore} implementation.
+     * @param blobStore a {@link ContentAddressableStore<Blob>} implementation.
+     * @param commitStore a {@link ContentAddressableStore<Commit>} implementation.
      */
-    protected BaseCommand(Vcs vcs) {
-        this.vcs = vcs;
-        this.stagingAreaService = new StagingAreaService(vcs);
-        this.commitService = new CommitService(vcs);
-        this.generalService = new GeneralService(vcs);
-        this.restorationService = new RestorationService(vcs);
+    protected BaseCommand(
+            Storage storage, VcsLayout vcsLayout, VcsStore vcsStore, ContentAddressableStore<Blob> blobStore,
+            ContentAddressableStore<Commit> commitStore) {
+        this.storage = storage;
+        this.vcsLayout = vcsLayout;
+        this.vcsStore = vcsStore;
+        this.blobStore = blobStore;
+        this.commitStore = commitStore;
+        this.stagingAreaService = new StagingAreaService(storage, vcsLayout, vcsStore, blobStore, commitStore);
+        this.commitService = new CommitService(storage, vcsLayout, vcsStore, blobStore, commitStore);
+        this.generalService = new GeneralService(storage, vcsLayout, vcsStore, blobStore, commitStore);
+        this.restorationService = new RestorationService(storage, vcsLayout, vcsStore, blobStore, commitStore);
     }
 }
