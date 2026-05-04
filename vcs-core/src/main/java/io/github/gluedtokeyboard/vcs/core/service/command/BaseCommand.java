@@ -3,10 +3,6 @@ package io.github.gluedtokeyboard.vcs.core.service.command;
 import io.github.gluedtokeyboard.vcs.core.model.Blob;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
 import io.github.gluedtokeyboard.vcs.core.model.Vcs;
-import io.github.gluedtokeyboard.vcs.core.service.common.CommitService;
-import io.github.gluedtokeyboard.vcs.core.service.common.GeneralService;
-import io.github.gluedtokeyboard.vcs.core.service.common.WorkingTreeService;
-import io.github.gluedtokeyboard.vcs.core.service.common.StagingAreaService;
 import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressable.ContentAddressableStore;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.vcs.VcsStore;
@@ -42,27 +38,7 @@ abstract class BaseCommand {
     protected final ContentAddressableStore<Commit> commitStore;
 
     /**
-     * Contains staging area methods.
-     */
-    protected final StagingAreaService stagingAreaService;
-
-    /**
-     * Contains methods for working with commits.
-     */
-    protected final CommitService commitService;
-
-    /**
-     * Contains general repository methods.
-     */
-    protected final GeneralService generalService;
-
-    /**
-     * Contains file and commit restoration methods.
-     */
-    protected final WorkingTreeService workingTreeService;
-
-    /**
-     * Stores the given interface implementations and initializes the common service objects with it.
+     * Stores the given interface implementations.
      * @param storage a {@link Storage} implementation.
      * @param vcsLayout a {@link VcsLayout} implementation.
      * @param vcsStore a {@link VcsStore} implementation.
@@ -77,9 +53,5 @@ abstract class BaseCommand {
         this.vcsStore = vcsStore;
         this.blobStore = blobStore;
         this.commitStore = commitStore;
-        this.stagingAreaService = new StagingAreaService(storage, vcsLayout, vcsStore, blobStore, commitStore);
-        this.commitService = new CommitService(storage, vcsLayout, vcsStore, blobStore, commitStore);
-        this.generalService = new GeneralService(storage, vcsLayout, vcsStore, blobStore, commitStore);
-        this.workingTreeService = new WorkingTreeService(storage, vcsLayout, vcsStore, blobStore, commitStore);
     }
 }
