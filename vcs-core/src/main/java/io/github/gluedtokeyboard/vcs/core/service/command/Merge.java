@@ -56,7 +56,7 @@ public class Merge extends BaseCommand {
         Commit current = Commit.deserialize(currentSha1);
         Commit splitPoint = getSplitPoint(current, other);
         checkMergeNeeded(current, other, splitPoint, branchName);
-        commitService.checkSafety(other);
+        workingTreeService.checkSafety(other);
         mergeCommits(current, other, splitPoint, branchName);
     }
 
