@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 import static io.github.gluedtokeyboard.vcs.core.service.common.CommitService.getCommitsInBFSOrder;
 import static io.github.gluedtokeyboard.vcs.core.service.common.CommitService.getCommittedBlob;
-import static io.github.gluedtokeyboard.vcs.core.service.common.RestorationService.restoreFile;
+import static io.github.gluedtokeyboard.vcs.core.service.common.WorkingTreeService.restoreFile;
 import static io.github.gluedtokeyboard.vcs.util.File.write;
 import static io.github.gluedtokeyboard.vcs.util.FileSystem.basename;
 import static io.github.gluedtokeyboard.vcs.util.General.*;
