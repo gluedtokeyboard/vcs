@@ -37,7 +37,7 @@ public class Reset extends BaseCommand {
         if (commit == null) {
             throw new RuntimeException("Commit with id " + commitId + " not found");
         }
-        restorationService.restoreCommitSafely(commit);
+        restorationService.applyCommitSafely(commit);
         vcs.setCurrentBranchHead(commit.getSha1());
     }
 }

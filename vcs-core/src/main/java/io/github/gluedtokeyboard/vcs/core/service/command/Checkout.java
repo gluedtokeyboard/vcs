@@ -77,7 +77,7 @@ public class Checkout extends BaseCommand {
         }
         String hash = vcs.getBranchHead(branch);
         Commit commit = Commit.deserialize(hash);
-        restorationService.restoreCommitSafely(commit);
+        restorationService.applyCommitSafely(commit);
         vcs.setCurrentBranch(branch);
     }
 }

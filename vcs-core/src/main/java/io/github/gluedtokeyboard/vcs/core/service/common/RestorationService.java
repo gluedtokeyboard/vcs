@@ -15,7 +15,7 @@ import static io.github.gluedtokeyboard.vcs.core.service.common.GeneralService.w
 import static io.github.gluedtokeyboard.vcs.util.FileSystem.rm;
 
 /**
- * File and commit restoration methods.
+ * Methods to restore files, and safely apply commits.
  */
 public final class RestorationService extends BaseService {
     /**
@@ -45,13 +45,13 @@ public final class RestorationService extends BaseService {
     }
 
     /**
-     * Restores the commit only if no data in the repository would be lost.
-     * @param commit the {@link Commit} to restore.
+     * Applies the commit only if no data in the repository would be lost.
+     * @param commit the {@link Commit} to apply.
      */
-    public void restoreCommitSafely(Commit commit) {
+    public void applyCommitSafely(Commit commit) {
         new CommitService(vcs).checkSafety(commit);
         removeTrackedFiles();
-        restoreCommit(commit);
+        applyCommit(commit);
     }
 
     /**
@@ -79,10 +79,10 @@ public final class RestorationService extends BaseService {
     }
 
     /**
-     * Restores the given {@link Commit}.
-     * @param commit the {@link Commit} to restore.
+     * Applies the given {@link Commit}.
+     * @param commit the {@link Commit} to apply.
      */
-    private static void restoreCommit(Commit commit) {
+    private static void applyCommit(Commit commit) {
         commit.getCommitFiles()
                 .map(Path::of)
                 .forEach(path -> restoreFile(commit, path));
