@@ -5,7 +5,7 @@ import io.github.gluedtokeyboard.vcs.core.model.Commit;
 import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 import io.github.gluedtokeyboard.vcs.core.service.common.CommitService;
 import io.github.gluedtokeyboard.vcs.core.service.common.GeneralService;
-import io.github.gluedtokeyboard.vcs.core.service.common.RestorationService;
+import io.github.gluedtokeyboard.vcs.core.service.common.WorkingTreeService;
 import io.github.gluedtokeyboard.vcs.core.service.common.StagingAreaService;
 import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressable.ContentAddressableStore;
@@ -59,7 +59,7 @@ abstract class BaseCommand {
     /**
      * Contains file and commit restoration methods.
      */
-    protected final RestorationService restorationService;
+    protected final WorkingTreeService workingTreeService;
 
     /**
      * Stores the given interface implementations and initializes the common service objects with it.
@@ -80,6 +80,6 @@ abstract class BaseCommand {
         this.stagingAreaService = new StagingAreaService(storage, vcsLayout, vcsStore, blobStore, commitStore);
         this.commitService = new CommitService(storage, vcsLayout, vcsStore, blobStore, commitStore);
         this.generalService = new GeneralService(storage, vcsLayout, vcsStore, blobStore, commitStore);
-        this.restorationService = new RestorationService(storage, vcsLayout, vcsStore, blobStore, commitStore);
+        this.workingTreeService = new WorkingTreeService(storage, vcsLayout, vcsStore, blobStore, commitStore);
     }
 }

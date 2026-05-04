@@ -17,7 +17,7 @@ import static io.github.gluedtokeyboard.vcs.util.FileSystem.rm;
 /**
  * Methods to restore files, and safely apply commits.
  */
-public final class RestorationService extends BaseService {
+public final class WorkingTreeService extends BaseService {
     /**
      * Stores the given interface implementations.
      *
@@ -27,7 +27,7 @@ public final class RestorationService extends BaseService {
      * @param blobStore   a {@link ContentAddressableStore<Blob>} implementation.
      * @param commitStore a {@link ContentAddressableStore<Commit>} implementation.
      */
-    public RestorationService(
+    public WorkingTreeService(
             Storage storage, VcsLayout vcsLayout, VcsStore vcsStore, ContentAddressableStore<Blob> blobStore,
             ContentAddressableStore<Commit> commitStore) {
         super(storage, vcsLayout, vcsStore, blobStore, commitStore);

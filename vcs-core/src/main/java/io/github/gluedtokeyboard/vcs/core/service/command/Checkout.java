@@ -10,7 +10,7 @@ import io.github.gluedtokeyboard.vcs.storage.Storage;
 import java.nio.file.Path;
 
 import static io.github.gluedtokeyboard.vcs.core.service.common.CommitService.getCommit;
-import static io.github.gluedtokeyboard.vcs.core.service.common.RestorationService.restoreFile;
+import static io.github.gluedtokeyboard.vcs.core.service.common.WorkingTreeService.restoreFile;
 import static io.github.gluedtokeyboard.vcs.util.FileSystem.joinCWD;
 
 /**
@@ -77,7 +77,7 @@ public class Checkout extends BaseCommand {
         }
         String hash = vcs.getBranchHead(branch);
         Commit commit = Commit.deserialize(hash);
-        restorationService.applyCommitSafely(commit);
+        workingTreeService.applyCommitSafely(commit);
         vcs.setCurrentBranch(branch);
     }
 }
