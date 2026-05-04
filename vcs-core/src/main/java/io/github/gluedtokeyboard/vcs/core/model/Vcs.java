@@ -36,37 +36,37 @@ public class Vcs implements Serializable {
 
     /**
      * Stages the given file.
-     * @param path the path of the file.
+     * @param repoRelativePath the path of the file relative to the repository root.
      * @param sha1 the SHA-1 hash of the file.
      */
-    public void stageFile(String path, String sha1) {
-        stagedFiles.put(path, sha1);
+    public void stageFile(String repoRelativePath, String sha1) {
+        stagedFiles.put(repoRelativePath, sha1);
     }
 
     /**
      * Unstages the given file.
-     * @param path the path of the file.
+     * @param repoRelativePath the path of the file relative to the repository root.
      */
-    public void unstageFile(String path) {
-        stagedFiles.remove(path);
+    public void unstageFile(String repoRelativePath) {
+        stagedFiles.remove(repoRelativePath);
     }
 
     /**
      * Checks if the given file is currently stages.
-     * @param path the path of the file.
+     * @param repoRelativePath the path of the file relative to the repository root.
      * @return {@code true} if the file is staged; {@code false} otherwise.
      */
-    public boolean isStaged(String path) {
-        return stagedFiles.containsKey(path);
+    public boolean isStaged(String repoRelativePath) {
+        return stagedFiles.containsKey(repoRelativePath);
     }
 
     /**
      * Returns the SHA-1 hash of the staged file.
-     * @param path the path of the staged file.
+     * @param repoRelativePath the path of the file relative to the repository root.
      * @return the SHA-1 hash of the staged file.
      */
-    public String getStagedSha(String path) {
-        return stagedFiles.get(path);
+    public String getStagedSha(String repoRelativePath) {
+        return stagedFiles.get(repoRelativePath);
     }
 
     /**
