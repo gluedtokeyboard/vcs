@@ -73,4 +73,14 @@ public final class GeneralService extends BaseService {
     public void walkRepoDirsPost(String repoRoot, Consumer<String> consumer) {
         walkRepo(repoRoot, false, false, true, consumer);
     }
+
+    /**
+     * Relativizes the given path with respect to the repository root.
+     * @param repoRoot the repository root.
+     * @param path an absolute path.
+     * @return the given path relative to the repository root.
+     */
+    public String getRepoRelativePath(String repoRoot, String path) {
+        return storage.getRelativePath(repoRoot, path);
+    }
 }
