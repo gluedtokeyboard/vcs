@@ -8,9 +8,8 @@ import io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressable
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.vcs.VcsStore;
 import io.github.gluedtokeyboard.vcs.storage.Storage;
 
-import java.util.ArrayDeque;
-import java.util.Iterator;
-import java.util.Queue;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Commit methods.
@@ -22,18 +21,26 @@ public final class CommitService extends BaseService {
     public static final String NULL_COMMIT = "";
 
     /**
-     * Stores the given interface implementations.
+     * Used to convert repository-relative paths to absolute paths.
+     */
+    private final GeneralService generalService;
+
+    /**
+     * Stores the given interface implementations, and a {@link GeneralService} object.
      *
      * @param storage     a {@link Storage} implementation.
      * @param vcsLayout   a {@link VcsLayout} implementation.
      * @param vcsStore    a {@link VcsStore} implementation.
      * @param blobStore   a {@link ContentAddressableStore<Blob>} implementation.
      * @param commitStore a {@link ContentAddressableStore<Commit>} implementation.
+     * @param generalService a {@link GeneralService} object initialized with the same interface implementations as this
+     *                       object.
      */
     public CommitService(
             Storage storage, VcsLayout vcsLayout, VcsStore vcsStore, ContentAddressableStore<Blob> blobStore,
-            ContentAddressableStore<Commit> commitStore) {
+            ContentAddressableStore<Commit> commitStore, GeneralService generalService) {
         super(storage, vcsLayout, vcsStore, blobStore, commitStore);
+        this.generalService = generalService;
     }
 
     /**
@@ -99,5 +106,17 @@ public final class CommitService extends BaseService {
                 }
             };
         };
+    }
+
+    /**
+     * Returns the absolute paths of the files tracked by the given commit.
+     * @param repoRoot the repository root.
+     * @param commit a {@linkplain Commit} object.
+     * @return the absolute paths of the files tracked by the given commit.
+     */
+    public Set<String> getCommitFilesAbsolutePaths(String repoRoot, Commit commit) {
+        return commit.getCommitFiles()
+                .map(repoRelativePath -> generalService.getAbsolutePath(repoRoot, repoRelativePath))
+                .collect(Collectors.toSet());
     }
 }
