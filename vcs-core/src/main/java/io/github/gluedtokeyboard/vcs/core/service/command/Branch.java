@@ -1,5 +1,6 @@
 package io.github.gluedtokeyboard.vcs.core.service.command;
 
+import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
 import io.github.gluedtokeyboard.vcs.core.model.Blob;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
 import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
@@ -28,28 +29,30 @@ public class Branch extends BaseCommand {
 
     /**
      * Creates a new branch.
+     * @param ctx the repository context.
      * @param branchName the name of the branch.
      * @throws RuntimeException if the branch already exists.
      */
-    public void createBranch(String branchName) {
-        if (vcs.containsBranch(branchName)) {
+    public void createBranch(VcsContext ctx, String branchName) {
+        if (ctx.vcs().containsBranch(branchName)) {
             throw new RuntimeException("Branch " + branchName + " already exists");
         }
-        vcs.setBranchHead(branchName, vcs.getCurrentBranchHead());
+        ctx.vcs().setBranchHead(branchName, ctx.vcs().getCurrentBranchHead());
     }
 
     /**
      * Removes an existing branch.
+     * @param ctx the repository context.
      * @param branchName the name of the branch.
      * @throws RuntimeException if the branch does not exist, or if it is the current branch.
      */
-    public void removeBranch(String branchName) {
-        if (!vcs.containsBranch(branchName)) {
+    public void removeBranch(VcsContext ctx, String branchName) {
+        if (!ctx.vcs().containsBranch(branchName)) {
             throw new RuntimeException("Branch " + branchName + " does not exist");
         }
-        if (branchName.equals(vcs.getCurrentBranch())) {
+        if (branchName.equals(ctx.vcs().getCurrentBranch())) {
             throw new RuntimeException("Cannot remove the current branch");
         }
-        vcs.removeBranch(branchName);
+        ctx.vcs().removeBranch(branchName);
     }
 }
