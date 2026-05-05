@@ -8,11 +8,7 @@ import io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressable
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.vcs.VcsStore;
 import io.github.gluedtokeyboard.vcs.storage.Storage;
 
-import java.nio.file.Path;
 import java.util.List;
-
-import static io.github.gluedtokeyboard.vcs.util.FileSystem.exists;
-import static io.github.gluedtokeyboard.vcs.util.FileSystem.mkdir;
 
 /**
  * Contains methods for initializing the repository.
@@ -34,43 +30,38 @@ public class Init extends BaseCommand {
     }
 
     /**
-     * Initializes a repository in the current working directory.
-     * @throws RuntimeException If a repository already exists in the current working directory.
+     * Initializes a repository in the given location.
+     * @param repoRoot the location for the new repository.
+     * @throws RuntimeException if a repository already exists in the given location.
      */
-    public void init() {
-        if (repoExists()) {
-            throw new RuntimeException("A repository already exists in the current working directory.");
+    public void init(String repoRoot) {
+        if (vcsStore.exists(repoRoot)) {
+            throw new RuntimeException("A repository already exists in: " + repoRoot);
         }
-        createRepo();
+        createRepo(repoRoot);
     }
 
     /**
-     * Creates a repository in the current working directory.
+     * Creates a repository in the given location.
+     * @param repoRoot the location for the new repository.
      */
-    public void createRepo() {
-        createRepoFolders();
-        vcs.serialize();
+    public void createRepo(String repoRoot) {
+        createRepoFolders(repoRoot);
+        Vcs vcs = new Vcs();
+        vcsStore.store(repoRoot, vcs);
     }
 
     /**
      * Creates the folders required to store the data and the metadata of the repository.
+     * @param repoRoot the location of the new repository.
      */
-    private void createRepoFolders() {
-        List<Path> folders = List.of(
-                Vcs.getStagingAreaFolder(),
-                Vcs.getCommitsFolder(),
-                Vcs.getBlobsFolder()
+    private void createRepoFolders(String repoRoot) {
+        List<String> folders = List.of(
+                vcsLayout.getCommitsFolder(repoRoot),
+                vcsLayout.getBlobsFolder(repoRoot)
         );
-        for (Path folder : folders) {
-            mkdir(folder);
+        for (String folder : folders) {
+            storage.mkdir(folder);
         }
-    }
-
-    /**
-     * Checks if a repository exists in the current working directory.
-     * @return {@code true} if a repository exists; {@code false} otherwise.
-     */
-    public boolean repoExists() {
-        return exists(Vcs.getRepoFolder());
     }
 }
