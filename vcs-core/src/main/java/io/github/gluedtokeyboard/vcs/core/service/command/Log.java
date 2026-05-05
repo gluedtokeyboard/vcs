@@ -1,5 +1,6 @@
 package io.github.gluedtokeyboard.vcs.core.service.command;
 
+import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
 import io.github.gluedtokeyboard.vcs.core.model.Blob;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
 import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
@@ -32,13 +33,14 @@ public class Log extends BaseCommand {
 
     /**
      * Returns commits starting from the head, following their first parents.
+     * @param ctx the repository context.
      * @return An {@linkplain ArrayList} of commits starting from the head to the earliest reachable commit.
      */
-    public ArrayList<Commit> log() {
+    public ArrayList<Commit> log(VcsContext ctx) {
         ArrayList<Commit> commits = new ArrayList<>();
-        String currentHash = vcs.getCurrentBranchHead();
+        String currentHash = ctx.vcs().getCurrentBranchHead();
         while (!(currentHash == null || currentHash.equals(NULL_COMMIT))) {
-            Commit commit = Commit.deserialize(currentHash);
+            Commit commit = commitStore.load(ctx.repoRoot(), currentHash);
             commits.addLast(commit);
             currentHash = commit.getParent1();
         }
