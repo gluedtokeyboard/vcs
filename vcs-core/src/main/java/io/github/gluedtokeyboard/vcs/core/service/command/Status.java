@@ -1,7 +1,10 @@
 package io.github.gluedtokeyboard.vcs.core.service.command;
 
+import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
 import io.github.gluedtokeyboard.vcs.core.model.Blob;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
+import io.github.gluedtokeyboard.vcs.core.service.common.CommitService;
+import io.github.gluedtokeyboard.vcs.core.service.common.GeneralService;
 import io.github.gluedtokeyboard.vcs.core.service.common.StagingAreaService;
 import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressable.ContentAddressableStore;
@@ -13,7 +16,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.github.gluedtokeyboard.vcs.core.service.common.GeneralService.walkRepoFiles;
 import static io.github.gluedtokeyboard.vcs.util.General.setDifference;
 
 /**
@@ -21,18 +23,43 @@ import static io.github.gluedtokeyboard.vcs.util.General.setDifference;
  */
 public class Status extends BaseCommand {
     /**
-     * Stores the given interface implementations.
+     * Used to traverse the repository files, and to convert absolute paths to repository-relative paths.
+     */
+    private final GeneralService generalService;
+
+    /**
+     * Used get a map from the absolute paths of the staged files to their hashes.
+     */
+    private final StagingAreaService stagingAreaService;
+
+    /**
+     * Used to get the latest commit of the current branch and its files.
+     */
+    private final CommitService commitService;
+
+    /**
+     * Stores the given interface implementations and service objects.
      *
      * @param storage     a {@link Storage} implementation.
      * @param vcsLayout   a {@link VcsLayout} implementation.
      * @param vcsStore    a {@link VcsStore} implementation.
      * @param blobStore   a {@link ContentAddressableStore <Blob>} implementation.
      * @param commitStore a {@link ContentAddressableStore<Commit>} implementation.
+     * @param generalService a {@link GeneralService} object initialized with the same interface implementations as this
+     *                       object.
+     * @param stagingAreaService a {@link StagingAreaService} object initialized with the same interface implementations
+     *                           as this object.
+     * @param commitService a {@link CommitService} object initialized with the same interface implementations as this
+     *                       object.
      */
     public Status(
             Storage storage, VcsLayout vcsLayout, VcsStore vcsStore, ContentAddressableStore<Blob> blobStore,
-            ContentAddressableStore<Commit> commitStore) {
+            ContentAddressableStore<Commit> commitStore, GeneralService generalService,
+            StagingAreaService stagingAreaService, CommitService commitService) {
         super(storage, vcsLayout, vcsStore, blobStore, commitStore);
+        this.generalService = generalService;
+        this.stagingAreaService = stagingAreaService;
+        this.commitService = commitService;
     }
 
     /**
@@ -46,31 +73,31 @@ public class Status extends BaseCommand {
      *     <li>Unstaged deletions</li>
      *     <li>Untracked files</li>
      * </ul>
+     * @param ctx the repository context.
      * @return A {@link StatusRecord} object containing those items.
      */
-    public StatusRecord status() {
-        List<String> branches = vcs.getAllBranches().toList();
-        String currentBranch = vcs.getCurrentBranch();
-        TreeMap<String, String> stagedFiles = vcs.getStagedFilesClone();
-        Set<String> stagedAdditions = getStagedAdditions(stagedFiles);
-        Set<String> stagedDeletions = getStagedDeletions(stagedFiles);
+    public StatusRecord status(VcsContext ctx) {
+        List<String> branches = ctx.vcs().getAllBranches().toList();
+        String currentBranch = ctx.vcs().getCurrentBranch();
+        Map<String, String> stagedFilesAbsolutePaths = stagingAreaService.getStagedFilesAbsolutePaths(ctx);
+        Set<String> stagedAdditions = getStagedAdditions(stagedFilesAbsolutePaths);
+        Set<String> stagedDeletions = getStagedDeletions(stagedFilesAbsolutePaths);
         Set<String> unstagedModifications = new HashSet<>();
         Set<String> untrackedFiles = new HashSet<>();
         Set<String> cwdFiles = new HashSet<>();
-        Commit latestCommit = commitService.getLatestCommitCurrentBranch();
-        Set<String> latestCommitFiles = getCommitFiles(latestCommit);
-        walkRepoFiles(file -> {
-            String fileString = file.toString();
-            if (isUnstagedMod(latestCommit, latestCommitFiles, file)) {
-                unstagedModifications.add(fileString);
-            } else if (isUntracked(stagedDeletions, latestCommitFiles, file)) {
-                untrackedFiles.add(fileString);
+        Commit latestCommit = commitService.getLatestCommitCurrentBranch(ctx);
+        Set<String> latestCommitFilesAbsolutePaths = getCommitFilesAbsolutePaths(ctx.repoRoot(), latestCommit);
+        generalService.walkRepoFiles(ctx.repoRoot(), file -> {
+            if (isUnstagedMod(ctx, latestCommit, latestCommitFilesAbsolutePaths, file)) {
+                unstagedModifications.add(file);
+            } else if (isUntracked(ctx, stagedDeletions, latestCommitFilesAbsolutePaths, file)) {
+                untrackedFiles.add(file);
             }
-            cwdFiles.add(fileString);
+            cwdFiles.add(file);
         });
         Set<String> unstagedDeletions = new HashSet<>();
         unstagedDeletions.addAll(setDifference(stagedAdditions, cwdFiles));
-        unstagedDeletions.addAll(setDifference(latestCommitFiles, cwdFiles, stagedDeletions));
+        unstagedDeletions.addAll(setDifference(latestCommitFilesAbsolutePaths, cwdFiles, stagedDeletions));
         return new StatusRecord(
                 branches, currentBranch, stagedAdditions, stagedDeletions, unstagedModifications, unstagedDeletions,
                 untrackedFiles
@@ -78,44 +105,52 @@ public class Status extends BaseCommand {
     }
 
     /**
-     * Returns the files tracked by the given commit.
+     * Returns the absolute paths of the files tracked by the given commit.
+     * @param repoRoot the repository root.
      * @param commit a {@link Commit} object.
-     * @return the {@link Set} of files tracked by the given commit.
+     * @return the absolute paths of the files tracked by the given commit.
      */
-    private Set<String> getCommitFiles(Commit commit) {
+    private Set<String> getCommitFilesAbsolutePaths(String repoRoot, Commit commit) {
         if (commit == null) {
             return Collections.emptySet();
         }
-        return commit.getCommitFiles().collect(Collectors.toSet());
+        return commitService.getCommitFilesAbsolutePaths(repoRoot, commit);
     }
 
     /**
      * Checks if the given file has been modified but hasn't been staged for addition.
+     * @param ctx the repository context.
      * @param latestCommit the latest {@link Commit} in the current branch.
-     * @param latestCommitFiles the files tracked by the latest {@link Commit} in the current branch.
+     * @param latestCommitFilesAbsolutePaths the absolute paths of the files tracked by the latest {@link Commit} in
+     *                                       the current branch.
      * @param file the path of the file.
      * @return a boolean indicating whether the given file has been modified but not staged for addition.
      */
-    private boolean isUnstagedMod(Commit latestCommit, Set<String> latestCommitFiles, String file) {
-        String fileString = file.toString();
-        Blob blob = new Blob(file);
-        return latestCommitFiles.contains(fileString)
-                && !latestCommit.getFileHash(file).equals(blob.getSha1())
-                && !vcs.isStaged(file)
-                || (vcs.isStaged(file) && !vcs.getStagedSha(file).equals(blob.getSha1()));
+    private boolean isUnstagedMod(
+            VcsContext ctx, Commit latestCommit, Set<String> latestCommitFilesAbsolutePaths, String file) {
+        String repoRelativePath = generalService.getRepoRelativePath(ctx.repoRoot(), file);
+        Blob blob = new Blob(storage, file);
+        return latestCommitFilesAbsolutePaths.contains(file)
+                && !latestCommit.getFileHash(repoRelativePath).equals(blob.getSha1())
+                && !ctx.vcs().isStaged(repoRelativePath)
+                || (ctx.vcs().isStaged(repoRelativePath)
+                     && !ctx.vcs().getStagedSha(repoRelativePath).equals(blob.getSha1()));
     }
 
     /**
      * Checks if the given file is untracked.
-     * @param stagedDeletions the {@link Set} of files currently staged for deletion.
-     * @param latestCommitFiles the files tracked by the latest {@link Commit} in the current branch.
+     * @param ctx the repository context.
+     * @param stagedDeletions the absolute paths of the files currently staged for deletion.
+     * @param latestCommitFilesAbsolutePaths the absolute paths of the files tracked by the latest {@link Commit} in
+     *                                       the current branch.
      * @param file the path of the file.
      * @return a boolean indicating whether the given file is untracked.
      */
-    private boolean isUntracked(Set<String> stagedDeletions, Set<String> latestCommitFiles, String file) {
-        String fileString = file.toString();
-        return stagedDeletions.contains(fileString)
-                || (!latestCommitFiles.contains(fileString) && !vcs.isStaged(file));
+    private boolean isUntracked(
+            VcsContext ctx, Set<String> stagedDeletions, Set<String> latestCommitFilesAbsolutePaths, String file) {
+        String repoRelativePath = generalService.getRepoRelativePath(ctx.repoRoot(), file);
+        return stagedDeletions.contains(file)
+                || (!latestCommitFilesAbsolutePaths.contains(file) && !ctx.vcs().isStaged(repoRelativePath));
     }
 
     /**
@@ -123,7 +158,7 @@ public class Status extends BaseCommand {
      * @param stagedFiles all the files currently staged for addition or deletion.
      * @return a {@link Set} containing the files currently staged for addition.
      */
-    private Set<String> getStagedAdditions(TreeMap<String, String> stagedFiles) {
+    private static Set<String> getStagedAdditions(Map<String, String> stagedFiles) {
         return filterStagedFiles(
                 stagedFiles,
                 entry -> !entry.getValue().equals(StagingAreaService.DELETION_MARKER)
@@ -135,7 +170,7 @@ public class Status extends BaseCommand {
      * @param stagedFiles all the files currently staged for addition or deletion.
      * @return a {@link Set} containing the files currently staged for deletion.
      */
-    private Set<String> getStagedDeletions(TreeMap<String, String> stagedFiles) {
+    private static Set<String> getStagedDeletions(Map<String, String> stagedFiles) {
         return filterStagedFiles(
                 stagedFiles,
                 entry -> entry.getValue().equals(StagingAreaService.DELETION_MARKER)
@@ -147,8 +182,8 @@ public class Status extends BaseCommand {
      * @param filter a {@link Predicate} to filter the staged files.
      * @return a {@link Stream} containing the remaining files.
      */
-    private Stream<String> filterStagedFiles(
-            TreeMap<String, String> stagedFiles, Predicate<Map.Entry<String, String>> filter) {
+    private static Stream<String> filterStagedFiles(
+            Map<String, String> stagedFiles, Predicate<Map.Entry<String, String>> filter) {
         return stagedFiles
                 .entrySet()
                 .stream()
