@@ -8,6 +8,10 @@ import io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressable
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.vcs.VcsStore;
 import io.github.gluedtokeyboard.vcs.storage.Storage;
 
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * Staging area methods.
  */
@@ -18,7 +22,7 @@ public final class StagingAreaService extends BaseService {
     public static final String DELETION_MARKER = "";
 
     /**
-     * Used to convert absolute paths into repository-relative paths.
+     * Used to convert between absolute paths and repository-relative paths.
      */
     private final GeneralService generalService;
 
@@ -71,5 +75,21 @@ public final class StagingAreaService extends BaseService {
         storage.rm(path);
         String repoRelativePath = generalService.getRepoRelativePath(ctx.repoRoot(), path);
         ctx.vcs().stageFile(repoRelativePath, DELETION_MARKER);
+    }
+
+    /**
+     * Returns a map from the absolute paths of the staged files to their hashes.
+     * @param ctx the repository context.
+     * @return a map from the absolute paths of the staged files to their hashes.
+     */
+    public Map<String, String> getStagedFilesAbsolutePaths(VcsContext ctx) {
+        return ctx.vcs().getStagedFilesClone().entrySet().stream()
+                .map(entry -> {
+                    String repoRelativePath = entry.getKey();
+                    String hash = entry.getValue();
+                    String absolutePath = generalService.getAbsolutePath(ctx.repoRoot(), repoRelativePath);
+                    return new SimpleEntry<>(absolutePath, hash);
+                })
+                .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
     }
 }
