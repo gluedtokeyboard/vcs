@@ -83,4 +83,14 @@ public final class GeneralService extends BaseService {
     public String getRepoRelativePath(String repoRoot, String path) {
         return storage.getRelativePath(repoRoot, path);
     }
+
+    /**
+     * Resolves the given repository-relative path against the repository root.
+     * @param repoRoot the repository root.
+     * @param repoRelativePath the path to resolve against the repository root.
+     * @return the given path resolved against the repository root.
+     */
+    public String getAbsolutePath(String repoRoot, String repoRelativePath) {
+        return storage.join(repoRoot, repoRelativePath);
+    }
 }
