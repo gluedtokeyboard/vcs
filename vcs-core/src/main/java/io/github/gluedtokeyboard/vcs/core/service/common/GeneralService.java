@@ -2,17 +2,12 @@ package io.github.gluedtokeyboard.vcs.core.service.common;
 
 import io.github.gluedtokeyboard.vcs.core.model.Blob;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
-import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressable.ContentAddressableStore;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.vcs.VcsStore;
 import io.github.gluedtokeyboard.vcs.storage.Storage;
 
-import java.util.Set;
 import java.util.function.Consumer;
-
-import static io.github.gluedtokeyboard.vcs.util.FileSystem.getCWD;
-import static io.github.gluedtokeyboard.vcs.util.FileSystem.walk;
 
 /**
  * General repository methods.
@@ -35,6 +30,7 @@ public final class GeneralService extends BaseService {
 
     /**
      * Walks the repository root.
+     * @param repoRoot the repository root.
      * @param consumeFiles indicates whether to pass files to the given {@link Consumer}.
      * @param consumeDirsPreVisit indicates whether to pass directories to the given {@link Consumer} before visiting
      *                           them.
@@ -42,33 +38,39 @@ public final class GeneralService extends BaseService {
      *                            them.
      * @param consumer a {@link Consumer} to consume the repository files and directories.
      */
-    public static void walkRepo(
-            boolean consumeFiles, boolean consumeDirsPreVisit, boolean consumeDirsPostVisit,
+    public void walkRepo(
+            String repoRoot, boolean consumeFiles, boolean consumeDirsPreVisit, boolean consumeDirsPostVisit,
             Consumer<String> consumer) {
-        walk(getCWD(), Set.of(Vcs.getRepoFolder()), consumeFiles, consumeDirsPreVisit, consumeDirsPostVisit, consumer);
+        String repoFolder = vcsLayout.getRepoFolder(repoRoot);
+        storage.walk(
+                repoRoot, path -> path.equals(repoFolder), consumeFiles, consumeDirsPreVisit,
+                consumeDirsPostVisit, consumer);
     }
 
     /**
      * Walks the repository root, but only feeds files to the consumer.
+     * @param repoRoot the repository root.
      * @param consumer a {@link Consumer} to consume the repository files.
      */
-    public static void walkRepoFiles(Consumer<String> consumer) {
-        walkRepo(true, false, false, consumer);
+    public void walkRepoFiles(String repoRoot, Consumer<String> consumer) {
+        walkRepo(repoRoot, true, false, false, consumer);
     }
 
     /**
      * Walks the repository root, but only feeds directories to the consumer before visiting them.
+     * @param repoRoot the repository root.
      * @param consumer a {@link Consumer} to consume all the directories in the repository.
      */
-    public static void walkRepoDirsPre(Consumer<String> consumer) {
-        walkRepo(false, true, false, consumer);
+    public void walkRepoDirsPre(String repoRoot, Consumer<String> consumer) {
+        walkRepo(repoRoot, false, true, false, consumer);
     }
 
     /**
      * Walks the repository root, but only feeds directories to the consumer after visiting them.
+     * @param repoRoot the repository root.
      * @param consumer a {@link Consumer} to consume all the directories in the repository.
      */
-    public static void walkRepoDirsPost(Consumer<String> consumer) {
-        walkRepo(false, false, true, consumer);
+    public void walkRepoDirsPost(String repoRoot, Consumer<String> consumer) {
+        walkRepo(repoRoot, false, false, true, consumer);
     }
 }
