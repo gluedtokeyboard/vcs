@@ -39,11 +39,6 @@ public class Merge extends BaseCommand {
     private final CommitCommand commitCommand;
 
     /**
-     * Used to check out the given branch when fast-forwarding.
-     */
-    private final Checkout checkout;
-
-    /**
      * Used to convert repository-relative paths to absolute paths.
      */
     private final GeneralService generalService;
@@ -54,7 +49,7 @@ public class Merge extends BaseCommand {
     private final CommitService commitService;
 
     /**
-     * Used to restore files and check if it is safe to merge the given branch.
+     * Used to restore files, apply commits safely, and check if it is safe to merge the given branch.
      */
     private final WorkingTreeService workingTreeService;
 
@@ -70,7 +65,6 @@ public class Merge extends BaseCommand {
      * @param rm an {@link Rm} object initialized with the same interface implementations as this object.
      * @param commitCommand a {@link CommitCommand} object initialized with the same interface implementations as this
      *                      object.
-     * @param checkout a {@link Checkout} object initialized with the same interface implementations as this object.
      * @param generalService a {@link GeneralService} object initialized with the same interface implementations as this
      *                       object.
      * @param commitService a {@link CommitService} object initialized with the same interface implementations as this
@@ -80,13 +74,12 @@ public class Merge extends BaseCommand {
      */
     public Merge(
             Storage storage, VcsLayout vcsLayout, VcsStore vcsStore, ContentAddressableStore<Blob> blobStore,
-            ContentAddressableStore<Commit> commitStore, Add add, Rm rm, CommitCommand commitCommand, Checkout checkout,
+            ContentAddressableStore<Commit> commitStore, Add add, Rm rm, CommitCommand commitCommand,
             GeneralService generalService, CommitService commitService, WorkingTreeService workingTreeService) {
         super(storage, vcsLayout, vcsStore, blobStore, commitStore);
         this.add = add;
         this.rm = rm;
         this.commitCommand = commitCommand;
-        this.checkout = checkout;
         this.generalService = generalService;
         this.commitService = commitService;
         this.workingTreeService = workingTreeService;
@@ -109,7 +102,7 @@ public class Merge extends BaseCommand {
         String currentSha1 = ctx.vcs().getCurrentBranchHead();
         Commit current = commitStore.load(ctx.repoRoot(), currentSha1);
         Commit splitPoint = getSplitPoint(ctx, current, other);
-        checkMergeNeeded(ctx, current, other, splitPoint, branchName);
+        checkMergeNeeded(ctx, currentSha1, otherSha1, splitPoint.getSha1());
         workingTreeService.checkSafety(ctx, other);
         mergeCommits(ctx, current, other, splitPoint, branchName);
     }
@@ -139,10 +132,9 @@ public class Merge extends BaseCommand {
     /**
      * Checks if a merge is needed between the two commits.
      * @param ctx the repository context.
-     * @param current the current {@link Commit}.
-     * @param other the {@link Commit} to merge into the current {@link Commit}.
-     * @param splitPoint the split point between the two commits.
-     * @param branchName the name of the branch to merge into the current branch.
+     * @param currentHash the hash of the current commit.
+     * @param otherHash the hash of the commit to merge into the current commit.
+     * @param splitPointHash the hash of the split point between the two commits.
      * @throws RuntimeException if:
      * <ul>
      *     <li>The current branch can be fast-forwarded. In this case the branch is fast-forwarded before the
@@ -150,15 +142,12 @@ public class Merge extends BaseCommand {
      *     <li>The given branch in an ancestor of the current branch.</li>
      * </ul>
      */
-    private void checkMergeNeeded(VcsContext ctx, Commit current, Commit other, Commit splitPoint, String branchName) {
-        String splitPointSha1 = splitPoint.getSha1();
-        String currentSha1 = current.getSha1();
-        String otherSha1 = other.getSha1();
-        if (splitPointSha1.equals(currentSha1)) {
-            checkout.checkoutBranch(ctx, branchName);
-            ctx.vcs().setCurrentBranchHead(otherSha1);
+    private void checkMergeNeeded(VcsContext ctx, String currentHash, String otherHash, String splitPointHash) {
+        if (splitPointHash.equals(currentHash)) {
+            workingTreeService.applyCommitSafely(ctx, otherHash);
+            ctx.vcs().setCurrentBranchHead(otherHash);
             throw new RuntimeException("Current branch fast-forwarded.");
-        } else if (splitPointSha1.equals(otherSha1)) {
+        } else if (splitPointHash.equals(otherHash)) {
             throw new RuntimeException("The given branch is an ancestor of the current branch.");
         }
     }
