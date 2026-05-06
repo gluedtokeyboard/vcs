@@ -1,23 +1,22 @@
 package io.github.gluedtokeyboard.vcs.core.service.command;
 
+import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
 import io.github.gluedtokeyboard.vcs.core.model.Blob;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
+import io.github.gluedtokeyboard.vcs.core.service.common.CommitService;
+import io.github.gluedtokeyboard.vcs.core.service.common.GeneralService;
+import io.github.gluedtokeyboard.vcs.core.service.common.WorkingTreeService;
 import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressable.ContentAddressableStore;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.vcs.VcsStore;
 import io.github.gluedtokeyboard.vcs.storage.Storage;
 
-import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static io.github.gluedtokeyboard.vcs.core.service.common.CommitService.getCommitsInBFSOrder;
-import static io.github.gluedtokeyboard.vcs.core.service.common.CommitService.getCommittedBlob;
-import static io.github.gluedtokeyboard.vcs.core.service.common.WorkingTreeService.restoreFile;
-import static io.github.gluedtokeyboard.vcs.util.File.write;
-import static io.github.gluedtokeyboard.vcs.util.FileSystem.basename;
 import static io.github.gluedtokeyboard.vcs.util.General.*;
 
 /**
@@ -25,54 +24,110 @@ import static io.github.gluedtokeyboard.vcs.util.General.*;
  */
 public class Merge extends BaseCommand {
     /**
-     * Stores the given interface implementations.
+     * Used to stage files when creating a merge commit.
+     */
+    private final Add add;
+
+    /**
+     * Used to delete files and stage removals when creating a merge commit.
+     */
+    private final Rm rm;
+
+    /**
+     * Used to create a merge commit.
+     */
+    private final CommitCommand commitCommand;
+
+    /**
+     * Used to check out the given branch when fast-forwarding.
+     */
+    private final Checkout checkout;
+
+    /**
+     * Used to convert repository-relative paths to absolute paths.
+     */
+    private final GeneralService generalService;
+
+    /**
+     * Used to get commits in BFS order.
+     */
+    private final CommitService commitService;
+
+    /**
+     * Used to restore files and check if it is safe to merge the given branch.
+     */
+    private final WorkingTreeService workingTreeService;
+
+    /**
+     * Stores the given interface implementations, command objects, and service objects.
      *
      * @param storage     a {@link Storage} implementation.
      * @param vcsLayout   a {@link VcsLayout} implementation.
      * @param vcsStore    a {@link VcsStore} implementation.
      * @param blobStore   a {@link ContentAddressableStore<Blob>} implementation.
      * @param commitStore a {@link ContentAddressableStore<Commit>} implementation.
+     * @param add an {@link Add} object initialized with the same interface implementations as this object.
+     * @param rm an {@link Rm} object initialized with the same interface implementations as this object.
+     * @param commitCommand a {@link CommitCommand} object initialized with the same interface implementations as this
+     *                      object.
+     * @param checkout a {@link Checkout} object initialized with the same interface implementations as this object.
+     * @param generalService a {@link GeneralService} object initialized with the same interface implementations as this
+     *                       object.
+     * @param commitService a {@link CommitService} object initialized with the same interface implementations as this
+     *                       object.
+     * @param workingTreeService a {@link WorkingTreeService} object initialized with the same interface implementations
+     *                           as this object.
      */
     public Merge(
             Storage storage, VcsLayout vcsLayout, VcsStore vcsStore, ContentAddressableStore<Blob> blobStore,
-            ContentAddressableStore<Commit> commitStore) {
+            ContentAddressableStore<Commit> commitStore, Add add, Rm rm, CommitCommand commitCommand, Checkout checkout,
+            GeneralService generalService, CommitService commitService, WorkingTreeService workingTreeService) {
         super(storage, vcsLayout, vcsStore, blobStore, commitStore);
+        this.add = add;
+        this.rm = rm;
+        this.commitCommand = commitCommand;
+        this.checkout = checkout;
+        this.generalService = generalService;
+        this.commitService = commitService;
+        this.workingTreeService = workingTreeService;
     }
 
     /**
      * Merges the given branch into the current branch.
+     * @param ctx the repository context.
      * @param branchName the name of the branch.
      */
-    public void merge(String branchName) {
-        if (branchName.equals(vcs.getCurrentBranch())) {
+    public void merge(VcsContext ctx, String branchName) {
+        if (branchName.equals(ctx.vcs().getCurrentBranch())) {
             throw new RuntimeException("You are already on branch " + branchName + ".");
         }
-        if (!vcs.containsBranch(branchName)) {
+        if (!ctx.vcs().containsBranch(branchName)) {
             throw new RuntimeException("Branch " + branchName + " does not exist.");
         }
-        String otherSha1 = vcs.getBranchHead(branchName);
-        Commit other = Commit.deserialize(otherSha1);
-        String currentSha1 = vcs.getCurrentBranchHead();
-        Commit current = Commit.deserialize(currentSha1);
-        Commit splitPoint = getSplitPoint(current, other);
-        checkMergeNeeded(current, other, splitPoint, branchName);
-        workingTreeService.checkSafety(other);
-        mergeCommits(current, other, splitPoint, branchName);
+        String otherSha1 = ctx.vcs().getBranchHead(branchName);
+        Commit other = commitStore.load(ctx.repoRoot(), otherSha1);
+        String currentSha1 = ctx.vcs().getCurrentBranchHead();
+        Commit current = commitStore.load(ctx.repoRoot(), currentSha1);
+        Commit splitPoint = getSplitPoint(ctx, current, other);
+        checkMergeNeeded(ctx, current, other, splitPoint, branchName);
+        workingTreeService.checkSafety(ctx, other);
+        mergeCommits(ctx, current, other, splitPoint, branchName);
     }
 
     /**
      * Returns the split point between the two commits.
+     * @param ctx the repository context.
      * @param commit1 the first {@link Commit}.
      * @param commit2 the second {@link Commit}.
      * @return the split point between the two commits.
      */
-    private Commit getSplitPoint(Commit commit1, Commit commit2) {
+    private Commit getSplitPoint(VcsContext ctx, Commit commit1, Commit commit2) {
         Set<String> commit1Ancestors = new HashSet<>();
-        getCommitsInBFSOrder(commit1).forEach(commit1Ancestors::add);
-        Iterable<String> commit2Ancestors = getCommitsInBFSOrder(commit2);
+        commitService.getCommitsInBFSOrder(ctx, commit1).forEach(commit1Ancestors::add);
+        Iterable<String> commit2Ancestors = commitService.getCommitsInBFSOrder(ctx, commit2);
         for (String commit2Ancestor : commit2Ancestors) {
             if (commit1Ancestors.contains(commit2Ancestor)) {
-                return Commit.deserialize(commit2Ancestor);
+                return commitStore.load(ctx.repoRoot(),commit2Ancestor);
             }
         }
         throw new RuntimeException(
@@ -83,6 +138,7 @@ public class Merge extends BaseCommand {
 
     /**
      * Checks if a merge is needed between the two commits.
+     * @param ctx the repository context.
      * @param current the current {@link Commit}.
      * @param other the {@link Commit} to merge into the current {@link Commit}.
      * @param splitPoint the split point between the two commits.
@@ -94,13 +150,13 @@ public class Merge extends BaseCommand {
      *     <li>The given branch in an ancestor of the current branch.</li>
      * </ul>
      */
-    private void checkMergeNeeded(Commit current, Commit other, Commit splitPoint, String branchName) {
+    private void checkMergeNeeded(VcsContext ctx, Commit current, Commit other, Commit splitPoint, String branchName) {
         String splitPointSha1 = splitPoint.getSha1();
         String currentSha1 = current.getSha1();
         String otherSha1 = other.getSha1();
         if (splitPointSha1.equals(currentSha1)) {
-            new Checkout(vcs).checkoutBranch(branchName);
-            vcs.setCurrentBranchHead(otherSha1);
+            checkout.checkoutBranch(ctx, branchName);
+            ctx.vcs().setCurrentBranchHead(otherSha1);
             throw new RuntimeException("Current branch fast-forwarded.");
         } else if (splitPointSha1.equals(otherSha1)) {
             throw new RuntimeException("The given branch is an ancestor of the current branch.");
@@ -109,24 +165,27 @@ public class Merge extends BaseCommand {
 
     /**
      * Merges the two commits.
+     * @param ctx the repository context.
      * @param current the current branch head.
      * @param other the branch head of {@code branchName}.
      * @param splitPoint the split point between the two commits.
      * @param branchName the name of the branch to merge into the current branch.
      */
-    private void mergeCommits(Commit current, Commit other, Commit splitPoint, String branchName) {
+    private void mergeCommits(VcsContext ctx, Commit current, Commit other, Commit splitPoint, String branchName) {
         // Handle modifications.
         Set<String> currentModifications = getModifications(splitPoint, current);
         Set<String> otherModifications = getModifications(splitPoint, other);
         Set<String> otherExclusiveModifications = setDifference(otherModifications, currentModifications);
-        restoreAndStageCommitFiles(other, otherExclusiveModifications);
+        restoreAndStageCommitFiles(ctx, other, otherExclusiveModifications);
         Set<String> modificationConflicts = setIntersection(currentModifications, otherModifications);
         // Handle deletions.
         Set<String> currentDeletions = getDeletions(splitPoint, current);
         Set<String> otherDeletions = getDeletions(splitPoint, other);
         Set<String> toBeDeleted = // Files deleted in the other commit but unmodified in the current commit.
                 setDifference(otherDeletions, currentDeletions, currentModifications);
-        removeAndStageFiles(toBeDeleted);
+        Stream<String> toBeDeletedAbsolutePaths = toBeDeleted.stream()
+                .map(path -> generalService.getAbsolutePath(ctx.repoRoot(), path));
+        removeAndStageFiles(ctx, toBeDeletedAbsolutePaths);
         Set<String> deletionConflicts = // Files that are deleted in one commit but modified in the other.
                 setUnion(
                         setIntersection(currentDeletions, otherModifications),
@@ -135,9 +194,9 @@ public class Merge extends BaseCommand {
         // Handle merge conflicts if any, and make a merge commit.
         Set<String> conflicts = setUnion(modificationConflicts, deletionConflicts);
         if (!conflicts.isEmpty()) {
-            mergeConflicts(current, other, conflicts, branchName);
+            mergeConflicts(ctx.repoRoot(), current, other, conflicts, branchName);
         }
-        createMergeCommit(branchName);
+        createMergeCommit(ctx, branchName);
         if (!conflicts.isEmpty()) {
             String conflictMessage = getConflictMessage(conflicts);
             throw new RuntimeException(conflictMessage);
@@ -146,12 +205,13 @@ public class Merge extends BaseCommand {
 
     /**
      * Creates a merge commit.
+     * @param ctx the repository context.
      * @param branchName the name of the branch to merge into the current branch.
      */
-    private void createMergeCommit(String branchName) {
-        String branchHead = vcs.getBranchHead(branchName);
-        String commitMessage = getMergeCommitMessage(branchName);
-        new CommitCommand(vcs).commit(branchHead, commitMessage);
+    private void createMergeCommit(VcsContext ctx, String branchName) {
+        String branchHead = ctx.vcs().getBranchHead(branchName);
+        String commitMessage = getMergeCommitMessage(ctx, branchName);
+        commitCommand.commit(ctx, branchHead, commitMessage);
     }
 
     /**
@@ -160,7 +220,7 @@ public class Merge extends BaseCommand {
      * @param commit the {@link Commit} with the modifications.
      * @return a {@link Set} containing the modifications.
      */
-    private Set<String> getModifications(Commit base, Commit commit) {
+    private static Set<String> getModifications(Commit base, Commit commit) {
         Map<String, String> modifications = commit.getFilesClone();
         Map<String, String> baseFiles = base.getFilesClone();
         baseFiles.forEach((key, value) -> {
@@ -173,16 +233,15 @@ public class Merge extends BaseCommand {
 
     /**
      * Restores the given files from the given commit and stages them.
+     * @param ctx the repository context.
      * @param commit the {@link Commit} from which to restore the files.
-     * @param files the {@link Set} of files to restore.
+     * @param commitFiles the {@link Set} of files to restore and stage from the given commit.
      */
-    private void restoreAndStageCommitFiles(Commit commit, Set<String> files) {
-        Add add = new Add(vcs);
-        files.forEach(file -> {
-            Path path = Path.of(file);
-            restoreFile(commit, path);
-            String basename = basename(path);
-            add.add(basename);
+    private void restoreAndStageCommitFiles(VcsContext ctx, Commit commit, Set<String> commitFiles) {
+        commitFiles.forEach(repoRelativePath -> {
+            String absolutePath = generalService.getAbsolutePath(ctx.repoRoot(), repoRelativePath);
+            workingTreeService.restoreFile(ctx, commit, absolutePath);
+            add.add(ctx, absolutePath);
         });
     }
 
@@ -192,7 +251,7 @@ public class Merge extends BaseCommand {
      * @param commit the {@link Commit} with the deletions.
      * @return a {@link Set} containing the deletions.
      */
-    private Set<String> getDeletions(Commit base, Commit commit) {
+    private static Set<String> getDeletions(Commit base, Commit commit) {
         Set<String> deletions = base.getCommitFiles().collect(Collectors.toSet());
         commit.getCommitFiles().forEach(deletions::remove);
         return deletions;
@@ -200,20 +259,21 @@ public class Merge extends BaseCommand {
 
     /**
      * Removes the given files from the repository and stages them for removal.
+     * @param ctx the repository context.
      * @param files the files to remove.
      */
-    private void removeAndStageFiles(Set<String> files) {
-        Rm rm = new Rm(vcs);
-        files.forEach(rm::rm);
+    private void removeAndStageFiles(VcsContext ctx, Stream<String> files) {
+        files.forEach(file -> rm.rm(ctx, file));
     }
 
     /**
      * Returns a message for the merge commit.
+     * @param ctx the repository context.
      * @param branchName the name of the branch to merge into the current branch.
      * @return a message for the merge commit.
      */
-    private String getMergeCommitMessage(String branchName) {
-        return "Merge " + branchName + " into " + vcs.getCurrentBranch();
+    private String getMergeCommitMessage(VcsContext ctx, String branchName) {
+        return "Merge " + branchName + " into " + ctx.vcs().getCurrentBranch();
     }
 
     /**
@@ -233,33 +293,35 @@ public class Merge extends BaseCommand {
     /**
      * Creates merge conflict blocks for the given conflicting files and writes them to the repository. See
      * {@link Merge#createMergeConflictBlock(String, String, String)} for what a merge conflict block is.
+     * @param repoRoot the repository root.
      * @param head the current branch head.
      * @param other the branch head of {@code branchName}.
      * @param conflicts the {@link Set} of conflicting files.
      * @param branchName the name of the branch to merge into the current branch.
      */
-    private void mergeConflicts(Commit head, Commit other, Set<String> conflicts, String branchName) {
+    private void mergeConflicts(String repoRoot, Commit head, Commit other, Set<String> conflicts, String branchName) {
         conflicts.forEach(conflict -> {
-            Path path = Path.of(conflict);
-            String headContents = getContents(head, path);
-            String otherContents = getContents(other, path);
+            String headContents = getContents(repoRoot, head, conflict);
+            String otherContents = getContents(repoRoot, other, conflict);
             String mergeConflictBlock = createMergeConflictBlock(headContents, otherContents, branchName);
-            write(mergeConflictBlock, path);
+            String conflictAbsolutePath = generalService.getAbsolutePath(repoRoot, conflict);
+            storage.write(mergeConflictBlock, conflictAbsolutePath);
         });
     }
 
     /**
      * Returns the contents of the given file from the given commit.
+     * @param repoRoot the repository root.
      * @param commit the {@link Commit} from which to return the file contents.
      * @param file the path of the file.
      * @return the contents of the given file.
      */
-    private String getContents(Commit commit, String file) {
+    private String getContents(String repoRoot, Commit commit, String file) {
         String sha1 = commit.getFileHash(file);
         if (sha1 == null) {
             return "";
         }
-        Blob blob = getCommittedBlob(sha1);
+        Blob blob = blobStore.load(repoRoot, sha1);
         return blob.getContents();
     }
 
@@ -271,7 +333,7 @@ public class Merge extends BaseCommand {
      * @param branchName the name of the branch to merge into the current branch.
      * @return the merge conflict block.
      */
-    private String createMergeConflictBlock(String headContents, String otherContents, String branchName) {
+    private static String createMergeConflictBlock(String headContents, String otherContents, String branchName) {
         return "<<<<<<< HEAD\n"
                 + headContents
                 + "=======\n"
