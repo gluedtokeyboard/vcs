@@ -93,8 +93,7 @@ public class Checkout extends BaseCommand {
             throw new RuntimeException("Branch " + branch + " is already the current branch");
         }
         String hash = ctx.vcs().getBranchHead(branch);
-        Commit commit = commitStore.load(ctx.repoRoot(), hash);
-        workingTreeService.applyCommitSafely(ctx, commit);
+        workingTreeService.applyCommitSafely(ctx, hash);
         ctx.vcs().setCurrentBranch(branch);
     }
 }
