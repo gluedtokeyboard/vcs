@@ -73,6 +73,16 @@ public final class WorkingTreeService extends BaseService {
     /**
      * Applies the commit only if no data in the repository would be lost.
      * @param ctx the repository context.
+     * @param commitPrefix a prefix of the commit's hash.
+     */
+    public void applyCommitSafely(VcsContext ctx, String commitPrefix) {
+        Commit commit = commitStore.load(ctx.repoRoot(), commitPrefix);
+        applyCommitSafely(ctx, commit);
+    }
+
+    /**
+     * Applies the commit only if no data in the repository would be lost.
+     * @param ctx the repository context.
      * @param commit the {@link Commit} to apply.
      */
     public void applyCommitSafely(VcsContext ctx, Commit commit) {
