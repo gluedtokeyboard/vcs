@@ -17,6 +17,15 @@ public interface Storage {
     byte[] read(String file);
 
     /**
+     * Reads the contents of the given file as a {@link String}.
+     * @param file the path of the file.
+     * @return the contents of the file as a {@link String}.
+     */
+    default String readString(String file) {
+        return new String(read(file), StandardCharsets.UTF_8);
+    }
+
+    /**
      * Writes the given bytes to a file.
      * @param contents the contents of the file.
      * @param file the destination path.
