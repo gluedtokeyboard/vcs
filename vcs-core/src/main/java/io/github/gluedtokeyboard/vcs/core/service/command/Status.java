@@ -88,7 +88,7 @@ public class Status extends BaseCommand {
         Commit latestCommit = commitService.getLatestCommitCurrentBranch(ctx);
         Set<String> latestCommitFilesAbsolutePaths = getCommitFilesAbsolutePaths(ctx.repoRoot(), latestCommit);
         generalService.walkRepoFiles(ctx.repoRoot(), file -> {
-            if (isUnstagedMod(ctx, latestCommit, latestCommitFilesAbsolutePaths, file)) {
+            if (isUnstagedMod(ctx, latestCommit, latestCommitFilesAbsolutePaths, stagedAdditions, file)) {
                 unstagedModifications.add(file);
             } else if (isUntracked(ctx, stagedDeletions, latestCommitFilesAbsolutePaths, file)) {
                 untrackedFiles.add(file);
@@ -123,18 +123,20 @@ public class Status extends BaseCommand {
      * @param latestCommit the latest {@link Commit} in the current branch.
      * @param latestCommitFilesAbsolutePaths the absolute paths of the files tracked by the latest {@link Commit} in
      *                                       the current branch.
+     * @param stagedAdditions the absolute paths of the files currently staged for addition.
      * @param file the path of the file.
      * @return a boolean indicating whether the given file has been modified but not staged for addition.
      */
     private boolean isUnstagedMod(
-            VcsContext ctx, Commit latestCommit, Set<String> latestCommitFilesAbsolutePaths, String file) {
+            VcsContext ctx, Commit latestCommit, Set<String> latestCommitFilesAbsolutePaths,
+            Set<String> stagedAdditions, String file) {
         String repoRelativePath = generalService.getRepoRelativePath(ctx.repoRoot(), file);
         Blob blob = new Blob(storage, file);
         return latestCommitFilesAbsolutePaths.contains(file)
                 && !latestCommit.getFileHash(repoRelativePath).equals(blob.getSha1())
                 && !ctx.vcs().isStaged(repoRelativePath)
-                || (ctx.vcs().isStaged(repoRelativePath)
-                     && !ctx.vcs().getStagedSha(repoRelativePath).equals(blob.getSha1()));
+                || (stagedAdditions.contains(repoRelativePath))
+                     && !ctx.vcs().getStagedSha(repoRelativePath).equals(blob.getSha1());
     }
 
     /**
