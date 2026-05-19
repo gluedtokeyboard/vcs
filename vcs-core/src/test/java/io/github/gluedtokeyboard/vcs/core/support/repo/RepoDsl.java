@@ -20,4 +20,11 @@ public final class RepoDsl {
     VcsContext repoCtx() {
         return repoCtx;
     }
+
+    public RepoDsl init(final String repoRoot) {
+        commands.init().init(repoRoot);
+        ctx.setRepoCtx(repoRoot);
+        repoCtx = ctx.repoCtx();
+        return this;
+    }
 }
