@@ -21,6 +21,10 @@ public final class RepoDsl {
         return repoCtx;
     }
 
+    public String repoRoot() {
+        return repoCtx.repoRoot();
+    }
+
     public RepoDsl init(final String repoRoot) {
         commands.init().init(repoRoot);
         ctx.setRepoCtx(repoRoot);
