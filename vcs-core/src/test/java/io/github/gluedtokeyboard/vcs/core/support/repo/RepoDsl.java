@@ -25,6 +25,10 @@ public final class RepoDsl {
         return repoCtx.repoRoot();
     }
 
+    public String getCurrentBranchHead() {
+        return repoCtx.vcs().getCurrentBranchHead();
+    }
+
     public RepoDsl init(final String repoRoot) {
         commands.init().init(repoRoot);
         ctx.setRepoCtx(repoRoot);
