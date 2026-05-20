@@ -31,4 +31,14 @@ public final class RepoDsl {
         repoCtx = ctx.repoCtx();
         return this;
     }
+
+    public RepoDsl add(final String file) {
+        commands.add().add(repoCtx, file);
+        return this;
+    }
+
+    public RepoDsl add(final String file, final String contents) {
+        ctx.storage().write(contents, file);
+        return add(file);
+    }
 }
