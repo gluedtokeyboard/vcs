@@ -50,4 +50,9 @@ public final class RepoDsl {
         commands.commitCommand().commit(repoCtx, message);
         return this;
     }
+
+    public RepoDsl rm(final String file) {
+        commands.rm().rm(repoCtx, file);
+        return this;
+    }
 }
