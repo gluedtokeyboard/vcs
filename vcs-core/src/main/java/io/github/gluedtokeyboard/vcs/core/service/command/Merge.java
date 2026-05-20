@@ -14,7 +14,6 @@ import io.github.gluedtokeyboard.vcs.storage.Storage;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.github.gluedtokeyboard.vcs.util.General.*;
@@ -241,7 +240,7 @@ public class Merge extends BaseCommand {
      * @return a {@link Set} containing the deletions.
      */
     private static Set<String> getDeletions(Commit base, Commit commit) {
-        Set<String> deletions = base.getCommitFilesStream().collect(Collectors.toSet());
+        Set<String> deletions = base.getCommitFiles();
         commit.getCommitFilesStream().forEach(deletions::remove);
         return deletions;
     }
