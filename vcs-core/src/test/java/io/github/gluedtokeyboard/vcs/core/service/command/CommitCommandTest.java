@@ -55,4 +55,34 @@ class CommitCommandTest extends BaseCommandTest {
             assertThat(head(ctx)).containsOnly("a.txt");
         }
     }
+
+    @Nested
+    @DisplayName("when the repository is not empty")
+    class NonEmptyRepository {
+        @BeforeEach
+        void setUp() {
+            repo = RepoFixtures.repoWithOneCommit(ctx);
+        }
+
+        @Test
+        @DisplayName("updates tracked files")
+        void shouldUpdateTrackedFiles() {
+            String file = "/b.txt";
+            repo
+                .add(file, "hello")
+                .commit("add b.txt");
+            assertThat(head(ctx)).containsOnly("a.txt", "b.txt");
+        }
+
+        @Test
+        @DisplayName("sets previous commit as its parent")
+        void shouldSetPreviousCommitAsParent() {
+            String preCommitHeadHash = repo.getCurrentBranchHead();
+            String file = "/b.txt";
+            repo
+                .add(file, "hello")
+                .commit("add b.txt");
+            assertThat(head(ctx)).parent1Equals(preCommitHeadHash);
+        }
+    }
 }
