@@ -241,8 +241,8 @@ public class Merge extends BaseCommand {
      * @return a {@link Set} containing the deletions.
      */
     private static Set<String> getDeletions(Commit base, Commit commit) {
-        Set<String> deletions = base.getCommitFiles().collect(Collectors.toSet());
-        commit.getCommitFiles().forEach(deletions::remove);
+        Set<String> deletions = base.getCommitFilesStream().collect(Collectors.toSet());
+        commit.getCommitFilesStream().forEach(deletions::remove);
         return deletions;
     }
 

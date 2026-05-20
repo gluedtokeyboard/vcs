@@ -115,7 +115,7 @@ public final class CommitService extends BaseService {
      * @return the absolute paths of the files tracked by the given commit.
      */
     public Set<String> getCommitFilesAbsolutePaths(String repoRoot, Commit commit) {
-        return commit.getCommitFiles()
+        return commit.getCommitFilesStream()
                 .map(repoRelativePath -> generalService.getAbsolutePath(repoRoot, repoRelativePath))
                 .collect(Collectors.toSet());
     }
