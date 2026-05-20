@@ -41,4 +41,9 @@ public final class RepoDsl {
         ctx.storage().write(contents, file);
         return add(file);
     }
+
+    public RepoDsl commit(final String message) {
+        commands.commitCommand().commit(repoCtx, message);
+        return this;
+    }
 }
