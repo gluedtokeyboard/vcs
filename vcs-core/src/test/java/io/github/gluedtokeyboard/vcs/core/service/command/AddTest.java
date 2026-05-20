@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import static io.github.gluedtokeyboard.vcs.core.support.infra.storage.StorageUtils.modifyFile;
 import static io.github.gluedtokeyboard.vcs.core.support.repo.RepoAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,6 +34,33 @@ class AddTest extends BaseCommandTest {
         @DisplayName("throws exception for non-existent file")
         void shouldThrowForNonExistentFile() {
             assertThrows(RuntimeException.class, () -> repo.add(path));
+        }
+    }
+
+    @Nested
+    @DisplayName("when the repository is not empty")
+    class NonEmptyRepository {
+        @BeforeEach
+        void setUp() {
+            repo = RepoFixtures.repoWithOneCommit(ctx);
+        }
+
+        @Test
+        @DisplayName("does not stage unmodified file")
+        void shouldNotStageUnmodifiedFile() {
+            repo.add(path);
+            assertThat(repo).isNotStaged(repoRelativePath);
+        }
+
+        @Test
+        @DisplayName("unstages reverted file")
+        void shouldUnstageRevertedFile() {
+            String originalContents = storage.readString(path);
+            modifyFile(storage, path);
+            repo.add(path);
+            storage.write(originalContents, path);
+            repo.add(path);
+            assertThat(repo).isNotStaged(repoRelativePath);
         }
     }
 }
