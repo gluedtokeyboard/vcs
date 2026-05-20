@@ -1,10 +1,7 @@
 package io.github.gluedtokeyboard.vcs.core.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static io.github.gluedtokeyboard.vcs.core.service.common.CommitService.NULL_COMMIT;
@@ -170,10 +167,10 @@ public class Commit implements Serializable {
     }
 
     /**
-     * Returns the files tracked by the commit.
-     * @return the files tracked by the commit.
+     * Returns the files tracked by the commit as a {@linkplain Stream}.
+     * @return a {@linkplain Stream} containing the files tracked by the commit.
      */
-    public Stream<String> getCommitFiles() {
+    public Stream<String> getCommitFilesStream() {
         return files.keySet().stream();
     }
 }
