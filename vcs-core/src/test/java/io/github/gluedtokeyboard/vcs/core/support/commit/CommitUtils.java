@@ -1,0 +1,21 @@
+package io.github.gluedtokeyboard.vcs.core.support.commit;
+
+import io.github.gluedtokeyboard.vcs.core.model.Commit;
+import io.github.gluedtokeyboard.vcs.core.support.TestContext;
+
+/**
+ * Commit utilities.
+ */
+public final class CommitUtils {
+    /**
+     * Loads the given commit.
+     *
+     * @param ctx the {@linkplain TestContext}
+     * @param commitPrefix a prefix of the commit's hash
+     * @return the {@linkplain Commit} matching the given hash.
+     */
+    public static Commit loadCommit(final TestContext ctx, final String commitPrefix) {
+        final String repoRoot = ctx.repoCtx().repoRoot();
+        return ctx.infra().commitStore.load(repoRoot, commitPrefix);
+    }
+}
