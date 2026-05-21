@@ -96,4 +96,9 @@ public final class RepoDsl {
         commands.checkout().checkoutBranch(repoCtx, branch);
         return this;
     }
+
+    public RepoDsl reset(final String commitPrefix) {
+        commands.reset().reset(repoCtx, commitPrefix);
+        return this;
+    }
 }
