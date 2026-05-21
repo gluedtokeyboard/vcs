@@ -84,5 +84,15 @@ class CommitCommandTest extends BaseCommandTest {
                 .commit("add b.txt");
             assertThat(head(ctx)).parent1Equals(preCommitHeadHash);
         }
+
+        @Test
+        @DisplayName("commits file removal")
+        void shouldCommitFileRemoval() {
+            String file = "/a.txt";
+            repo
+                .rm(file)
+                .commit("remove a.txt");
+            assertThat(head(ctx)).containsOnly();
+        }
     }
 }
