@@ -75,4 +75,72 @@ public final class RepoFixtures {
                 .add("/c.txt", "hello")
                 .commit("add c.txt");
     }
+
+    /**
+     * Creates a repository initialized at {@code "/"} with the following commits and branches:
+     * <pre>
+     *     (main)
+     *     +----------------------------+
+     *     | Message: add d.txt         |
+     *     | Files:                     |
+     *     |   b.txt - "hello world"    |
+     *     |   c.txt - "hello"          |
+     *     |   d.txt - "hello"          |
+     *     +----------------------------+
+     *                   |
+     *                   v
+     *     +----------------------------+
+     *     | Message: update b.txt      |
+     *     | Files:                     |
+     *     |   b.txt - "hello world"    |
+     *     |   c.txt - "hello"          |
+     *     +----------------------------+
+     *                   |
+     *                   v
+     *     +----------------------------+
+     *     | Message: remove a.txt      |
+     *     | Files:                     |
+     *     |   b.txt - "hello"          |
+     *     |   c.txt - "hello"          |
+     *     +----------------------------+
+     *                   |
+     *                   v
+     *     (development)
+     *     +----------------------------+
+     *     | Message: add c.txt         |
+     *     | Files:                     |
+     *     |   a.txt - "hello"          |
+     *     |   b.txt - "hello"          |
+     *     |   c.txt - "hello"          |
+     *     +----------------------------+
+     *                   |
+     *                   v
+     *     +----------------------------+
+     *     | Message: add b.txt         |
+     *     | Files:                     |
+     *     |   a.txt - "hello"          |
+     *     |   b.txt - "hello"          |
+     *     +----------------------------+
+     *                   |
+     *                   v
+     *     +----------------------------+
+     *     | Message: add a.txt         |
+     *     | Files:                     |
+     *     |   a.txt - "hello"          |
+     *     +----------------------------+
+     * </pre>
+     *
+     * @param ctx the {@linkplain TestContext}
+     * @return a repository with multiple branches
+     */
+    public static RepoDsl repoWithMultipleBranches(TestContext ctx) {
+        return repoWithMultipleCommits(ctx)
+                .createBranch("development")
+                .rm("/a.txt")
+                .commit("remove a.txt")
+                .add("/b.txt", "hello world")
+                .commit("update b.txt")
+                .add("/d.txt", "hello")
+                .commit("add d.txt");
+    }
 }
