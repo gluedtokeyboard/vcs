@@ -1,8 +1,11 @@
 package io.github.gluedtokeyboard.vcs.core.support.repo;
 
 import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
+import io.github.gluedtokeyboard.vcs.core.model.Commit;
 import io.github.gluedtokeyboard.vcs.core.support.Commands;
 import io.github.gluedtokeyboard.vcs.core.support.TestContext;
+
+import java.util.ArrayList;
 
 /**
  * A DSL for repository operations.
@@ -54,5 +57,9 @@ public final class RepoDsl {
     public RepoDsl rm(final String file) {
         commands.rm().rm(repoCtx, file);
         return this;
+    }
+
+    public ArrayList<Commit> log() {
+        return commands.log().log(repoCtx);
     }
 }
