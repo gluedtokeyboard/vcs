@@ -27,4 +27,14 @@ public final class CommitAssertions {
         assertEquals(expectedFiles, actualFiles, message);
         return this;
     }
+
+    public CommitAssertions parent1Equals(final String parent1Hash) {
+        assertEquals(parent1Hash, commit.getParent1());
+        return this;
+    }
+
+    public CommitAssertions parent2Equals(final String parent2Hash) {
+        assertEquals(parent2Hash, commit.getParent2());
+        return this;
+    }
 }
