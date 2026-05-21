@@ -24,6 +24,13 @@ public class StorageAssertions {
         return this;
     }
 
+    public StorageAssertions contains(final String path, final String expectedContents) {
+        String message = "Expected storage to contain " + path + " with contents: " + expectedContents;
+        String actualContents = storage.readString(path);
+        assertEquals(expectedContents, actualContents, message);
+        return this;
+    }
+
     public StorageAssertions doesNotContain(final String path) {
         String message = "Expected storage to not contain " + path;
         assertFalse(storage.exists(path), message);
