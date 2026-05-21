@@ -62,4 +62,14 @@ public final class RepoDsl {
     public ArrayList<Commit> log() {
         return commands.log().log(repoCtx);
     }
+
+    public RepoDsl createBranch(String branch) {
+        commands.branch().createBranch(repoCtx, branch);
+        return this;
+    }
+
+    public RepoDsl removeBranch(String branch) {
+        commands.branch().removeBranch(repoCtx, branch);
+        return this;
+    }
 }
