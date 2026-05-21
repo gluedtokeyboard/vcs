@@ -81,4 +81,19 @@ public final class RepoDsl {
     public StatusRecord status() {
         return commands.status().status(repoCtx);
     }
+
+    public RepoDsl checkout(final String file) {
+        commands.checkout().checkout(repoCtx, file);
+        return this;
+    }
+
+    public RepoDsl checkout(final String commitPrefix, final String file) {
+        commands.checkout().checkout(repoCtx, commitPrefix, file);
+        return this;
+    }
+
+    public RepoDsl checkoutBranch(final String branch) {
+        commands.checkout().checkoutBranch(repoCtx, branch);
+        return this;
+    }
 }
