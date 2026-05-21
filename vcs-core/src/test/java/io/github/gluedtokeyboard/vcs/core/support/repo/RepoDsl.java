@@ -37,6 +37,10 @@ public final class RepoDsl {
         return repoCtx.vcs().getCurrentBranch();
     }
 
+    public String getBranchHead(String branch) {
+        return repoCtx.vcs().getBranchHead(branch);
+    }
+
     public RepoDsl init(final String repoRoot) {
         commands.init().init(repoRoot);
         ctx.setRepoCtx(repoRoot);
