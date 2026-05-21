@@ -101,4 +101,9 @@ public final class RepoDsl {
         commands.reset().reset(repoCtx, commitPrefix);
         return this;
     }
+
+    public RepoDsl merge(final String branch) {
+        commands.merge().merge(repoCtx, branch);
+        return this;
+    }
 }
