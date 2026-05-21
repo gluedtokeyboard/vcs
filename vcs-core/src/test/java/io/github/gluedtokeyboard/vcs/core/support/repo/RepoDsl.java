@@ -2,6 +2,7 @@ package io.github.gluedtokeyboard.vcs.core.support.repo;
 
 import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
+import io.github.gluedtokeyboard.vcs.core.service.command.Status.StatusRecord;
 import io.github.gluedtokeyboard.vcs.core.support.Commands;
 import io.github.gluedtokeyboard.vcs.core.support.TestContext;
 
@@ -75,5 +76,9 @@ public final class RepoDsl {
     public RepoDsl removeBranch(String branch) {
         commands.branch().removeBranch(repoCtx, branch);
         return this;
+    }
+
+    public StatusRecord status() {
+        return commands.status().status(repoCtx);
     }
 }
