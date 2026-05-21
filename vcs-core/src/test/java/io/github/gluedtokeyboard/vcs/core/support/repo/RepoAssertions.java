@@ -29,4 +29,36 @@ public final class RepoAssertions {
         assertFalse(isStaged, message);
         return this;
     }
+
+    public RepoAssertions containsBranch(final String branch) {
+        final boolean containsBranch = repo.repoCtx().vcs().containsBranch(branch);
+        final String message = "Expected repo to contain branch " + branch;
+        assertTrue(containsBranch, message);
+        return this;
+    }
+
+    public RepoAssertions doesNotContainBranch(final String branch) {
+        final boolean containsBranch = repo.repoCtx().vcs().containsBranch(branch);
+        final String message = "Expected repo to not contain branch " + branch;
+        assertFalse(containsBranch, message);
+        return this;
+    }
+
+    public RepoAssertions currentBranchEquals(final String expectedBranch) {
+        final String currentBranch = repo.repoCtx().vcs().getCurrentBranch();
+        final String message = "Expected the current branch to be: " + expectedBranch + " but got: " + currentBranch;
+        assertEquals(expectedBranch, currentBranch, message);
+        return this;
+    }
+
+    public RepoAssertions currentBranchHeadEquals(final String expectedCommitHash) {
+        final String currentBranchHead = repo.getCurrentBranchHead();
+        final String message =
+                "Expected the current branch head to be: "
+                + expectedCommitHash
+                + " but got: "
+                + currentBranchHead;
+        assertEquals(expectedCommitHash, currentBranchHead, message);
+        return this;
+    }
 }
