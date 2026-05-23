@@ -14,6 +14,7 @@ import io.github.gluedtokeyboard.vcs.storage.Storage;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.github.gluedtokeyboard.vcs.util.General.*;
@@ -165,7 +166,8 @@ public class Merge extends BaseCommand {
         Set<String> otherModifications = getModifications(splitPoint, other);
         Set<String> otherExclusiveModifications = setDifference(otherModifications, currentModifications);
         restoreAndStageCommitFiles(ctx, other, otherExclusiveModifications);
-        Set<String> modificationConflicts = setIntersection(currentModifications, otherModifications);
+        Set<String> modificationConflicts = getModificationConflicts(
+                currentModifications, otherModifications, current, other);
         // Handle deletions.
         Set<String> currentDeletions = getDeletions(splitPoint, current);
         Set<String> otherDeletions = getDeletions(splitPoint, other);
@@ -231,6 +233,24 @@ public class Merge extends BaseCommand {
             workingTreeService.restoreFile(ctx, commit, absolutePath);
             add.add(ctx, absolutePath);
         });
+    }
+
+    /**
+     * Returns the files modified differently in both the branches.
+     *
+     * @param currentModifications the files modified in the current branch relative to the split point
+     * @param otherModifications the files modified in the given branch relative to the split point
+     * @param current the current branch head
+     * @param other the branch head of the given branch
+     * @return the files modified differently in both the branches
+     */
+    private Set<String> getModificationConflicts(
+            Set<String> currentModifications, Set<String> otherModifications, Commit current, Commit other) {
+        return setIntersection(currentModifications, otherModifications)
+                .stream()
+                // Only keep modifications that aren't the same.
+                .filter(file -> !current.getFileHash(file).equals(other.getFileHash(file)))
+                .collect(Collectors.toSet());
     }
 
     /**
