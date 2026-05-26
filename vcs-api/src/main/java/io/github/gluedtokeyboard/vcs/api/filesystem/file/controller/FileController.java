@@ -51,4 +51,22 @@ public class FileController {
                 .created(location)
                 .body(response);
     }
+
+    /**
+     * Updates the file corresponding to the given ID.
+     *
+     * @param file the file DTO containing the new path and/or the new contents
+     * @return the updated file
+     */
+    @PatchMapping("{id}")
+    public ResponseEntity<FileResponse> updateFile(@PathVariable("id") UUID id, @RequestBody FileRequest file) {
+        FileContentResult result = null;
+        if (file.path() != null) {
+            result = fileService.updatePath(id, file.path());
+        }
+        if (file.contents() != null) {
+            result = fileService.updateContents(id, file.contents());
+        }
+        return ResponseEntity.ok(new FileResponse(result.id(), result.path(), result.contents()));
+    }
 }
