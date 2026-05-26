@@ -35,4 +35,31 @@ public class FileService {
         String contents = storage.readString(path);
         return new FileContentResult(id, path, contents);
     }
+
+    /**
+     * Updates the contents of the file.
+     *
+     * @param id the file ID
+     * @param contents the new contents
+     * @return the updated file
+     */
+    public FileContentResult updateContents(UUID id, String contents) {
+        String path = nodeService.getPath(id);
+        storage.write(contents, path);
+        return new FileContentResult(id, path, contents);
+    }
+
+    /**
+     * Updates the path of the file
+     *
+     * @param id the file ID
+     * @param path the new path
+     * @return the updated file
+     */
+    public FileContentResult updatePath(UUID id, String path) {
+        String oldPath = nodeService.getPath(id);
+        storage.mv(oldPath, path);
+        String contents = storage.readString(path);
+        return new FileContentResult(id, path, contents);
+    }
 }
