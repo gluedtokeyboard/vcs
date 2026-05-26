@@ -49,4 +49,20 @@ public class DirectoryService {
                 .toList();
         return new DirectoryContentResult(id, path, contents);
     }
+
+    /**
+     * Creates a new directory.
+     *
+     * @param path the directory path
+     * @return the newly created directory
+     * @throws IllegalArgumentException if a directory already exists at the given path
+     */
+    public DirectoryContentResult createDirectory(String path) {
+        if (nodeRepository.existsByPath(path)) {
+            throw new IllegalArgumentException("A directory already exists at the given path");
+        }
+        storage.mkdir(path);
+        UUID id = nodeService.getId(path);
+        return new DirectoryContentResult(id, path, List.of());
+    }
 }
