@@ -85,4 +85,14 @@ public class FileService {
         String contents = storage.readString(path);
         return new FileContentResult(id, path, contents);
     }
+
+    /**
+     * Deletes the file corresponding to the given ID
+     *
+     * @param id the file ID
+     */
+    public void deleteFile(UUID id) {
+        String path = nodeService.getPath(id);
+        storage.rm(path);
+    }
 }
