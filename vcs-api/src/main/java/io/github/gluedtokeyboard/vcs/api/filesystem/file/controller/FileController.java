@@ -5,6 +5,7 @@ import io.github.gluedtokeyboard.vcs.api.filesystem.file.dto.response.FileRespon
 import io.github.gluedtokeyboard.vcs.api.filesystem.file.service.model.FileContentResult;
 import io.github.gluedtokeyboard.vcs.api.filesystem.file.service.FileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,5 +69,16 @@ public class FileController {
             result = fileService.updateContents(id, file.contents());
         }
         return ResponseEntity.ok(new FileResponse(result.id(), result.path(), result.contents()));
+    }
+
+    /**
+     * Deletes the file corresponding to the given ID.
+     *
+     * @param id the file ID
+     */
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteFile(@PathVariable("id") UUID id) {
+        fileService.deleteFile(id);
     }
 }
