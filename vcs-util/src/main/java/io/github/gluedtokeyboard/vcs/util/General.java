@@ -1,6 +1,8 @@
 package io.github.gluedtokeyboard.vcs.util;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -58,5 +60,18 @@ public final class General {
             union.addAll(other);
         }
         return union;
+    }
+
+    /**
+     * Splits the given path using the given separator.
+     *
+     * @param path the path to split
+     * @param separator the separator to use to split the path
+     * @return the parts of the given path
+     */
+    public static List<String> splitPath(String path, String separator) {
+        return Arrays.stream(path.split(separator))
+                .filter(part -> !part.isEmpty())
+                .toList();
     }
 }
