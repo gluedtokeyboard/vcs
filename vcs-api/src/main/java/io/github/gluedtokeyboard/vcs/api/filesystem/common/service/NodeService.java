@@ -39,4 +39,14 @@ public class NodeService {
     public FilesystemNode getNode(UUID id) {
         return nodeRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
+
+    /**
+     * Returns the path of the node corresponding to the given ID.
+     *
+     * @param id the node ID
+     * @return the path of the corresponding node
+     */
+    public String getPath(UUID id) {
+        return getNode(id).getPath();
+    }
 }
