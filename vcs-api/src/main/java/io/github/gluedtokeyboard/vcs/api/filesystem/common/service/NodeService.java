@@ -49,4 +49,14 @@ public class NodeService {
     public String getPath(UUID id) {
         return getNode(id).getPath();
     }
+
+    /**
+     * Deletes the node corresponding to the given path.
+     *
+     * @param path the node path.
+     */
+    public void deleteNode(String path) {
+        FilesystemNode node = nodeRepository.findByPath(path).orElseThrow(NoSuchElementException::new);
+        nodeRepository.delete(node);
+    }
 }
