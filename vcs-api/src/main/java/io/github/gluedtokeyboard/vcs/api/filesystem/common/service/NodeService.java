@@ -51,6 +51,16 @@ public class NodeService {
     }
 
     /**
+     * Returns the ID of the node corresponding to the given path.
+     *
+     * @param path the node path
+     * @return the corresponding ID
+     */
+    public UUID getId(String path) {
+        return nodeRepository.findByPath(path).orElseThrow(NoSuchElementException::new).getId();
+    }
+
+    /**
      * Deletes the node corresponding to the given path.
      *
      * @param path the node path.
