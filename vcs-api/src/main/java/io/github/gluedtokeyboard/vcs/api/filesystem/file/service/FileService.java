@@ -1,6 +1,7 @@
 package io.github.gluedtokeyboard.vcs.api.filesystem.file.service;
 
 import io.github.gluedtokeyboard.vcs.api.filesystem.common.infrastructure.IdStorage;
+import io.github.gluedtokeyboard.vcs.api.filesystem.common.repository.FilesystemNodeRepository;
 import io.github.gluedtokeyboard.vcs.api.filesystem.common.service.NodeService;
 import io.github.gluedtokeyboard.vcs.api.filesystem.file.service.model.FileContentResult;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,11 @@ public class FileService {
     private final NodeService nodeService;
 
     /**
+     * The object used to interact with the database.
+     */
+    private final FilesystemNodeRepository nodeRepository;
+
+    /**
      * Returns the file corresponding to the given ID.
      *
      * @param id the file ID.
@@ -33,6 +39,23 @@ public class FileService {
     public FileContentResult getFile(UUID id) {
         String path = nodeService.getPath(id);
         String contents = storage.readString(path);
+        return new FileContentResult(id, path, contents);
+    }
+
+    /**
+     * Creates a new file.
+     *
+     * @param path the file path
+     * @param contents the file contents
+     * @return the newly created file
+     * @throws IllegalArgumentException if a file already exists at the given path
+     */
+    public FileContentResult createFile(String path, String contents) {
+        if (nodeRepository.existsByPath(path)) {
+            throw new IllegalArgumentException("A file already exists at the given path");
+        }
+        storage.write(contents, path);
+        UUID id = nodeService.getId(path);
         return new FileContentResult(id, path, contents);
     }
 
