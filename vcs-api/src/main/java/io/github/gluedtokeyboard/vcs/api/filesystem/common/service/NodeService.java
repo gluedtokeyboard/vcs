@@ -28,4 +28,15 @@ public class NodeService {
     public FilesystemNode createNode(String path) {
         return nodeRepository.save(new FilesystemNode(path));
     }
+
+    /**
+     * Returns the {@link FilesystemNode} corresponding to the given ID.
+     *
+     * @param id the node ID
+     * @return the corresponding {@link FilesystemNode}
+     * @throws NoSuchElementException if a node with the given ID does not exist
+     */
+    public FilesystemNode getNode(UUID id) {
+        return nodeRepository.findById(id).orElseThrow(NoSuchElementException::new);
+    }
 }
