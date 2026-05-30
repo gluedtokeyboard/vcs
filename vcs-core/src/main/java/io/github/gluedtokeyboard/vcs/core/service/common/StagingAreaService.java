@@ -127,8 +127,19 @@ public final class StagingAreaService extends BaseService {
     public static Set<String> getStagedDeletions(Map<String, String> stagedFiles) {
         return filterStagedFiles(
                 stagedFiles,
-                entry -> entry.getValue().equals(StagingAreaService.DELETION_MARKER)
+                entry -> isStagedForDeletion(stagedFiles, entry.getKey())
         ).collect(Collectors.toSet());
+    }
+
+    /**
+     * Checks if the given file is staged for deletion.
+     *
+     * @param stagedFiles the staged files
+     * @param file the file to check
+     * @return a boolean indicating whether the given file is staged for deletion
+     */
+    public static boolean isStagedForDeletion(Map<String, String> stagedFiles, String file) {
+        return stagedFiles.get(file).equals(StagingAreaService.DELETION_MARKER);
     }
 
     /**
