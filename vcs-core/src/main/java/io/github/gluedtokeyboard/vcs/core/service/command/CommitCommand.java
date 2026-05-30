@@ -4,7 +4,6 @@ import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
 import io.github.gluedtokeyboard.vcs.core.model.Blob;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
 import io.github.gluedtokeyboard.vcs.core.service.common.CommitService;
-import io.github.gluedtokeyboard.vcs.core.service.common.StagingAreaService;
 import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressable.ContentAddressableStore;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.vcs.VcsStore;
@@ -12,6 +11,8 @@ import io.github.gluedtokeyboard.vcs.storage.Storage;
 
 import java.util.Date;
 import java.util.TreeMap;
+
+import static io.github.gluedtokeyboard.vcs.core.service.common.StagingAreaService.isStagedForDeletion;
 
 /**
  * Methods for creating a commit.
@@ -101,7 +102,7 @@ public class CommitCommand extends BaseCommand {
      */
     private static void updateFiles(TreeMap<String, String> parentFiles, TreeMap<String, String> stagedFiles) {
         stagedFiles.forEach((key, value) -> {
-            if (value.equals(StagingAreaService.DELETION_MARKER)) {
+            if (isStagedForDeletion(stagedFiles, key)) {
                 parentFiles.remove(key);
             } else {
                 parentFiles.put(key, value);
