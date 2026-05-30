@@ -104,8 +104,19 @@ public final class StagingAreaService extends BaseService {
     public static Set<String> getStagedAdditions(Map<String, String> stagedFiles) {
         return filterStagedFiles(
                 stagedFiles,
-                entry -> !entry.getValue().equals(StagingAreaService.DELETION_MARKER)
+                entry -> isStagedForAddition(stagedFiles, entry.getKey())
         ).collect(Collectors.toSet());
+    }
+
+    /**
+     * Checks if the given file is staged for addition.
+     *
+     * @param stagedFiles the staged files
+     * @param file the file to check
+     * @return a boolean indicating whether the given file is staged for addition
+     */
+    public static boolean isStagedForAddition(Map<String, String> stagedFiles, String file) {
+        return !stagedFiles.get(file).equals(StagingAreaService.DELETION_MARKER);
     }
 
     /**
