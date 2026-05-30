@@ -10,7 +10,10 @@ import io.github.gluedtokeyboard.vcs.storage.Storage;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Staging area methods.
@@ -91,5 +94,43 @@ public final class StagingAreaService extends BaseService {
                     return new SimpleEntry<>(absolutePath, hash);
                 })
                 .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
+    }
+
+    /**
+     * Returns the files currently staged for addition.
+     * @param stagedFiles all the files currently staged for addition or deletion.
+     * @return a {@link Set} containing the files currently staged for addition.
+     */
+    public static Set<String> getStagedAdditions(Map<String, String> stagedFiles) {
+        return filterStagedFiles(
+                stagedFiles,
+                entry -> !entry.getValue().equals(StagingAreaService.DELETION_MARKER)
+        ).collect(Collectors.toSet());
+    }
+
+    /**
+     * Returns the files currently staged for deletion.
+     * @param stagedFiles all the files currently staged for addition or deletion.
+     * @return a {@link Set} containing the files currently staged for deletion.
+     */
+    public static Set<String> getStagedDeletions(Map<String, String> stagedFiles) {
+        return filterStagedFiles(
+                stagedFiles,
+                entry -> entry.getValue().equals(StagingAreaService.DELETION_MARKER)
+        ).collect(Collectors.toSet());
+    }
+
+    /**
+     * Filters the staged files.
+     * @param filter a {@link Predicate} to filter the staged files.
+     * @return a {@link Stream} containing the remaining files.
+     */
+    private static Stream<String> filterStagedFiles(
+            Map<String, String> stagedFiles, Predicate<Map.Entry<String, String>> filter) {
+        return stagedFiles
+                .entrySet()
+                .stream()
+                .filter(filter)
+                .map(Map.Entry::getKey);
     }
 }

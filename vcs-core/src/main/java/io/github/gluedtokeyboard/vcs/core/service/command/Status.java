@@ -12,10 +12,9 @@ import io.github.gluedtokeyboard.vcs.core.storage.objectstore.vcs.VcsStore;
 import io.github.gluedtokeyboard.vcs.storage.Storage;
 
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+import static io.github.gluedtokeyboard.vcs.core.service.common.StagingAreaService.getStagedAdditions;
+import static io.github.gluedtokeyboard.vcs.core.service.common.StagingAreaService.getStagedDeletions;
 import static io.github.gluedtokeyboard.vcs.util.General.setDifference;
 
 /**
@@ -153,44 +152,6 @@ public class Status extends BaseCommand {
         String repoRelativePath = generalService.getRepoRelativePath(ctx.repoRoot(), file);
         return stagedDeletions.contains(file)
                 || (!latestCommitFilesAbsolutePaths.contains(file) && !ctx.vcs().isStaged(repoRelativePath));
-    }
-
-    /**
-     * Returns the files currently staged for addition.
-     * @param stagedFiles all the files currently staged for addition or deletion.
-     * @return a {@link Set} containing the files currently staged for addition.
-     */
-    private static Set<String> getStagedAdditions(Map<String, String> stagedFiles) {
-        return filterStagedFiles(
-                stagedFiles,
-                entry -> !entry.getValue().equals(StagingAreaService.DELETION_MARKER)
-        ).collect(Collectors.toSet());
-    }
-
-    /**
-     * Returns the files currently staged for deletion.
-     * @param stagedFiles all the files currently staged for addition or deletion.
-     * @return a {@link Set} containing the files currently staged for deletion.
-     */
-    private static Set<String> getStagedDeletions(Map<String, String> stagedFiles) {
-        return filterStagedFiles(
-                stagedFiles,
-                entry -> entry.getValue().equals(StagingAreaService.DELETION_MARKER)
-        ).collect(Collectors.toSet());
-    }
-
-    /**
-     * Filters the staged files.
-     * @param filter a {@link Predicate} to filter the staged files.
-     * @return a {@link Stream} containing the remaining files.
-     */
-    private static Stream<String> filterStagedFiles(
-            Map<String, String> stagedFiles, Predicate<Map.Entry<String, String>> filter) {
-        return stagedFiles
-                .entrySet()
-                .stream()
-                .filter(filter)
-                .map(Map.Entry::getKey);
     }
 
     /**
