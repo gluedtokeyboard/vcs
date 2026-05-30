@@ -22,7 +22,7 @@ public final class StagingAreaService extends BaseService {
     /**
      * A marker to indicate that a file is staged for deletion.
      */
-    public static final String DELETION_MARKER = "";
+    private static final String DELETION_MARKER = "";
 
     /**
      * Used to convert between absolute paths and repository-relative paths.
