@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * Service methods for nodes.
@@ -37,7 +39,18 @@ public class NodeService {
      * @throws NoSuchElementException if a node with the given ID does not exist
      */
     public FilesystemNode getNode(UUID id) {
-        return nodeRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        return getNode(() -> nodeRepository.findById(id));
+    }
+
+    /**
+     * Returns the {@link FilesystemNode} returned by the given supplier.
+     *
+     * @param nodeSupplier a {@link Supplier} that returns an optional {@link FilesystemNode}
+     * @return the {@link FilesystemNode} obtained from the supplier if present
+     * @throws NoSuchElementException if the supplier returns an empty {@link Optional}
+     */
+    private FilesystemNode getNode(Supplier<Optional<FilesystemNode>> nodeSupplier) {
+        return nodeSupplier.get().orElseThrow(NoSuchElementException::new);
     }
 
     /**
