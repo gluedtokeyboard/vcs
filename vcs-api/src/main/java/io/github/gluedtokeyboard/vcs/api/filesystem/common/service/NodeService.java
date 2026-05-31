@@ -43,6 +43,17 @@ public class NodeService {
     }
 
     /**
+     * Returns the {@link FilesystemNode} corresponding to the given path.
+     *
+     * @param path the node path
+     * @return the corresponding {@link FilesystemNode}
+     * @throws NoSuchElementException if a node with the given path does not exist
+     */
+    public FilesystemNode getNode(String path) {
+        return getNode(() -> nodeRepository.findByPath(path));
+    }
+
+    /**
      * Returns the {@link FilesystemNode} returned by the given supplier.
      *
      * @param nodeSupplier a {@link Supplier} that returns an optional {@link FilesystemNode}
