@@ -90,7 +90,7 @@ public final class Commands {
         if (commitCommand == null) {
             commitCommand = new CommitCommand(
                     vcsInfra.storage, vcsInfra.vcsLayout, vcsInfra.vcsStore, vcsInfra.blobStore, vcsInfra.commitStore,
-                    commitService());
+                    commitService(), stagingAreaService());
         }
         return commitCommand;
     }

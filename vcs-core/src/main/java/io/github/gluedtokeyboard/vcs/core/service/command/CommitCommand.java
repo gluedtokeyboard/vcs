@@ -4,6 +4,7 @@ import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
 import io.github.gluedtokeyboard.vcs.core.model.Blob;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
 import io.github.gluedtokeyboard.vcs.core.service.common.CommitService;
+import io.github.gluedtokeyboard.vcs.core.service.common.StagingAreaService;
 import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressable.ContentAddressableStore;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.vcs.VcsStore;
@@ -24,7 +25,12 @@ public class CommitCommand extends BaseCommand {
     private final CommitService commitService;
 
     /**
-     * Stores the given interface implementations and a {@link CommitService} object.
+     * Used to clear the staging area after creating a commit.
+     */
+    private final StagingAreaService stagingAreaService;
+
+    /**
+     * Stores the given interface implementations and service objects.
      *
      * @param storage     a {@link Storage} implementation.
      * @param vcsLayout   a {@link VcsLayout} implementation.
@@ -33,12 +39,16 @@ public class CommitCommand extends BaseCommand {
      * @param commitStore a {@link ContentAddressableStore<Commit>} implementation.
      * @param commitService a {@link CommitService} object initialized with the same interface implementations as this
      *                       object.
+     * @param stagingAreaService a {@link StagingAreaService} object initialized with the same interface implementations
+     *                           as this object.
      */
     public CommitCommand(
             Storage storage, VcsLayout vcsLayout, VcsStore vcsStore, ContentAddressableStore<Blob> blobStore,
-            ContentAddressableStore<Commit> commitStore, CommitService commitService) {
+            ContentAddressableStore<Commit> commitStore, CommitService commitService,
+            StagingAreaService stagingAreaService) {
         super(storage, vcsLayout, vcsStore, blobStore, commitStore);
         this.commitService = commitService;
+        this.stagingAreaService = stagingAreaService;
     }
 
     /**
@@ -65,7 +75,7 @@ public class CommitCommand extends BaseCommand {
         }
         Commit commit = createCommit(ctx, parent2, message);
         ctx.vcs().setCurrentBranchHead(commit.getSha1());
-        ctx.vcs().clearStagingArea();
+        stagingAreaService.clearStagingArea(ctx);
         commitStore.store(ctx.repoRoot(), commit);
     }
 
