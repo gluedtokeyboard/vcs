@@ -71,6 +71,16 @@ public class RepoService {
     }
 
     /**
+     * Returns the root of the given repository.
+     *
+     * @param repoId the repository ID
+     * @return the root of the given repository
+     */
+    public String getRepoRoot(UUID repoId) {
+        return getRepo(repoId).getRepoRoot().getPath();
+    }
+
+    /**
      * Returns the {@link Repo} returned by the given supplier.
      *
      * @param repoSupplier a {@link Supplier} that returns an optional {@link Repo}
