@@ -6,10 +6,7 @@ import io.github.gluedtokeyboard.vcs.api.vcs.repo.entity.Repo;
 import io.github.gluedtokeyboard.vcs.api.vcs.repo.service.RepoApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.UUID;
@@ -38,5 +35,17 @@ public class RepoController {
         return ResponseEntity
                 .created(location)
                 .body(repoResponse);
+    }
+
+    /**
+     * Searches for a repository upwards from the given directory.
+     *
+     * @param directoryId the directory ID
+     * @return the repository found
+     */
+    @GetMapping
+    public ResponseEntity<RepoResponse> resolveRepo(@RequestParam("directoryId") UUID directoryId) {
+        Repo repo = repoApplicationService.resolveRepo(directoryId);
+        return ResponseEntity.ok(RepoResponse.from(repo));
     }
 }
