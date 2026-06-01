@@ -81,6 +81,15 @@ public final class StagingAreaService extends BaseService {
     }
 
     /**
+     * Clears the staging area.
+     *
+     * @param ctx the repository context
+     */
+    public void clearStagingArea(VcsContext ctx) {
+        ctx.vcs().clearStagingArea();
+    }
+
+    /**
      * Returns a map from the absolute paths of the staged files to their hashes.
      * @param ctx the repository context.
      * @return a map from the absolute paths of the staged files to their hashes.
