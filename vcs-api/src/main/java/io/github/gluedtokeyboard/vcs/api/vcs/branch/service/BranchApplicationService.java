@@ -30,4 +30,17 @@ public class BranchApplicationService {
         branch.createBranch(ctx, branchName);
         return branchService.getBranchByRepoIdAndName(repoId, branchName);
     }
+
+    /**
+     * Removes the given branch.
+     *
+     * @param branchId the branch ID
+     */
+    public void removeBranch(UUID branchId) {
+        Branch branchEntity = branchService.getBranchById(branchId);
+        String repoRoot = branchEntity.getRepo().getRepoRoot().getPath();
+        VcsContext ctx = repoContext.getContextByDirectory(repoRoot);
+        String branchName = branchEntity.getName();
+        branch.removeBranch(ctx, branchName);
+    }
 }
