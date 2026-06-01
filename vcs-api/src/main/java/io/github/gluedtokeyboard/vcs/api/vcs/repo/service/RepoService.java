@@ -8,6 +8,8 @@ import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 /**
  * Service methods for {@link Repo}.
  */
@@ -40,5 +42,17 @@ public class RepoService {
         String repoFolder = vcsLayout.getRepoFolder(repoRoot);
         FilesystemNode repoFolderNode = nodeService.getNode(repoFolder);
         return repoRepository.save(new Repo(repoRootNode, repoFolderNode));
+    }
+
+    /**
+     * Returns the repository present at the given location.
+     *
+     * @param repoRoot the repository root
+     * @return the repository present at the given location
+     * @throws NoSuchElementException if a repository is not present at the given location
+     */
+    public Repo getRepo(String repoRoot) {
+        FilesystemNode repoRootNode = nodeService.getNode(repoRoot);
+        return repoRepository.findByRepoRootId(repoRootNode.getId()).orElseThrow(NoSuchElementException::new);
     }
 }
