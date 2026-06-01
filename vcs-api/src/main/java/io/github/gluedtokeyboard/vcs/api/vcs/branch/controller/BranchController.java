@@ -5,6 +5,7 @@ import io.github.gluedtokeyboard.vcs.api.vcs.branch.dto.response.BranchResponse;
 import io.github.gluedtokeyboard.vcs.api.vcs.branch.entity.Branch;
 import io.github.gluedtokeyboard.vcs.api.vcs.branch.service.BranchApplicationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,5 +35,16 @@ public class BranchController {
         return ResponseEntity
                 .created(location)
                 .body(BranchResponse.from(branch));
+    }
+
+    /**
+     * Removes the given branch.
+     *
+     * @param id the branch ID
+     */
+    @DeleteMapping("{branch_id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeBranch(@PathVariable("branch_id") UUID id) {
+        branchApplicationService.removeBranch(id);
     }
 }
