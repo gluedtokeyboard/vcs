@@ -47,6 +47,17 @@ public class BranchService {
     }
 
     /**
+     * Returns the branch with the given ID.
+     *
+     * @param id the branch ID
+     * @return the corresponding branch
+     * @throws NoSuchElementException if a branch with the given ID does not exist
+     */
+    public Branch getBranchById(UUID id) {
+        return getBranch(() -> branchRepository.findById(id));
+    }
+
+    /**
      * Returns the branch from the given repository with the given name.
      *
      * @param repoId the repository ID
