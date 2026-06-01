@@ -8,6 +8,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.function.Supplier;
+
 /**
  * Service methods for {@link Branch}.
  */
@@ -39,5 +43,16 @@ public class BranchService {
     public void removeBranch(String repoRoot, String branchName) {
         Repo repo = repoService.getRepo(repoRoot);
         branchRepository.deleteByRepoIdAndName(repo.getId(), branchName);
+    }
+
+    /**
+     * Returns the {@link Branch} returned by the given supplier.
+     *
+     * @param branchSupplier a {@link Supplier} that returns an optional {@link Branch}
+     * @return the {@link Branch} obtained from the supplier if present
+     * @throws NoSuchElementException if the supplier returns an empty {@link Optional}
+     */
+    private Branch getBranch(Supplier<Optional<Branch>> branchSupplier) {
+        return branchSupplier.get().orElseThrow(NoSuchElementException::new);
     }
 }
