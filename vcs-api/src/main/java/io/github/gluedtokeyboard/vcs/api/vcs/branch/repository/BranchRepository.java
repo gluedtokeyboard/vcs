@@ -11,4 +11,11 @@ import java.util.UUID;
  */
 @Repository
 public interface BranchRepository extends JpaRepository<Branch, UUID> {
+    /**
+     * Deletes the branch in the given repository with the given name.
+     *
+     * @param repoId the repository ID
+     * @param name the branch name
+     */
+    void deleteByRepoIdAndName(UUID repoId, String name);
 }
