@@ -60,6 +60,17 @@ public class RepoService {
     }
 
     /**
+     * Returns the repository corresponding to the given ID.
+     *
+     * @param repoId the repository ID
+     * @return the corresponding repository
+     * @throws NoSuchElementException if a repository with the given ID does not exist
+     */
+    public Repo getRepo(UUID repoId) {
+        return getRepo(() -> repoRepository.findById(repoId));
+    }
+
+    /**
      * Returns the {@link Repo} returned by the given supplier.
      *
      * @param repoSupplier a {@link Supplier} that returns an optional {@link Repo}
