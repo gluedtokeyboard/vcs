@@ -2,6 +2,7 @@ package io.github.gluedtokeyboard.vcs.api.vcs.common.repocontext;
 
 import io.github.gluedtokeyboard.vcs.api.filesystem.common.infrastructure.IdStorage;
 import io.github.gluedtokeyboard.vcs.api.filesystem.common.service.NodeService;
+import io.github.gluedtokeyboard.vcs.api.vcs.repo.service.RepoService;
 import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.vcs.VcsStore;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class RepoContext {
     private final IdStorage storage;
     private final VcsStore vcsStore;
     private final NodeService nodeService;
+    private final RepoService repoService;
 
     /**
      * Searches for a repository upwards from the given directory.
@@ -28,6 +30,18 @@ public class RepoContext {
      */
     public VcsContext getContextByDirectoryId(UUID directoryId) {
         String directory = nodeService.getPath(directoryId);
+        return getContextByDirectory(directory);
+    }
+
+    /**
+     * Returns the context for the given repository.
+     *
+     * @param repoId the repository ID
+     * @return the context for the given repository
+     * @throws java.util.NoSuchElementException if a repository with the given ID does not exist
+     */
+    public VcsContext getContextByRepoId(UUID repoId) {
+        String directory = repoService.getRepoRoot(repoId);
         return getContextByDirectory(directory);
     }
 
