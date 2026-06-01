@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * Service methods for {@link Repo}.
@@ -53,6 +56,17 @@ public class RepoService {
      */
     public Repo getRepo(String repoRoot) {
         FilesystemNode repoRootNode = nodeService.getNode(repoRoot);
-        return repoRepository.findByRepoRootId(repoRootNode.getId()).orElseThrow(NoSuchElementException::new);
+        return getRepo(() -> repoRepository.findByRepoRootId(repoRootNode.getId()));
+    }
+
+    /**
+     * Returns the {@link Repo} returned by the given supplier.
+     *
+     * @param repoSupplier a {@link Supplier} that returns an optional {@link Repo}
+     * @return the {@link Repo} obtained from the supplier if present
+     * @throws NoSuchElementException if the supplier returns an empty {@link Optional}
+     */
+    private Repo getRepo(Supplier<Optional<Repo>> repoSupplier) {
+        return repoSupplier.get().orElseThrow(NoSuchElementException::new);
     }
 }
