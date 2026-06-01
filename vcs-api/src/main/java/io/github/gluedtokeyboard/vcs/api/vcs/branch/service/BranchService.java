@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
@@ -43,6 +44,18 @@ public class BranchService {
     public void removeBranch(String repoRoot, String branchName) {
         Repo repo = repoService.getRepo(repoRoot);
         branchRepository.deleteByRepoIdAndName(repo.getId(), branchName);
+    }
+
+    /**
+     * Returns the branch from the given repository with the given name.
+     *
+     * @param repoId the repository ID
+     * @param branchName the branch name
+     * @return the corresponding branch
+     * @throws NoSuchElementException if the branch does not exist
+     */
+    public Branch getBranchByRepoIdAndName(UUID repoId, String branchName) {
+        return getBranch(() -> branchRepository.findByRepoIdAndName(repoId, branchName));
     }
 
     /**
