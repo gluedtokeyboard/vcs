@@ -4,6 +4,7 @@ import io.github.gluedtokeyboard.vcs.api.vcs.staging.entity.StagingEntry;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -25,4 +26,13 @@ public interface StagingEntryRepository extends JpaRepository<StagingEntry, UUID
      * @param repoId the repository ID
      */
     void deleteAllByRepoId(UUID repoId);
+
+    /**
+     * Retrieves the entry with the given path from the given repository.
+     *
+     * @param repoId the repository ID
+     * @param relativePath the repository relative path of the entry
+     * @return the corresponding entry
+     */
+    Optional<StagingEntry> findByRepoIdAndRelativePath(UUID repoId, String relativePath);
 }
