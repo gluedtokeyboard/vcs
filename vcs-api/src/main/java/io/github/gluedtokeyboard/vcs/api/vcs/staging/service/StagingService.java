@@ -1,0 +1,36 @@
+package io.github.gluedtokeyboard.vcs.api.vcs.staging.service;
+
+import io.github.gluedtokeyboard.vcs.api.vcs.repo.entity.Repo;
+import io.github.gluedtokeyboard.vcs.api.vcs.repo.service.RepoService;
+import io.github.gluedtokeyboard.vcs.api.vcs.staging.model.EntryType;
+import io.github.gluedtokeyboard.vcs.api.vcs.staging.entity.StagingEntry;
+import io.github.gluedtokeyboard.vcs.api.vcs.staging.repository.StagingEntryRepository;
+import io.github.gluedtokeyboard.vcs.core.service.common.GeneralService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+/**
+ * Contains {@link StagingEntry} service methods.
+ */
+@Service
+@RequiredArgsConstructor
+public class StagingService {
+    private final RepoService repoService;
+    private final GeneralService generalService;
+    private final StagingEntryRepository stagingEntryRepository;
+   
+    /**
+     * Creates a staging area entry.
+     *
+     * @param repoRoot the repository root
+     * @param path the file path
+     * @param type the entry type
+     * @return the newly created entry
+     */
+    private StagingEntry createEntry(String repoRoot, String path, EntryType type) {
+        Repo repo = repoService.getRepo(repoRoot);
+        String repoRelativePath = generalService.getRepoRelativePath(repoRoot, path);
+        StagingEntry stagingEntry = new StagingEntry(repo, repoRelativePath, type);
+        return stagingEntryRepository.save(stagingEntry);
+    }
+}
