@@ -7,10 +7,12 @@ import io.github.gluedtokeyboard.vcs.api.vcs.infrastructure.context.Infrastructu
 import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
 import io.github.gluedtokeyboard.vcs.core.service.command.CommitCommand;
+import io.github.gluedtokeyboard.vcs.core.service.command.Log;
 import io.github.gluedtokeyboard.vcs.core.service.command.Merge;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -24,6 +26,7 @@ public class CommitApplicationService {
     private final InfrastructureContext infraCtx;
     private final CommitCommand commitCommand;
     private final Merge merge;
+    private final Log log;
 
     /**
      * Creates a commit in the given repository.
@@ -46,6 +49,17 @@ public class CommitApplicationService {
             );
         }
         return getLatestCommit(ctx);
+    }
+
+    /**
+     * Returns a list of commits starting from the HEAD, following their first parents.
+     *
+     * @param repoId the repository ID
+     * @return a list of commits starting from the HEAD, following their first parents
+     */
+    public List<Commit> log(UUID repoId) {
+        VcsContext ctx = repoContext.getContextByRepoId(repoId);
+        return log.log(ctx);
     }
 
     /**
