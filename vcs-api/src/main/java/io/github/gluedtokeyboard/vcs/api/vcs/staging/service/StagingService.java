@@ -10,6 +10,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+import java.util.UUID;
+
 /**
  * Contains {@link StagingEntry} service methods.
  */
@@ -62,6 +65,19 @@ public class StagingService {
     public void deleteEntries(String repoRoot) {
         Repo repo = repoService.getRepo(repoRoot);
         stagingEntryRepository.deleteAllByRepoId(repo.getId());
+    }
+
+    /**
+     * Returns the staging area entry with the given relative path from the given repository.
+     *
+     * @param repoId the repository ID
+     * @param relativePath the repository relative path of the file
+     * @return the corresponding staging area entry
+     */
+    public StagingEntry getEntry(UUID repoId, String relativePath) {
+        return stagingEntryRepository
+                .findByRepoIdAndRelativePath(repoId, relativePath)
+                .orElseThrow(NoSuchElementException::new);
     }
 
     /**
