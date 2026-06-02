@@ -18,4 +18,11 @@ public interface StagingEntryRepository extends JpaRepository<StagingEntry, UUID
      * @param relativePath the repository relative path of the file
      */
     void deleteByRepoIdAndRelativePath(UUID repoId, String relativePath);
+
+    /**
+     * Deletes all the entries in the given repository.
+     *
+     * @param repoId the repository ID
+     */
+    void deleteAllByRepoId(UUID repoId);
 }
