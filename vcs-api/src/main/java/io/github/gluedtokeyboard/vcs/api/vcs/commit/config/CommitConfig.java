@@ -1,10 +1,10 @@
 package io.github.gluedtokeyboard.vcs.api.vcs.commit.config;
 
 import io.github.gluedtokeyboard.vcs.api.vcs.infrastructure.context.InfrastructureContext;
+import io.github.gluedtokeyboard.vcs.api.vcs.staging.service.IdStagingAreaService;
 import io.github.gluedtokeyboard.vcs.core.service.command.*;
 import io.github.gluedtokeyboard.vcs.core.service.common.CommitService;
 import io.github.gluedtokeyboard.vcs.core.service.common.GeneralService;
-import io.github.gluedtokeyboard.vcs.core.service.common.StagingAreaService;
 import io.github.gluedtokeyboard.vcs.core.service.common.WorkingTreeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,7 @@ public class CommitConfig {
     }
 
     @Bean
-    public CommitCommand commitCommand(CommitService commitService, StagingAreaService stagingAreaService) {
+    public CommitCommand commitCommand(CommitService commitService, IdStagingAreaService stagingAreaService) {
         return new CommitCommand(
                 ctx.storage(), ctx.vcsLayout(), ctx.vcsStore(), ctx.blobStore(), ctx.commitStore(), commitService,
                 stagingAreaService);
