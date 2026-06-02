@@ -18,7 +18,17 @@ public class StagingService {
     private final RepoService repoService;
     private final GeneralService generalService;
     private final StagingEntryRepository stagingEntryRepository;
-   
+
+    /**
+     * Creates a staging area entry for addition.
+     * @param repoRoot the repository root
+     * @param path the file path
+     * @return the newly created entry
+     */
+    public StagingEntry createAdditionEntry(String repoRoot, String path) {
+        return createEntry(repoRoot, path, EntryType.ADDITION);
+    }
+
     /**
      * Creates a staging area entry.
      *
