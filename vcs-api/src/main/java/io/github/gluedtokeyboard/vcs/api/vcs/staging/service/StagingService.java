@@ -30,6 +30,16 @@ public class StagingService {
     }
 
     /**
+     * Creates a staging area entry for deletion.
+     * @param repoRoot the repository root
+     * @param path the file path
+     * @return the newly created entry
+     */
+    public StagingEntry createDeletionEntry(String repoRoot, String path) {
+        return createEntry(repoRoot, path, EntryType.DELETION);
+    }
+
+    /**
      * Creates a staging area entry.
      *
      * @param repoRoot the repository root
