@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -38,5 +39,22 @@ public class CommitController {
         return ResponseEntity
                 .created(location)
                 .body(CommitResponse.from(commit, repoId));
+    }
+
+    /**
+     * Returns the commit log of the given repository.
+     *
+     * @param repoId the repository ID
+     * @return the commit log of the given repository
+     */
+    @GetMapping
+    public ResponseEntity<List<CommitResponse>> log(@PathVariable("repo_id") UUID repoId) {
+        List<Commit> commits = commitService.log(repoId);
+        return ResponseEntity.ok(
+                commits
+                    .stream()
+                    .map(commit -> CommitResponse.from(commit, repoId))
+                    .toList()
+        );
     }
 }
