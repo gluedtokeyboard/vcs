@@ -1,5 +1,6 @@
 package io.github.gluedtokeyboard.vcs.api.vcs.workingtree.controller;
 
+import io.github.gluedtokeyboard.vcs.api.vcs.workingtree.dto.request.CheckoutFileRequest;
 import io.github.gluedtokeyboard.vcs.api.vcs.workingtree.dto.request.ResetRequest;
 import io.github.gluedtokeyboard.vcs.api.vcs.workingtree.service.WorkingTreeApplicationService;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +28,20 @@ public class WorkingTreeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void reset(@PathVariable("repo_id") UUID repoId, @RequestBody ResetRequest resetRequest) {
         workingTreeApplicationService.reset(repoId, resetRequest.commitPrefix());
+    }
+
+    /**
+     * Checks out the given file from the given commit in the given repository.
+     *
+     * @param repoId the repository ID
+     * @param checkoutFileRequest the checkout file request DTO containing a prefix of the commit's hash and the file
+     *                            path
+     */
+    @PatchMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void checkoutFile(
+            @PathVariable("repo_id") UUID repoId, @RequestBody CheckoutFileRequest checkoutFileRequest) {
+        workingTreeApplicationService.checkoutFile(
+                repoId, checkoutFileRequest.commitPrefix(), checkoutFileRequest.path());
     }
 }
