@@ -54,6 +54,17 @@ public class StagingService {
     }
 
     /**
+     * Deletes all the staging area entries in the given repository.
+     *
+     * @param repoRoot the repository root
+     */
+    @Transactional
+    public void deleteEntries(String repoRoot) {
+        Repo repo = repoService.getRepo(repoRoot);
+        stagingEntryRepository.deleteAllByRepoId(repo.getId());
+    }
+
+    /**
      * Creates a staging area entry.
      *
      * @param repoRoot the repository root
