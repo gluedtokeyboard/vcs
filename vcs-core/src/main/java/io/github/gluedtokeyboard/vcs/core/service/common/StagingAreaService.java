@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 /**
  * Staging area methods.
  */
-public final class StagingAreaService extends BaseService {
+public class StagingAreaService extends BaseService {
     /**
      * A marker to indicate that a file is staged for deletion.
      */

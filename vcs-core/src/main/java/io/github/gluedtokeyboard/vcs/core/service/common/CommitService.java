@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Commit methods.
  */
-public final class CommitService extends BaseService {
+public class CommitService extends BaseService {
     /**
      * The representation of a null commit.
      */

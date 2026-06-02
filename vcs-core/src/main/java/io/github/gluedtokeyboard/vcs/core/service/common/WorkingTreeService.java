@@ -17,7 +17,7 @@ import static io.github.gluedtokeyboard.vcs.util.General.setIntersection;
 /**
  * Methods to restore files, and safely apply commits.
  */
-public final class WorkingTreeService extends BaseService {
+public class WorkingTreeService extends BaseService {
     /**
      * Used to get unstaged modifications, unstaged deletions, and untracked files.
      */
