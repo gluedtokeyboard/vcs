@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 /**
  * General repository methods.
  */
-public final class GeneralService extends BaseService {
+public class GeneralService extends BaseService {
     /**
      * Stores the given interface implementations.
      *
