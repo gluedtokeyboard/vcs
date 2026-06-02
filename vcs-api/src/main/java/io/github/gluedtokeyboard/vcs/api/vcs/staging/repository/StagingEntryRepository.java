@@ -11,4 +11,11 @@ import java.util.UUID;
  */
 @Repository
 public interface StagingEntryRepository extends JpaRepository<StagingEntry, UUID> {
+    /**
+     * Deletes the entry in the given repository with the given path.
+     *
+     * @param repoId the repository ID
+     * @param relativePath the repository relative path of the file
+     */
+    void deleteByRepoIdAndRelativePath(UUID repoId, String relativePath);
 }
