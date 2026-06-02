@@ -6,6 +6,7 @@ import io.github.gluedtokeyboard.vcs.api.vcs.staging.model.EntryType;
 import io.github.gluedtokeyboard.vcs.api.vcs.staging.entity.StagingEntry;
 import io.github.gluedtokeyboard.vcs.api.vcs.staging.repository.StagingEntryRepository;
 import io.github.gluedtokeyboard.vcs.core.service.common.GeneralService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,19 @@ public class StagingService {
      */
     public StagingEntry createDeletionEntry(String repoRoot, String path) {
         return createEntry(repoRoot, path, EntryType.DELETION);
+    }
+
+    /**
+     * Deletes the staging area entry in the given repository for the given path.
+     *
+     * @param repoRoot the repository root
+     * @param path the file path
+     */
+    @Transactional
+    public void deleteEntry(String repoRoot, String path) {
+        Repo repo = repoService.getRepo(repoRoot);
+        String repoRelativePath = generalService.getRepoRelativePath(repoRoot, path);
+        stagingEntryRepository.deleteByRepoIdAndRelativePath(repo.getId(), repoRelativePath);
     }
 
     /**
