@@ -3,7 +3,7 @@ package io.github.gluedtokeyboard.vcs.api.vcs.commit.service;
 import io.github.gluedtokeyboard.vcs.api.vcs.branch.service.BranchService;
 import io.github.gluedtokeyboard.vcs.api.vcs.commit.model.CommitType;
 import io.github.gluedtokeyboard.vcs.api.vcs.common.repocontext.RepoContext;
-import io.github.gluedtokeyboard.vcs.api.vcs.infrastructure.context.InfrastructureContext;
+import io.github.gluedtokeyboard.vcs.api.vcs.common.infrastructure.context.InfrastructureContext;
 import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
 import io.github.gluedtokeyboard.vcs.core.service.command.CommitCommand;

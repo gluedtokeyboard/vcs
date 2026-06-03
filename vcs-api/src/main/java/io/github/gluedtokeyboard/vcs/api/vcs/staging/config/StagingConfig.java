@@ -1,6 +1,6 @@
 package io.github.gluedtokeyboard.vcs.api.vcs.staging.config;
 
-import io.github.gluedtokeyboard.vcs.api.vcs.infrastructure.context.InfrastructureContext;
+import io.github.gluedtokeyboard.vcs.api.vcs.common.infrastructure.context.InfrastructureContext;
 import io.github.gluedtokeyboard.vcs.api.vcs.staging.service.IdStagingAreaService;
 import io.github.gluedtokeyboard.vcs.core.service.command.Add;
 import io.github.gluedtokeyboard.vcs.core.service.command.Rm;

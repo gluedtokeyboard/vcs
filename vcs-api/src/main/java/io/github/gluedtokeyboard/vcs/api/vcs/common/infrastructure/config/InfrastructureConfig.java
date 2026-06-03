@@ -1,4 +1,4 @@
-package io.github.gluedtokeyboard.vcs.api.vcs.infrastructure.config;
+package io.github.gluedtokeyboard.vcs.api.vcs.common.infrastructure.config;
 
 import io.github.gluedtokeyboard.vcs.api.filesystem.common.infrastructure.IdStorage;
 import io.github.gluedtokeyboard.vcs.core.model.Blob;
