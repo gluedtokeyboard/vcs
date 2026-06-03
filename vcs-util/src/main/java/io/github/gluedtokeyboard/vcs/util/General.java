@@ -1,9 +1,7 @@
 package io.github.gluedtokeyboard.vcs.util;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * General utils.
@@ -73,5 +71,18 @@ public final class General {
         return Arrays.stream(path.split(separator))
                 .filter(part -> !part.isEmpty())
                 .toList();
+    }
+
+    /**
+     * Maps each element of a {@linkplain Collection} using the given {@linkplain Function}.
+     *
+     * @param collection the source {@linkplain Collection}
+     * @param mapper the mapping {@linkplain Function}
+     * @return the mapped elements
+     * @param <T> the type of the {@linkplain Collection} elements
+     * @param <R> the result type
+     */
+    public static <T, R> List<R> map(Collection<T> collection, Function<T, R> mapper) {
+        return collection.stream().map(mapper).toList();
     }
 }
