@@ -1,5 +1,6 @@
 package io.github.gluedtokeyboard.vcs.api.filesystem.directory.controller;
 
+import io.github.gluedtokeyboard.vcs.api.filesystem.common.service.NodeService;
 import io.github.gluedtokeyboard.vcs.api.filesystem.directory.dto.request.DirectoryRequest;
 import io.github.gluedtokeyboard.vcs.api.filesystem.directory.dto.response.DirectoryResponse;
 import io.github.gluedtokeyboard.vcs.api.filesystem.directory.service.DirectoryService;
@@ -23,6 +24,8 @@ public class DirectoryController {
      */
     private final DirectoryService directoryService;
 
+    private final NodeService nodeService;
+
     /**
      * Returns the directory corresponding to the given ID.
      *
@@ -34,6 +37,18 @@ public class DirectoryController {
         DirectoryContentResult result = directoryService.getDirectory(id);
         DirectoryResponse response = new DirectoryResponse(result.id(), result.path(), result.contents());
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Returns the root directory.
+     *
+     * @return the root directory
+     */
+    @GetMapping("root")
+    public ResponseEntity<DirectoryResponse> getRoot() {
+        String root = "/";
+        UUID rootId = nodeService.getId(root);
+        return getDirectory(rootId);
     }
 
     /**
