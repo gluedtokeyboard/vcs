@@ -2,7 +2,9 @@ package io.github.gluedtokeyboard.vcs.api.vcs.repo.controller;
 
 import io.github.gluedtokeyboard.vcs.api.vcs.repo.dto.request.RepoRequest;
 import io.github.gluedtokeyboard.vcs.api.vcs.repo.dto.response.RepoResponse;
+import io.github.gluedtokeyboard.vcs.api.vcs.repo.dto.response.StatusResponse;
 import io.github.gluedtokeyboard.vcs.api.vcs.repo.entity.Repo;
+import io.github.gluedtokeyboard.vcs.api.vcs.repo.model.IdStatusRecord;
 import io.github.gluedtokeyboard.vcs.api.vcs.repo.service.RepoApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -47,5 +49,17 @@ public class RepoController {
     public ResponseEntity<RepoResponse> resolveRepo(@RequestParam("directoryId") UUID directoryId) {
         Repo repo = repoApplicationService.resolveRepo(directoryId);
         return ResponseEntity.ok(RepoResponse.from(repo));
+    }
+
+    /**
+     * Returns the status of the given repository.
+     *
+     * @param repoId the repository ID
+     * @return the status of the given repository
+     */
+    @GetMapping("{repo_id}/status")
+    public ResponseEntity<StatusResponse> status(@PathVariable("repo_id") UUID repoId) {
+        IdStatusRecord statusRecord = repoApplicationService.status(repoId);
+        return ResponseEntity.ok(StatusResponse.from(statusRecord));
     }
 }
