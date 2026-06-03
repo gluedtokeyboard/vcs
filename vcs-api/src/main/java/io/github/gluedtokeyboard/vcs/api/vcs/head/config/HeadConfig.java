@@ -1,6 +1,6 @@
 package io.github.gluedtokeyboard.vcs.api.vcs.head.config;
 
-import io.github.gluedtokeyboard.vcs.api.vcs.infrastructure.context.InfrastructureContext;
+import io.github.gluedtokeyboard.vcs.api.vcs.common.infrastructure.context.InfrastructureContext;
 import io.github.gluedtokeyboard.vcs.core.service.command.Checkout;
 import io.github.gluedtokeyboard.vcs.core.service.common.GeneralService;
 import io.github.gluedtokeyboard.vcs.core.service.common.WorkingTreeService;
