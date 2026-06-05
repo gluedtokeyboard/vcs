@@ -4,6 +4,7 @@ import io.github.gluedtokeyboard.vcs.api.filesystem.common.model.NodePath;
 import io.github.gluedtokeyboard.vcs.api.vcs.branch.dto.response.BranchResponse;
 import io.github.gluedtokeyboard.vcs.api.vcs.repo.model.IdStatusRecord;
 import io.github.gluedtokeyboard.vcs.api.vcs.staging.dto.response.StagingResponse;
+import io.github.gluedtokeyboard.vcs.storage.EntryType;
 
 import java.util.List;
 
@@ -36,9 +37,9 @@ public record StatusResponse(
                 map(statusRecord.branches(), BranchResponse::from),
                 map(statusRecord.stagedAdditions(), StagingResponse::from),
                 map(statusRecord.stagedDeletions(), StagingResponse::from),
-                map(statusRecord.unstagedModifications(), NodePath::from),
+                map(statusRecord.unstagedModifications(), node -> NodePath.from(node, EntryType.FILE)),
                 statusRecord.unstagedDeletions(),
-                map(statusRecord.untrackedFiles(), NodePath::from)
+                map(statusRecord.untrackedFiles(), node -> NodePath.from(node, EntryType.FILE))
         );
     }
 }

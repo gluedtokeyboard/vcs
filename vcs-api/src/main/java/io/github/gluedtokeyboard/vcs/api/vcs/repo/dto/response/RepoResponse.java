@@ -2,6 +2,7 @@ package io.github.gluedtokeyboard.vcs.api.vcs.repo.dto.response;
 
 import io.github.gluedtokeyboard.vcs.api.filesystem.common.model.NodePath;
 import io.github.gluedtokeyboard.vcs.api.vcs.repo.entity.Repo;
+import io.github.gluedtokeyboard.vcs.storage.EntryType;
 
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ public record RepoResponse(UUID id, NodePath repoRoot) {
      * @return the {@link RepoResponse} created from the given {@link Repo}
      */
     public static RepoResponse from(Repo repo) {
-        NodePath nodePath = NodePath.from(repo.getRepoRoot());
+        NodePath nodePath = NodePath.from(repo.getRepoRoot(), EntryType.DIRECTORY);
         return new RepoResponse(repo.getId(), nodePath);
     }
 }
