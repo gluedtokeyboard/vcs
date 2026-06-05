@@ -1,6 +1,6 @@
 package io.github.gluedtokeyboard.vcs.api.vcs.repo.dto.response;
 
-import io.github.gluedtokeyboard.vcs.api.filesystem.common.model.NodePath;
+import io.github.gluedtokeyboard.vcs.api.filesystem.common.model.NodeResult;
 import io.github.gluedtokeyboard.vcs.api.vcs.branch.dto.response.BranchResponse;
 import io.github.gluedtokeyboard.vcs.api.vcs.repo.model.IdStatusRecord;
 import io.github.gluedtokeyboard.vcs.api.vcs.staging.dto.response.StagingResponse;
@@ -23,8 +23,8 @@ import static io.github.gluedtokeyboard.vcs.util.General.map;
  */
 public record StatusResponse(
         BranchResponse currentBranch, List<BranchResponse> branches, List<StagingResponse> stagedAdditions,
-        List<StagingResponse> stagedDeletions, List<NodePath> unstagedModifications, List<String> unstagedDeletions,
-        List<NodePath> untrackedFiles) {
+        List<StagingResponse> stagedDeletions, List<NodeResult> unstagedModifications, List<String> unstagedDeletions,
+        List<NodeResult> untrackedFiles) {
     /**
      * Creates a {@link StatusResponse} from the given {@link IdStatusRecord}.
      *
@@ -37,9 +37,9 @@ public record StatusResponse(
                 map(statusRecord.branches(), BranchResponse::from),
                 map(statusRecord.stagedAdditions(), StagingResponse::from),
                 map(statusRecord.stagedDeletions(), StagingResponse::from),
-                map(statusRecord.unstagedModifications(), node -> NodePath.from(node, EntryType.FILE)),
+                map(statusRecord.unstagedModifications(), node -> NodeResult.from(node, EntryType.FILE)),
                 statusRecord.unstagedDeletions(),
-                map(statusRecord.untrackedFiles(), node -> NodePath.from(node, EntryType.FILE))
+                map(statusRecord.untrackedFiles(), node -> NodeResult.from(node, EntryType.FILE))
         );
     }
 }
