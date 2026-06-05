@@ -44,7 +44,7 @@ public class DirectoryService {
                 .map(entry -> {
                     String entryPath = entry.path();
                     UUID entryId = nodeRepository.findByPath(entryPath).get().getId();
-                    return new NodePath(entryId, entryPath);
+                    return new NodePath(entryId, entryPath, entry.type());
                 })
                 .toList();
         return new DirectoryContentResult(id, path, contents);
