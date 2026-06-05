@@ -1,6 +1,6 @@
 package io.github.gluedtokeyboard.vcs.api.filesystem.directory.service;
 
-import io.github.gluedtokeyboard.vcs.api.filesystem.common.model.NodePath;
+import io.github.gluedtokeyboard.vcs.api.filesystem.common.model.NodeResult;
 import io.github.gluedtokeyboard.vcs.api.filesystem.common.repository.FilesystemNodeRepository;
 import io.github.gluedtokeyboard.vcs.api.filesystem.common.infrastructure.IdStorage;
 import io.github.gluedtokeyboard.vcs.api.filesystem.common.service.NodeService;
@@ -40,11 +40,11 @@ public class DirectoryService {
      */
     public DirectoryContentResult getDirectory(UUID id) {
         String path = nodeService.getPath(id);
-        List<NodePath> contents = storage.ls(path).stream()
+        List<NodeResult> contents = storage.ls(path).stream()
                 .map(entry -> {
                     String entryPath = entry.path();
                     UUID entryId = nodeRepository.findByPath(entryPath).get().getId();
-                    return new NodePath(entryId, entryPath, entry.type());
+                    return new NodeResult(entryId, entryPath, entry.type());
                 })
                 .toList();
         return new DirectoryContentResult(id, path, contents);

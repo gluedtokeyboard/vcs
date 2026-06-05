@@ -12,15 +12,15 @@ import java.util.UUID;
  * @param path the node path
  * @param type the node type
  */
-public record NodePath(UUID id, String path, EntryType type) {
+public record NodeResult(UUID id, String path, EntryType type) {
     /**
-     * Creates a {@link NodePath} from a {@link FilesystemNode} and an {@link EntryType}.
+     * Creates a {@link NodeResult} from a {@link FilesystemNode} and an {@link EntryType}.
      *
      * @param node a {@link FilesystemNode}
      * @param type the node type
-     * @return the {@link NodePath} created from the given {@link FilesystemNode}
+     * @return the {@link NodeResult} created from the given {@link FilesystemNode}
      */
-    public static NodePath from(FilesystemNode node, EntryType type) {
-        return new NodePath(node.getId(), node.getPath(), type);
+    public static NodeResult from(FilesystemNode node, EntryType type) {
+        return new NodeResult(node.getId(), node.getPath(), type);
     }
 }

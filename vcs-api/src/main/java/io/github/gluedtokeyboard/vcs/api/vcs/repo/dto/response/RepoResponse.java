@@ -1,6 +1,6 @@
 package io.github.gluedtokeyboard.vcs.api.vcs.repo.dto.response;
 
-import io.github.gluedtokeyboard.vcs.api.filesystem.common.model.NodePath;
+import io.github.gluedtokeyboard.vcs.api.filesystem.common.model.NodeResult;
 import io.github.gluedtokeyboard.vcs.api.vcs.repo.entity.Repo;
 import io.github.gluedtokeyboard.vcs.storage.EntryType;
 
@@ -12,7 +12,7 @@ import java.util.UUID;
  * @param id the repository ID
  * @param repoRoot the repository root along with its ID
  */
-public record RepoResponse(UUID id, NodePath repoRoot) {
+public record RepoResponse(UUID id, NodeResult repoRoot) {
     /**
      * Creates a {@link RepoResponse} from a {@link Repo}.
      *
@@ -20,7 +20,7 @@ public record RepoResponse(UUID id, NodePath repoRoot) {
      * @return the {@link RepoResponse} created from the given {@link Repo}
      */
     public static RepoResponse from(Repo repo) {
-        NodePath nodePath = NodePath.from(repo.getRepoRoot(), EntryType.DIRECTORY);
-        return new RepoResponse(repo.getId(), nodePath);
+        NodeResult nodeResult = NodeResult.from(repo.getRepoRoot(), EntryType.DIRECTORY);
+        return new RepoResponse(repo.getId(), nodeResult);
     }
 }
