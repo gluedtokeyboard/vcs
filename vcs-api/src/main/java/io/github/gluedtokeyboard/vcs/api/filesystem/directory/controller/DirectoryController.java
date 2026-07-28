@@ -6,6 +6,7 @@ import io.github.gluedtokeyboard.vcs.api.filesystem.directory.dto.response.Direc
 import io.github.gluedtokeyboard.vcs.api.filesystem.directory.service.DirectoryService;
 import io.github.gluedtokeyboard.vcs.api.filesystem.directory.service.model.DirectoryContentResult;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,5 +66,16 @@ public class DirectoryController {
         return ResponseEntity
                 .created(location)
                 .body(response);
+    }
+
+    /**
+     * Deletes the directory corresponding to the given ID.
+     *
+     * @param id the directory ID
+     */
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDirectory(@PathVariable("id") UUID id) {
+        directoryService.deleteDirectory(id);
     }
 }
