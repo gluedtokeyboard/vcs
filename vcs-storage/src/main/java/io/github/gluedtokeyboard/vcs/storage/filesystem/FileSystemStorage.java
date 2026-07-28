@@ -101,9 +101,18 @@ public class FileSystemStorage implements Storage {
     public void rm(String path) {
         Path realPath = getRealPath(path);
         try {
-            Files.delete(realPath);
-        } catch (DirectoryNotEmptyException e) {
-            throw new IllegalStateException(e);
+            if (Files.isDirectory(realPath)) {
+                walk(path, (_) -> false, true, false, true, (path_) -> {
+                    try {
+                        Path realPath_ = getRealPath(path_);
+                        Files.delete(realPath_);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            } else {
+                Files.delete(realPath);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

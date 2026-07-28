@@ -58,7 +58,6 @@ public interface Storage {
     /**
      * Deletes the given path.
      * @param path the path to delete.
-     * @throws IllegalStateException if the given path is a non-empty directory.
      */
     void rm(String path);
 

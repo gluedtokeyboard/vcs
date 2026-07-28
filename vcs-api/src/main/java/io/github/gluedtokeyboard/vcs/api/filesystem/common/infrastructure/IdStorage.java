@@ -8,6 +8,7 @@ import io.github.gluedtokeyboard.vcs.storage.Storage;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -111,12 +112,15 @@ public class IdStorage implements Storage {
      * Deletes the given path.
      *
      * @param path the path to delete.
-     * @throws IllegalStateException if the given path is a non-empty directory.
      */
     @Override
     public void rm(String path) {
+        // Store the paths first (we are not deleting database entries right away in case rm throws an exception).
+        List<String> paths = new ArrayList<>();
+        walk(path, (_) -> false, true, true, false, paths::add);
         storage.rm(path);
-        nodeService.deleteNode(path);
+        // If rm is successful, delete the database entries.
+        paths.forEach(nodeService::deleteNode);
     }
 
     /**

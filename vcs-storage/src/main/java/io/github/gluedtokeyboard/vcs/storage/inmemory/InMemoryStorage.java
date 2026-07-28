@@ -99,14 +99,10 @@ public class InMemoryStorage implements Storage {
      * Deletes the given file.
      *
      * @param path the path to delete.
-     * @throws IllegalStateException if the given path is a non-empty directory.
      */
     @Override
     public void rm(String path) {
         Node node = findNode(path);
-        if (node instanceof DirectoryNode directoryNode && !directoryNode.children.isEmpty()) {
-            throw new IllegalStateException(path + " is not an empty directory.");
-        }
         if (node != null && node != root) {
             node.parent.children.remove(node.name);
         }
