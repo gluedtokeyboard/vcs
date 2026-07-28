@@ -68,11 +68,15 @@ public abstract class StorageContractTest {
     }
 
     @Test
-    @DisplayName("Should not remove a non-empty directory")
-    void shouldNotRemoveNonEmptyDirectory() {
-        storage.mkdir("/a");
-        storage.write("x", "/a/file.txt");
-        assertThrows(IllegalStateException.class, () -> storage.rm("/a"));
+    @DisplayName("Should remove a non-empty directory")
+    void shouldRemoveNonEmptyDirectory() {
+        String directory = "/a";
+        String file = directory + "/file.txt";
+        Storage storage = createStorage();
+        storage.mkdir(directory);
+        storage.write("x", file);
+        storage.rm(directory);
+        assertFalse(storage.exists(directory));
     }
 
     @Test
