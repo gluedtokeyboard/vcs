@@ -65,4 +65,14 @@ public class DirectoryService {
         UUID id = nodeService.getId(path);
         return new DirectoryContentResult(id, path, List.of());
     }
+
+    /**
+     * Deletes the directory corresponding to the given ID.
+     *
+     * @param id the directory ID
+     */
+    public void deleteDirectory(UUID id) {
+        String path = nodeService.getPath(id);
+        storage.rm(path);
+    }
 }
