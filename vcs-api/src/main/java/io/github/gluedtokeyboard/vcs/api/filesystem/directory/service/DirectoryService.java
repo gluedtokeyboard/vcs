@@ -75,4 +75,17 @@ public class DirectoryService {
         String path = nodeService.getPath(id);
         storage.rm(path);
     }
+
+    /**
+     * Updates the path of the directory.
+     *
+     * @param id the directory ID
+     * @param path the new path
+     * @return the updated directory
+     */
+    public DirectoryContentResult updateDirectoryPath(UUID id, String path) {
+        String oldPath = nodeService.getPath(id);
+        storage.mv(oldPath, path);
+        return new DirectoryContentResult(id, path, null);
+    }
 }
