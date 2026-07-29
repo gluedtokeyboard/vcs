@@ -78,4 +78,17 @@ public class DirectoryController {
     public void deleteDirectory(@PathVariable("id") UUID id) {
         directoryService.deleteDirectory(id);
     }
+
+    /**
+     * Updates the path of the directory corresponding to the given ID.
+     *
+     * @param directory the directory DTO containing the new path
+     * @return the updated directory
+     */
+    @PatchMapping("{id}")
+    public ResponseEntity<DirectoryResponse> updateDirectoryPath(
+            @PathVariable("id") UUID id, @RequestBody DirectoryRequest directory) {
+        DirectoryContentResult result = directoryService.updateDirectoryPath(id, directory.path());
+        return ResponseEntity.ok(new DirectoryResponse(result.id(), result.path(), result.contents()));
+    }
 }
