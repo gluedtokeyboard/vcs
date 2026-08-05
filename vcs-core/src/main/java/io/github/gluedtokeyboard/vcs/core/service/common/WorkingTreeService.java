@@ -8,8 +8,10 @@ import io.github.gluedtokeyboard.vcs.core.service.command.Status.StatusRecord;
 import io.github.gluedtokeyboard.vcs.core.storage.layout.VcsLayout;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.contentaddressable.ContentAddressableStore;
 import io.github.gluedtokeyboard.vcs.core.storage.objectstore.vcs.VcsStore;
+import io.github.gluedtokeyboard.vcs.storage.Entry;
 import io.github.gluedtokeyboard.vcs.storage.Storage;
 
+import java.util.List;
 import java.util.Set;
 
 import static io.github.gluedtokeyboard.vcs.util.General.setIntersection;
@@ -155,10 +157,9 @@ public class WorkingTreeService extends BaseService {
      */
     private void removeEmptyDirectories(String repoRoot) {
         generalService.walkRepoDirsPost(repoRoot, path -> {
-            try {
+            List<Entry> files = storage.ls(path);
+            if (files.isEmpty()) {
                 storage.rm(path);
-            } catch (IllegalStateException e) {
-                /* Directory not empty, so do nothing. */
             }
         });
     }
