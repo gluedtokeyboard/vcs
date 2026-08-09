@@ -47,6 +47,13 @@ public abstract class Node {
     }
 
     /**
+     * Creates a deep copy of the current {@linkplain Node}.
+     *
+     * @return a deep copy of the current {@linkplain Node}
+     */
+    abstract Node copy();
+
+    /**
      * A string representation of the {@linkplain Node}, which consists of its runtime class name followed by the
      * {@linkplain Node}'s name.
      *
