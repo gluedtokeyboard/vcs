@@ -131,6 +131,51 @@ public abstract class StorageContractTest {
     }
 
     @Test
+    @DisplayName("Copy file")
+    void shouldCopyFile() {
+        String source = "/a.txt";
+        String destination = "/b.txt";
+        String contents = "x";
+        storage.write(contents, source);
+        storage.cp(source, destination);
+        String newContents = storage.readString(destination);
+        assertEquals(contents, newContents);
+    }
+
+    @Test
+    @DisplayName("Copy directory without nested directories")
+    void shouldCopyDirectoryWithoutNestedDirectories() {
+        String source = "/a";
+        String destination = "/b";
+        storage.mkdir(source);
+        storage.write("", source + "/1");
+        storage.write("", source + "/2");
+        assertSuccessfulCopy(source, destination);
+    }
+
+    @Test
+    @DisplayName("Copy directory with nested directories")
+    void shouldCopyDirectoryWithNestedDirectories() {
+        String source = "/a";
+        String destination = "/b";
+        setupStorage(storage);
+        assertSuccessfulCopy(source, destination);
+    }
+
+    /**
+     * Asserts that the given directory has been successfully copied to the given destination.
+     *
+     * @param source the source directory
+     * @param destination the destination path
+     */
+    private void assertSuccessfulCopy(String source, String destination) {
+        HashSet<String> sourceContents = getDirectoryContentsNested(source);
+        storage.cp(source, destination);
+        HashSet<String> destinationContents = getDirectoryContentsNested(destination);
+        assertEquals(sourceContents, destinationContents);
+    }
+
+    @Test
     @DisplayName("Basename")
     void shouldReturnBasename() {
         assertEquals("file.txt", storage.basename("/a/b/file.txt"));
