@@ -76,6 +76,14 @@ public interface Storage {
     void mv(String source, String destination);
 
     /**
+     * Copies the given source to the given destination.
+     *
+     * @param source the source path
+     * @param destination the destination path
+     */
+    void cp(String source, String destination);
+
+    /**
      * Returns the basename of the given path.
      * @param path a path.
      * @return the basename of the given path.
