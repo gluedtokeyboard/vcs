@@ -156,6 +156,31 @@ public class FileSystemStorage implements Storage {
     }
 
     /**
+     * Copies the given source to the given destination.
+     *
+     * @param source the source path
+     * @param destination the destination path
+     */
+    @Override
+    public void cp(String source, String destination) {
+        Path realDestination = getRealPath(destination);
+        walk(source, _ -> false, true, true, false, source_ -> {
+            Path realSource_ = getRealPath(source_);
+            String relativePath = getRelativePath(source, source_);
+            Path realDestination_ = Path.of(join(realDestination.toString(), relativePath));
+            try {
+                if (Files.isDirectory(realSource_)) {
+                    Files.createDirectories(realDestination_);
+                } else {
+                    Files.copy(realSource_, realDestination_, StandardCopyOption.REPLACE_EXISTING);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    /**
      * Returns the basename of the given path.
      *
      * @param path a path.
