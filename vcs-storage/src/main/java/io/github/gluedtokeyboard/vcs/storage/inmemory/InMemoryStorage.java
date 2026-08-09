@@ -161,6 +161,27 @@ public class InMemoryStorage implements Storage {
     }
 
     /**
+     * Copies the given source to the given destination.
+     *
+     * @param source the source path
+     * @param destination the destination path
+     */
+    @Override
+    public void cp(String source, String destination) {
+        Node node = findNode(source);
+        if (node == null) {
+            throw new NoSuchElementException("Source " + source + " does not exist.");
+        }
+        String newName = basename(destination);
+        node = node.copy();
+        node.name = newName;
+        String newDirectoryPath = getDirectory(destination);
+        DirectoryNode newDirectory = mkdirs(newDirectoryPath);
+        node.parent = newDirectory;
+        newDirectory.children.put(newName, node);
+    }
+
+    /**
      * Returns the basename of the given path.
      *
      * @param path a path.
