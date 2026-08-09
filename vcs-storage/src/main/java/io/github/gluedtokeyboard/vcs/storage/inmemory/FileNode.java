@@ -1,5 +1,7 @@
 package io.github.gluedtokeyboard.vcs.storage.inmemory;
 
+import java.util.Arrays;
+
 /**
  * Represents a file node in a filesystem tree.
  */
@@ -18,5 +20,15 @@ public class FileNode extends Node {
     FileNode(String name, DirectoryNode parent, byte[] contents) {
         super(name, parent);
         this.contents = contents;
+    }
+
+    /**
+     * Creates a copy of the current {@linkplain FileNode}.
+     *
+     * @return a copy of the current {@linkplain FileNode}
+     */
+    FileNode copy() {
+        byte[] newContents = Arrays.copyOf(contents, contents.length);
+        return new FileNode(name, parent, newContents);
     }
 }
