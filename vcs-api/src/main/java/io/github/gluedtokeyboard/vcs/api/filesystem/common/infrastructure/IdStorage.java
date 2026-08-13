@@ -153,6 +153,21 @@ public class IdStorage implements Storage {
     }
 
     /**
+     * Copies the given source to the given destination.
+     *
+     * @param source      the source path
+     * @param destination the destination path
+     */
+    @Override
+    public void cp(String source, String destination) {
+        storage.cp(source, destination);
+        walk(destination, (_) -> false, true, true, false, path -> {
+            FilesystemNode node = new FilesystemNode(path);
+            nodeRepository.save(node);
+        });
+    }
+
+    /**
      * Returns the basename of the given path.
      *
      * @param path a path.
