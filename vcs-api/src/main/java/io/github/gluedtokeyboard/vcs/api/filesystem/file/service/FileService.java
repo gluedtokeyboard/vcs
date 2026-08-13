@@ -95,4 +95,19 @@ public class FileService {
         String path = nodeService.getPath(id);
         storage.rm(path);
     }
+
+    /**
+     * Copies the given file to the given destination.
+     *
+     * @param sourceId the source file ID
+     * @param destination the destination path
+     * @return the newly created file
+     */
+    public FileContentResult copyFile(UUID sourceId, String destination) {
+        String source = nodeService.getPath(sourceId);
+        storage.cp(source, destination);
+        UUID destinationId = nodeService.getId(destination);
+        String contents = storage.readString(destination);
+        return new FileContentResult(destinationId, destination, contents);
+    }
 }
