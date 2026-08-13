@@ -88,4 +88,18 @@ public class DirectoryService {
         storage.mv(oldPath, path);
         return new DirectoryContentResult(id, path, null);
     }
+
+    /**
+     * Copies the given directory to the given destination.
+     *
+     * @param sourceId the source directory ID
+     * @param destination the destination path
+     * @return the newly created directory
+     */
+    public DirectoryContentResult copyDirectory(UUID sourceId, String destination) {
+        String source = nodeService.getPath(sourceId);
+        storage.cp(source, destination);
+        UUID destinationId = nodeService.getId(destination);
+        return new DirectoryContentResult(destinationId, destination, null);
+    }
 }
