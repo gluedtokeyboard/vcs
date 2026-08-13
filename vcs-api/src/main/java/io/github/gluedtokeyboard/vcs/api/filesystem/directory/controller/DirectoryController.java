@@ -53,14 +53,20 @@ public class DirectoryController {
     }
 
     /**
-     * Creates a new directory.
+     * Creates a new directory, or creates a copy of an existing directory.
      *
-     * @param directory the directory DTO containing its path
+     * @param directory the directory DTO containing its path and optionally a source ID in case of creating a copy
      * @return the newly created directory
      */
     @PostMapping
     public ResponseEntity<DirectoryResponse> createDirectory(@RequestBody DirectoryRequest directory) {
-        DirectoryContentResult result = directoryService.createDirectory(directory.path());
+        DirectoryContentResult result;
+        UUID copyFrom = directory.copyFrom();
+        if (copyFrom != null) {
+            result = directoryService.copyDirectory(copyFrom, directory.path());
+        } else {
+            result = directoryService.createDirectory(directory.path());
+        }
         DirectoryResponse response = new DirectoryResponse(result.id(), result.path(), result.contents());
         URI location = URI.create("/api/v1/fs/directories/" + result.id());
         return ResponseEntity
