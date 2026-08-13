@@ -40,12 +40,18 @@ public class FileController {
     /**
      * Creates a new file.
      *
-     * @param file the file DTO containing the path and the contents
+     * @param file the file DTO containing the path and either the contents or the source ID in case of creating a copy
      * @return the newly created file
      */
     @PostMapping
     public ResponseEntity<FileResponse> createFile(@RequestBody FileRequest file) {
-        FileContentResult result = fileService.createFile(file.path(), file.contents());
+        FileContentResult result;
+        UUID copyFrom = file.copyFrom();
+        if (copyFrom != null) {
+            result = fileService.copyFile(copyFrom, file.path());
+        } else {
+            result = fileService.createFile(file.path(), file.contents());
+        }
         FileResponse response = new FileResponse(result.id(), result.path(), result.contents());
         URI location = URI.create("/api/v1/fs/files/" + result.id());
         return ResponseEntity
