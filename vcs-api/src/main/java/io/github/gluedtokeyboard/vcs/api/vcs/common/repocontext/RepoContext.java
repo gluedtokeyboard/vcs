@@ -55,4 +55,14 @@ public class RepoContext {
     public VcsContext getContextByDirectory(String directory) {
         return VcsContext.getContext(storage, vcsStore, directory);
     }
+
+    /**
+     * Stores the {@link io.github.gluedtokeyboard.vcs.core.model.Vcs} object held by the given context at the
+     * repository root.
+     *
+     * @param ctx the repository context
+     */
+    public void storeVcs(VcsContext ctx) {
+        vcsStore.store(ctx.repoRoot(), ctx.vcs());
+    }
 }
