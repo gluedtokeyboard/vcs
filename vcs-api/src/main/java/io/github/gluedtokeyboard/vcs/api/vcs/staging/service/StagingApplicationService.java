@@ -8,6 +8,7 @@ import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
 import io.github.gluedtokeyboard.vcs.core.service.command.Add;
 import io.github.gluedtokeyboard.vcs.core.service.command.Rm;
 import io.github.gluedtokeyboard.vcs.core.service.common.GeneralService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class StagingApplicationService {
      * @param entryType the type of the staging entry
      * @return the newly created staging entry
      */
+    @Transactional
     public StagingEntry stageFile(UUID repoId, UUID fileId, EntryType entryType) {
         VcsContext ctx = repoContext.getContextByRepoId(repoId);
         String path = nodeService.getPath(fileId);
