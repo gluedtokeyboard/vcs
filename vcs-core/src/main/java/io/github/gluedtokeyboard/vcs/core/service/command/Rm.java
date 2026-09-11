@@ -75,6 +75,9 @@ public class Rm extends BaseCommand {
      */
     private boolean isTracked(VcsContext ctx, String repoRelativePath) {
         String parentHash = ctx.vcs().getCurrentBranchHead();
+        if (parentHash == null) {
+            return false;
+        }
         Commit parentCommit = commitStore.load(ctx.repoRoot(), parentHash);
         return parentCommit.contains(repoRelativePath);
     }
