@@ -29,5 +29,6 @@ public class HeadApplicationService {
         VcsContext ctx = repoContext.getContextByRepoId(repoId);
         String branchName = branchService.getBranchById(branchId).getName();
         checkout.checkoutBranch(ctx, branchName);
+        repoContext.storeVcs(ctx);
     }
 }

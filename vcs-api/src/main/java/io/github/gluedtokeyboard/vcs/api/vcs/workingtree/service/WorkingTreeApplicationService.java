@@ -28,6 +28,7 @@ public class WorkingTreeApplicationService {
     public void reset(UUID repoId, String commitPrefix) {
         VcsContext ctx = repoContext.getContextByRepoId(repoId);
         reset.reset(ctx, commitPrefix);
+        repoContext.storeVcs(ctx);
     }
 
     /**
@@ -44,5 +45,6 @@ public class WorkingTreeApplicationService {
         } else {
             checkout.checkout(ctx, commitPrefix, path);
         }
+        repoContext.storeVcs(ctx);
     }
 }

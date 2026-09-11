@@ -28,7 +28,9 @@ public class BranchApplicationService {
     public Branch createBranch(UUID repoId, String branchName) {
         VcsContext ctx = repoContext.getContextByRepoId(repoId);
         branch.createBranch(ctx, branchName);
-        return branchService.getBranchByRepoIdAndName(repoId, branchName);
+        Branch branch = branchService.getBranchByRepoIdAndName(repoId, branchName);
+        repoContext.storeVcs(ctx);
+        return branch;
     }
 
     /**
@@ -42,5 +44,6 @@ public class BranchApplicationService {
         VcsContext ctx = repoContext.getContextByDirectory(repoRoot);
         String branchName = branchEntity.getName();
         branch.removeBranch(ctx, branchName);
+        repoContext.storeVcs(ctx);
     }
 }

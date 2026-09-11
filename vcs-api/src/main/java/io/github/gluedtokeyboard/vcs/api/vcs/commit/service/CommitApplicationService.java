@@ -48,7 +48,9 @@ public class CommitApplicationService {
                         .getName()
             );
         }
-        return getLatestCommit(ctx);
+        Commit commit = getLatestCommit(ctx);
+        repoContext.storeVcs(ctx);
+        return commit;
     }
 
     /**
@@ -59,7 +61,9 @@ public class CommitApplicationService {
      */
     public List<Commit> log(UUID repoId) {
         VcsContext ctx = repoContext.getContextByRepoId(repoId);
-        return log.log(ctx);
+        List<Commit> commits = log.log(ctx);
+        repoContext.storeVcs(ctx);
+        return commits;
     }
 
     /**

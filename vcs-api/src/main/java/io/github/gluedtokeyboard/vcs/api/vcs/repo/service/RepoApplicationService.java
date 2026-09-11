@@ -111,8 +111,10 @@ public class RepoApplicationService {
                 statusRecord.untrackedFiles(),
                 nodeService::getNode
         );
-        return new IdStatusRecord(
+        IdStatusRecord status = new IdStatusRecord(
                 currentBranch, branches, stagedAdditions, stagedDeletions, unstagedModifications, unstagedDeletions,
                 untrackedFiles);
+        repoContext.storeVcs(ctx);
+        return status;
     }
 }
