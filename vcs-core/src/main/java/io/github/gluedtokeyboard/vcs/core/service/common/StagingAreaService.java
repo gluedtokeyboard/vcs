@@ -27,7 +27,7 @@ public class StagingAreaService extends BaseService {
     /**
      * Used to convert between absolute paths and repository-relative paths.
      */
-    private final GeneralService generalService;
+    protected final GeneralService generalService;
 
     /**
      * Stores the given interface implementations and a {@link GeneralService} object.
