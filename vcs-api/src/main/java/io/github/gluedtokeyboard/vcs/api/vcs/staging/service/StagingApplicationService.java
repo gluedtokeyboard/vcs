@@ -55,6 +55,7 @@ public class StagingApplicationService {
             // in the missing staging entry.
             entry = null;
         }
+        repoContext.storeVcs(ctx);
         return entry;
     }
 }
