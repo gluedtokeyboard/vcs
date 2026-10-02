@@ -146,6 +146,7 @@ public class Merge extends BaseCommand {
         if (splitPointHash.equals(currentHash)) {
             workingTreeService.applyCommitSafely(ctx, otherHash);
             ctx.vcs().setCurrentBranchHead(otherHash);
+            vcsStore.store(ctx.repoRoot(), ctx.vcs());
             throw new RuntimeException("Current branch fast-forwarded.");
         } else if (splitPointHash.equals(otherHash)) {
             throw new RuntimeException("The given branch is an ancestor of the current branch.");
@@ -187,6 +188,7 @@ public class Merge extends BaseCommand {
             mergeConflicts(ctx.repoRoot(), current, other, conflicts, branchName);
         }
         createMergeCommit(ctx, branchName);
+        vcsStore.store(ctx.repoRoot(), ctx.vcs());
         if (!conflicts.isEmpty()) {
             String conflictMessage = getConflictMessage(conflicts);
             throw new RuntimeException(conflictMessage);
