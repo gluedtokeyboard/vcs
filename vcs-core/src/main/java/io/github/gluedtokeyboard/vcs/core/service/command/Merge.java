@@ -185,7 +185,7 @@ public class Merge extends BaseCommand {
         // Handle merge conflicts if any, and make a merge commit.
         Set<String> conflicts = setUnion(modificationConflicts, deletionConflicts);
         if (!conflicts.isEmpty()) {
-            mergeConflicts(ctx.repoRoot(), current, other, conflicts, branchName);
+            handleMergeConflicts(ctx, current, other, conflicts, branchName);
         }
         createMergeCommit(ctx, branchName);
         vcsStore.store(ctx.repoRoot(), ctx.vcs());
@@ -301,6 +301,22 @@ public class Merge extends BaseCommand {
     }
 
     /**
+     * Creates merge conflict blocks and stages them. See {@link Merge#createMergeConflictBlock(String, String, String)}
+     * for what a merge conflict block is.
+     *
+     * @param ctx the repository context
+     * @param head the current branch head
+     * @param other the branch head of {@code branchName}
+     * @param conflicts the conflicting files
+     * @param branchName the name of the branch to merge into the current branch
+     */
+    private void handleMergeConflicts(
+            VcsContext ctx, Commit head, Commit other, Set<String> conflicts, String branchName) {
+        mergeConflicts(ctx.repoRoot(), head, other, conflicts, branchName);
+        stageConflicts(ctx, conflicts);
+    }
+
+    /**
      * Creates merge conflict blocks for the given conflicting files and writes them to the repository. See
      * {@link Merge#createMergeConflictBlock(String, String, String)} for what a merge conflict block is.
      * @param repoRoot the repository root.
@@ -349,5 +365,18 @@ public class Merge extends BaseCommand {
                 + "=======\n"
                 + otherContents
                 + ">>>>>>> " + branchName + "\n";
+    }
+
+    /**
+     * Stages the given conflicting files.
+     *
+     * @param ctx the repository context
+     * @param conflicts the conflicting files
+     */
+    private void stageConflicts(VcsContext ctx, Set<String> conflicts) {
+        conflicts.forEach(conflict -> {
+            String conflictAbsolutePath = generalService.getAbsolutePath(ctx.repoRoot(), conflict);
+            add.add(ctx, conflictAbsolutePath);
+        });
     }
 }
