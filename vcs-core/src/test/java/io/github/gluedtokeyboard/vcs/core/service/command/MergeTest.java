@@ -8,6 +8,7 @@ import static io.github.gluedtokeyboard.vcs.core.support.infra.storage.StorageAs
 import static io.github.gluedtokeyboard.vcs.core.support.repo.RepoAssertions.assertThat;
 import static io.github.gluedtokeyboard.vcs.core.support.commit.CommitAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("Merge")
 class MergeTest extends BaseCommandTest {
@@ -225,6 +226,13 @@ class MergeTest extends BaseCommandTest {
                     assertThat(head(ctx))
                             .parent1Equals(initialBranchHead)
                             .parent2Equals(otherBranchHead);
+                }
+
+                @AfterEach
+                void verifyNoUnstagedModifications() {
+                    String message = "The repository contains unstaged modifications after a merge with conflicts. " +
+                            "Check if the merge conflict blocks have been committed.";
+                    assertTrue(repo.status().unstagedModifications().isEmpty(), message);
                 }
             }
         }
