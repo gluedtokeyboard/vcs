@@ -9,15 +9,16 @@ public final class FileSystem {
     /**
      * Joins the given parts to the given path.
      *
-     * @param path  The base path.
+     * @param base  The base path.
      * @param parts The parts to join to the path.
-     * @return A {@link Path} object containing the given parts joined to the base path.
+     * @return the given parts joined to the base path.
      */
-    public static Path join(Path path, String... parts) {
+    public static String join(String base, String... parts) {
+        Path joinedPath = Path.of(base);
         for (String part : parts) {
-            path = path.resolve(part);
+            joinedPath = joinedPath.resolve(part);
         }
-        return path;
+        return joinedPath.toString();
     }
 
     /**
@@ -26,17 +27,17 @@ public final class FileSystem {
      * @param parts the parts to join to the current working directory.
      * @return the given parts joined to the current working directory.
      */
-    public static Path joinCWD(String... parts) {
+    public static String joinCWD(String... parts) {
         return join(getCWD(), parts);
     }
 
     /**
      * Returns the absolute path of the current working directory.
      *
-     * @return A {@link Path} object containing the current working directory.
+     * @return the current working directory.
      */
-    public static Path getCWD() {
-        return Path.of("").toAbsolutePath();
+    public static String getCWD() {
+        return Path.of("").toAbsolutePath().toString();
     }
 
     /**
@@ -45,8 +46,8 @@ public final class FileSystem {
      * @param base a base path.
      * @return the given absolute path relative to the given base path.
      */
-    public static Path getRelativePath(Path path, Path base) {
-        return base.relativize(path);
+    public static String getRelativePath(String path, String base) {
+        return Path.of(base).relativize(Path.of(path)).toString();
     }
 
     /**
@@ -55,6 +56,6 @@ public final class FileSystem {
      * @return the given absolute path relative to the current working directory.
      */
     public static String getRelativePathCWD(String path) {
-        return getRelativePath(Path.of(path), getCWD()).toString();
+        return getRelativePath(path, getCWD());
     }
 }
