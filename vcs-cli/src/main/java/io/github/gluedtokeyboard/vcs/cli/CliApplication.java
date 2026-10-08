@@ -1,12 +1,15 @@
 package io.github.gluedtokeyboard.vcs.cli;
 
+import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
-import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 import io.github.gluedtokeyboard.vcs.core.service.command.*;
 
 import java.util.ArrayList;
 
+import static io.github.gluedtokeyboard.vcs.cli.CliConfig.*;
 import static io.github.gluedtokeyboard.vcs.cli.CliUtil.*;
+import static io.github.gluedtokeyboard.vcs.util.FileSystem.getCWD;
+import static io.github.gluedtokeyboard.vcs.util.FileSystem.joinCWD;
 
 /**
  * The entry point for the CLI.
@@ -17,17 +20,18 @@ public class CliApplication {
      * @param args the command-line arguments for the application.
      */
     static void main(String[] args) {
-        Vcs vcs;
+        String cwd = getCWD();
         try {
             String command = args[0];
             if (command.equals("init")) {
-                vcs = new Vcs();
-                new Init(vcs).init();
+                init().init(cwd);
             } else {
-                vcs = Vcs.deserialize();
+                VcsContext ctx = VcsContext.getContext(storage(), vcsStore(), cwd);
+                String absolutePath;
                 switch (command) {
                     case "add":
-                        new Add(vcs).add(args[1]);
+                        absolutePath = joinCWD(args[1]);
+                        add().add(ctx, absolutePath);
                         break;
                     case "commit":
                         String message;
@@ -36,46 +40,49 @@ public class CliApplication {
                         } else {
                             message = args[1];
                         }
-                        new CommitCommand(vcs).commit(message);
+                        commitCommand().commit(ctx, message);
                         break;
                     case "rm":
-                        new Rm(vcs).rm(args[1]);
+                        absolutePath = joinCWD(args[1]);
+                        rm().rm(ctx, absolutePath);
                         break;
                     case "log":
-                        ArrayList<Commit> commits = new Log(vcs).log();
+                        ArrayList<Commit> commits = log().log(ctx);
                         commits.stream().map(CliUtil::commitToString).forEach(System.out::println);
                         break;
                     case "status":
-                        Status.StatusRecord status = new Status(vcs).status();
+                        Status.StatusRecord status = status().status(ctx);
                         printStatus(status);
                         break;
                     case "branch":
-                        Branch branch = new Branch(vcs);
+                        Branch branch = branch();
                         if (args[1].equals("-d")) {
-                            branch.removeBranch(args[2]);
+                            branch.removeBranch(ctx, args[2]);
                         } else {
-                            branch.createBranch(args[1]);
+                            branch.createBranch(ctx, args[1]);
                         }
                         break;
                     case "checkout":
-                        Checkout checkout = new Checkout(vcs);
+                        Checkout checkout = checkout();
                         switch (args.length) {
                             case 2:
-                                checkout.checkoutBranch(args[1]);
+                                checkout.checkoutBranch(ctx, args[1]);
                                 break;
                             case 3:
-                                checkout.checkout(args[2]);
+                                absolutePath = joinCWD(args[2]);
+                                checkout.checkout(ctx, absolutePath);
                                 break;
                             case 4:
-                                checkout.checkout(args[1], args[3]);
+                                absolutePath = joinCWD(args[3]);
+                                checkout.checkout(ctx, args[1], absolutePath);
                                 break;
                         }
                         break;
                     case "reset":
-                        new Reset(vcs).reset(args[1]);
+                        reset().reset(ctx, args[1]);
                         break;
                     case "merge":
-                        new Merge(vcs).merge(args[1]);
+                        merge().merge(ctx, args[1]);
                         break;
                     case "help":
                         System.out.print(getHelp());
@@ -85,8 +92,8 @@ public class CliApplication {
                         printHelpPrompt();
                         break;
                 }
+                vcsStore().store(ctx.repoRoot(), ctx.vcs());
             }
-            vcs.serialize();
         } catch (ArrayIndexOutOfBoundsException e) {
             System.err.println("Insufficient arguments.");
             printHelpPrompt();
