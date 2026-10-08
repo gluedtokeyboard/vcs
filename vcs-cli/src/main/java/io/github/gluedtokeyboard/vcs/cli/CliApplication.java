@@ -25,6 +25,8 @@ public class CliApplication {
             String command = args[0];
             if (command.equals("init")) {
                 init().init(cwd);
+            } else if (command.equals("help")) {
+                System.out.print(getHelp());
             } else {
                 VcsContext ctx = VcsContext.getContext(storage(), vcsStore(), cwd);
                 String absolutePath;
@@ -83,9 +85,6 @@ public class CliApplication {
                         break;
                     case "merge":
                         merge().merge(ctx, args[1]);
-                        break;
-                    case "help":
-                        System.out.print(getHelp());
                         break;
                     default:
                         System.err.println("Unknown command: " + command);
