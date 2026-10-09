@@ -71,6 +71,17 @@ public class RepoService {
     }
 
     /**
+     * Returns the repository with the given folder path.
+     *
+     * @param repoFolderPath the repository's folder path
+     * @return the repository with the given folder path
+     * @throws NoSuchElementException if a repository with the given folder path does not exist
+     */
+    public Repo getRepoByRepoFolder(String repoFolderPath) {
+        return getRepo(() -> repoRepository.findByRepoFolderPath(repoFolderPath));
+    }
+
+    /**
      * Returns the root of the given repository.
      *
      * @param repoId the repository ID
