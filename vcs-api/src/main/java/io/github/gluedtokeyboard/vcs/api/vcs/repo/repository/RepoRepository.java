@@ -19,4 +19,12 @@ public interface RepoRepository extends JpaRepository<Repo, UUID> {
      * @return the {@link Repo} at the given root if present
      */
     Optional<Repo> findByRepoRootId(UUID repoRootId);
+
+    /**
+     * Retrieves a {@link Repo} by its folder path.
+     *
+     * @param repoFolderPath the repository's folder path
+     * @return the {@link Repo} with the given folder path if present
+     */
+    Optional<Repo> findByRepoFolderPath(String repoFolderPath);
 }
