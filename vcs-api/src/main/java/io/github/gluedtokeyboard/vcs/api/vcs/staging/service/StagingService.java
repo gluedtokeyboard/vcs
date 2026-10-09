@@ -34,6 +34,17 @@ public class StagingService {
     }
 
     /**
+     * Creates a staging area entry for addition.
+     *
+     * @param repo the repository object
+     * @param repoRelativePath the repository relative file path
+     * @return the newly created entry
+     */
+    public StagingEntry createAdditionEntry(Repo repo, String repoRelativePath) {
+        return createEntry(repo, repoRelativePath, EntryType.ADDITION);
+    }
+
+    /**
      * Creates a staging area entry for deletion.
      * @param repoRoot the repository root
      * @param path the file path
@@ -41,6 +52,17 @@ public class StagingService {
      */
     public StagingEntry createDeletionEntry(String repoRoot, String path) {
         return createEntry(repoRoot, path, EntryType.DELETION);
+    }
+
+    /**
+     * Creates a staging area entry for deletion.
+     *
+     * @param repo the repository object
+     * @param repoRelativePath the repository relative file path
+     * @return the newly created entry
+     */
+    public StagingEntry createDeletionEntry(Repo repo, String repoRelativePath) {
+        return createEntry(repo, repoRelativePath, EntryType.DELETION);
     }
 
     /**
@@ -91,6 +113,18 @@ public class StagingService {
     private StagingEntry createEntry(String repoRoot, String path, EntryType type) {
         Repo repo = repoService.getRepo(repoRoot);
         String repoRelativePath = generalService.getRepoRelativePath(repoRoot, path);
+        return createEntry(repo, repoRelativePath, type);
+    }
+
+    /**
+     * Creates a staging area entry.
+     *
+     * @param repo the repository object
+     * @param repoRelativePath the repository relative file path
+     * @param type the entry type
+     * @return the newly created entry
+     */
+    private StagingEntry createEntry(Repo repo, String repoRelativePath, EntryType type) {
         StagingEntry stagingEntry = new StagingEntry(repo, repoRelativePath, type);
         return stagingEntryRepository.save(stagingEntry);
     }
