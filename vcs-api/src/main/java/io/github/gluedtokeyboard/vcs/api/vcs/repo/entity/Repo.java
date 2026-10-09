@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -35,6 +36,7 @@ public class Repo {
             unique = true
     )
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @Setter
     private FilesystemNode repoRoot;
 
     /**
