@@ -31,6 +31,17 @@ public class BranchService {
      */
     public Branch createBranch(String repoRoot, String branchName) {
         Repo repo = repoService.getRepo(repoRoot);
+        return createBranch(repo, branchName);
+    }
+
+    /**
+     * Creates a branch in the given repository.
+     *
+     * @param repo the repository object
+     * @param branchName the branch name
+     * @return the newly created branch
+     */
+    public Branch createBranch(Repo repo, String branchName) {
         return branchRepository.save(new Branch(repo, branchName));
     }
 

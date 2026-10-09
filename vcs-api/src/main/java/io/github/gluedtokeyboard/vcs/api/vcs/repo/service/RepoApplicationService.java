@@ -4,20 +4,26 @@ import io.github.gluedtokeyboard.vcs.api.filesystem.common.entity.FilesystemNode
 import io.github.gluedtokeyboard.vcs.api.filesystem.common.service.NodeService;
 import io.github.gluedtokeyboard.vcs.api.vcs.branch.entity.Branch;
 import io.github.gluedtokeyboard.vcs.api.vcs.branch.service.BranchService;
+import io.github.gluedtokeyboard.vcs.api.vcs.common.infrastructure.context.InfrastructureContext;
 import io.github.gluedtokeyboard.vcs.api.vcs.common.repocontext.RepoContext;
 import io.github.gluedtokeyboard.vcs.api.vcs.repo.entity.Repo;
 import io.github.gluedtokeyboard.vcs.api.vcs.repo.model.IdStatusRecord;
 import io.github.gluedtokeyboard.vcs.api.vcs.repo.repository.RepoRepository;
 import io.github.gluedtokeyboard.vcs.api.vcs.staging.entity.StagingEntry;
+import io.github.gluedtokeyboard.vcs.api.vcs.staging.service.IdStagingAreaService;
 import io.github.gluedtokeyboard.vcs.api.vcs.staging.service.StagingService;
 import io.github.gluedtokeyboard.vcs.core.context.VcsContext;
+import io.github.gluedtokeyboard.vcs.core.model.Vcs;
 import io.github.gluedtokeyboard.vcs.core.service.command.Status;
 import io.github.gluedtokeyboard.vcs.core.service.command.Status.StatusRecord;
 import io.github.gluedtokeyboard.vcs.core.service.common.GeneralService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.TreeMap;
 import java.util.UUID;
 
 import static io.github.gluedtokeyboard.vcs.util.General.map;
@@ -49,6 +55,7 @@ public class RepoApplicationService {
     private final BranchService branchService;
     private final StagingService stagingService;
     private final Status status;
+    private final InfrastructureContext infraCtx;
 
     /**
      * Initializes the repository at the given root.
@@ -63,15 +70,52 @@ public class RepoApplicationService {
     }
 
     /**
-     * Searches for a repository upwards from the given directory.
+     * Searches for a repository upwards from the given directory. If a repository is found but its database entries are
+     * not present or outdated, they are created or updated.
      *
      * @param directoryId the directory ID
      * @return the repository found
-     * @throws java.util.NoSuchElementException if a repository could not be found
+     * @throws NoSuchElementException if a repository could not be found
      */
+    @Transactional
     public Repo resolveRepo(UUID directoryId) {
         VcsContext ctx = repoContext.getContextByDirectoryId(directoryId);
-        return repoService.getRepo(ctx.repoRoot());
+        try {
+            return repoService.getRepo(ctx.repoRoot());
+        } catch (NoSuchElementException _) {
+            FilesystemNode repoRoot = nodeService.getNode(ctx.repoRoot());
+            String repoFolderPath = infraCtx.vcsLayout().getRepoFolder(repoRoot.getPath());
+            try {
+                Repo repo = repoService.getRepoByRepoFolder(repoFolderPath);
+                repo.setRepoRoot(repoRoot);
+                return repo;
+            } catch (NoSuchElementException _) {
+                return registerRepo(ctx);
+            }
+        }
+    }
+
+    private Repo registerRepo(VcsContext ctx) {
+        Repo repo = repoService.createRepo(ctx.repoRoot());
+        Vcs vcs = ctx.vcs();
+        registerBranches(repo, vcs);
+        registerStagingAreaEntries(repo, vcs);
+        return repo;
+    }
+
+    private void registerBranches(Repo repo, Vcs vcs) {
+        vcs.getAllBranches().forEach(branch -> branchService.createBranch(repo, branch));
+    }
+
+    private void registerStagingAreaEntries(Repo repo, Vcs vcs) {
+        TreeMap<String, String> stagedFiles = vcs.getStagedFilesClone();
+        stagedFiles.keySet().forEach(stagedFile -> {
+            if (IdStagingAreaService.isStagedForAddition(stagedFiles, stagedFile)) {
+                stagingService.createAdditionEntry(repo, stagedFile);
+            } else {
+                stagingService.createDeletionEntry(repo, stagedFile);
+            }
+        });
     }
 
     /**
