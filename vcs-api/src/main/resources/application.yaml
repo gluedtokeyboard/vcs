@@ -17,3 +17,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+storage:
+  type: ${STORAGE_TYPE:inmemory}
+  filesystem:
+    root: ${FILESYSTEM_STORAGE_ROOT}
