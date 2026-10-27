@@ -5,6 +5,8 @@ import io.github.gluedtokeyboard.vcs.api.filesystem.directory.dto.request.Direct
 import io.github.gluedtokeyboard.vcs.api.filesystem.directory.dto.response.DirectoryResponse;
 import io.github.gluedtokeyboard.vcs.api.filesystem.directory.service.DirectoryService;
 import io.github.gluedtokeyboard.vcs.api.filesystem.directory.service.model.DirectoryContentResult;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/fs/directories")
 @RequiredArgsConstructor
+@Tag(name = "Directory")
 public class DirectoryController {
     /**
      * Used for service methods.
@@ -34,7 +37,11 @@ public class DirectoryController {
      * @return the corresponding directory
      */
     @GetMapping("{id}")
-    public ResponseEntity<DirectoryResponse> getDirectory(@PathVariable("id") UUID id) {
+    public ResponseEntity<DirectoryResponse> getDirectory(
+            @Parameter(description = "The directory ID.")
+            @PathVariable("id")
+            UUID id
+    ) {
         DirectoryContentResult result = directoryService.getDirectory(id);
         DirectoryResponse response = new DirectoryResponse(result.id(), result.path(), result.contents());
         return ResponseEntity.ok(response);
@@ -81,7 +88,11 @@ public class DirectoryController {
      */
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDirectory(@PathVariable("id") UUID id) {
+    public void deleteDirectory(
+            @Parameter(description = "The directory ID.")
+            @PathVariable("id")
+            UUID id
+    ) {
         directoryService.deleteDirectory(id);
     }
 
@@ -93,7 +104,12 @@ public class DirectoryController {
      */
     @PatchMapping("{id}")
     public ResponseEntity<DirectoryResponse> updateDirectoryPath(
-            @PathVariable("id") UUID id, @RequestBody DirectoryRequest directory) {
+            @Parameter(description = "The directory ID.")
+            @PathVariable("id")
+            UUID id,
+
+            @RequestBody DirectoryRequest directory
+) {
         DirectoryContentResult result = directoryService.updateDirectoryPath(id, directory.path());
         return ResponseEntity.ok(new DirectoryResponse(result.id(), result.path(), result.contents()));
     }

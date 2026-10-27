@@ -5,6 +5,8 @@ import io.github.gluedtokeyboard.vcs.api.vcs.commit.dto.response.CommitResponse;
 import io.github.gluedtokeyboard.vcs.api.vcs.commit.model.CommitType;
 import io.github.gluedtokeyboard.vcs.api.vcs.commit.service.CommitApplicationService;
 import io.github.gluedtokeyboard.vcs.core.model.Commit;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/vcs/repos/{repo_id}/commits")
 @RequiredArgsConstructor
+@Tag(name = "Commit")
 public class CommitController {
     private final CommitApplicationService commitService;
 
@@ -32,7 +35,12 @@ public class CommitController {
      */
     @PostMapping
     public ResponseEntity<CommitResponse> commit(
-            @PathVariable("repo_id") UUID repoId, @RequestBody CommitRequest commitRequest) {
+            @Parameter(description = "The repository ID.")
+            @PathVariable("repo_id")
+            UUID repoId,
+
+            @RequestBody CommitRequest commitRequest
+    ) {
         CommitType type = commitRequest.type();
         Commit commit = commitService.commit(repoId, type, commitRequest.message(), commitRequest.branchId());
         URI location = URI.create("/api/v1/vcs/repos" + repoId + "/commits/" + commit.getSha1());
@@ -48,7 +56,11 @@ public class CommitController {
      * @return the commit log of the given repository
      */
     @GetMapping
-    public ResponseEntity<List<CommitResponse>> log(@PathVariable("repo_id") UUID repoId) {
+    public ResponseEntity<List<CommitResponse>> log(
+            @Parameter(description = "The repository ID.")
+            @PathVariable("repo_id")
+            UUID repoId
+    ) {
         List<Commit> commits = commitService.log(repoId);
         return ResponseEntity.ok(
                 commits

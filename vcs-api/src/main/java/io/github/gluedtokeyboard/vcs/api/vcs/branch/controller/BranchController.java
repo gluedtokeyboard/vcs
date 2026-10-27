@@ -4,6 +4,8 @@ import io.github.gluedtokeyboard.vcs.api.vcs.branch.dto.request.BranchRequest;
 import io.github.gluedtokeyboard.vcs.api.vcs.branch.dto.response.BranchResponse;
 import io.github.gluedtokeyboard.vcs.api.vcs.branch.entity.Branch;
 import io.github.gluedtokeyboard.vcs.api.vcs.branch.service.BranchApplicationService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/vcs/repos/{repo_id}/branches")
 @RequiredArgsConstructor
+@Tag(name = "Branch")
 public class BranchController {
     private final BranchApplicationService branchApplicationService;
 
@@ -30,7 +33,12 @@ public class BranchController {
      */
     @PostMapping
     public ResponseEntity<BranchResponse> createBranch(
-            @PathVariable("repo_id") UUID repoId, @RequestBody BranchRequest branchRequest) {
+            @Parameter(description = "The repository ID.")
+            @PathVariable("repo_id")
+            UUID repoId,
+
+            @RequestBody BranchRequest branchRequest
+    ) {
         Branch branch = branchApplicationService.createBranch(repoId, branchRequest.name());
         URI location = URI.create("/api/v1/vcs/repos/" + repoId + "/branches/" + branch.getId());
         return ResponseEntity
@@ -46,7 +54,15 @@ public class BranchController {
      */
     @DeleteMapping("{branch_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeBranch(@PathVariable("repo_id") UUID repoId, @PathVariable("branch_id") UUID branchId) {
+    public void removeBranch(
+            @Parameter(description = "The repository ID.")
+            @PathVariable("repo_id")
+            UUID repoId,
+
+            @Parameter(description = "The branch ID.")
+            @PathVariable("branch_id")
+            UUID branchId
+    ) {
         branchApplicationService.removeBranch(branchId);
     }
 }

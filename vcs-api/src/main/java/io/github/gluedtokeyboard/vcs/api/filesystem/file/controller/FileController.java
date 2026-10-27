@@ -4,6 +4,8 @@ import io.github.gluedtokeyboard.vcs.api.filesystem.file.dto.request.FileRequest
 import io.github.gluedtokeyboard.vcs.api.filesystem.file.dto.response.FileResponse;
 import io.github.gluedtokeyboard.vcs.api.filesystem.file.service.model.FileContentResult;
 import io.github.gluedtokeyboard.vcs.api.filesystem.file.service.FileService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/fs/files")
 @RequiredArgsConstructor
+@Tag(name = "File")
 public class FileController {
     /**
      * Used for service methods.
@@ -31,7 +34,11 @@ public class FileController {
      * @return the corresponding file
      */
     @GetMapping("{id}")
-    public ResponseEntity<FileResponse> getFile(@PathVariable("id") UUID id) {
+    public ResponseEntity<FileResponse> getFile(
+            @Parameter(description = "The file ID.")
+            @PathVariable("id")
+            UUID id
+    ) {
         FileContentResult result = fileService.getFile(id);
         FileResponse response = new FileResponse(result.id(), result.path(), result.contents());
         return ResponseEntity.ok(response);
@@ -66,7 +73,13 @@ public class FileController {
      * @return the updated file
      */
     @PatchMapping("{id}")
-    public ResponseEntity<FileResponse> updateFile(@PathVariable("id") UUID id, @RequestBody FileRequest file) {
+    public ResponseEntity<FileResponse> updateFile(
+            @Parameter(description = "The file ID.")
+            @PathVariable("id")
+            UUID id,
+
+            @RequestBody FileRequest file
+    ) {
         FileContentResult result = null;
         if (file.path() != null) {
             result = fileService.updatePath(id, file.path());
@@ -84,7 +97,11 @@ public class FileController {
      */
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFile(@PathVariable("id") UUID id) {
+    public void deleteFile(
+            @Parameter(description = "The file ID.")
+            @PathVariable("id")
+            UUID id
+    ) {
         fileService.deleteFile(id);
     }
 }
