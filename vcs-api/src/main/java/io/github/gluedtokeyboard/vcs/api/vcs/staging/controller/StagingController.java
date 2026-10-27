@@ -4,6 +4,8 @@ import io.github.gluedtokeyboard.vcs.api.vcs.staging.dto.request.StagingRequest;
 import io.github.gluedtokeyboard.vcs.api.vcs.staging.dto.response.StagingResponse;
 import io.github.gluedtokeyboard.vcs.api.vcs.staging.entity.StagingEntry;
 import io.github.gluedtokeyboard.vcs.api.vcs.staging.service.StagingApplicationService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/vcs/repos/{repo_id}/staging")
 @RequiredArgsConstructor
+@Tag(name = "Staging Area")
 public class StagingController {
     private final StagingApplicationService stagingApplicationService;
 
@@ -29,7 +32,12 @@ public class StagingController {
      */
     @PostMapping
     public ResponseEntity<StagingResponse> stageFile(
-            @PathVariable("repo_id") UUID repoID, @RequestBody StagingRequest stagingRequest) {
+            @Parameter(description = "The repository ID.")
+            @PathVariable("repo_id")
+            UUID repoID,
+
+            @RequestBody StagingRequest stagingRequest
+    ) {
         StagingEntry stagingEntry = stagingApplicationService.stageFile(
                 repoID, stagingRequest.fileId(), stagingRequest.entryType());
         if (stagingEntry == null) {
