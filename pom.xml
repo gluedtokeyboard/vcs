@@ -6,7 +6,7 @@
 
     <groupId>io.github.gluedtokeyboard</groupId>
     <artifactId>vcs</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <modules>
         <module>vcs-util</module>
