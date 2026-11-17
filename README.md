@@ -4,6 +4,8 @@
 
 A version control system built from scratch in Java, with a command-line interface and a REST API.
 
+A React + TypeScript frontend is available at [VCS-UI](https://github.com/gluedtokeyboard/vcs-ui).
+
 ## Features
 
 - Initialize repositories (`init`)
@@ -21,8 +23,8 @@ A version control system built from scratch in Java, with a command-line interfa
 
 ### REST API
 
-Have a look at [Swagger UI]() for the available endpoints and their descriptions. You can also try out API requests
-directly from your browser.
+Have a look at [Swagger UI](https://vcs-61do.onrender.com/swagger-ui.html) for the available endpoints and their
+descriptions. You can also try out API requests directly from your browser.
 
 ### CLI
 
